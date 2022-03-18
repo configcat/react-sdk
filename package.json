@@ -1,0 +1,40 @@
+{
+  "name": "configcat-react",
+  "version": "0.0.1-alpha.1",
+  "scripts": {
+    "build": "tsc",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.40",
+    "@types/react-dom": "^17.0.13",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "typescript": "^4.6.2"
+  },
+  "description": "ConfigCat is a configuration as a service that lets you manage your features and configurations without actually deploying new code.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "module": "lib/index.js",
+  "keywords": [
+      "configcat",
+      "config",
+      "configuration",
+      "remote configuration",
+      "configcat client",
+      "feature flags",
+      "feature toggle",
+      "feature switch",
+      "canary release",
+      "soft launch",
+      "release strategy",
+      "react",
+      "reactjs"
+  ],
+  "author": "ConfigCat",
+  "homepage": "https://configcat.com",
+  "license": "MIT",
+  "dependencies": {
+    "configcat-common": "^4.6.2"
+  }
+}

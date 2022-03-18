@@ -1,0 +1,10 @@
+.vscode/
+node_modules/
+src/
+samples/
+tests/
+coverage/
+package-lock.json
+tsconfig.*.json
+.gitignore
+media/
