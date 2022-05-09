@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
   
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -38,7 +38,7 @@ jobs:
           path: configcat-react*.tgz
         
   publish:
-    needs: test
+    needs: build
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags')
     steps:
