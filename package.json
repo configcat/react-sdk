@@ -1,6 +1,6 @@
 {
   "name": "configcat-react",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1",
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build"
@@ -35,6 +35,6 @@
   "homepage": "https://configcat.com",
   "license": "MIT",
   "dependencies": {
-    "configcat-common": "^4.6.2"
+    "configcat-common": "^5.0.2"
   }
 }
