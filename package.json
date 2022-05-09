@@ -1,6 +1,6 @@
 {
   "name": "configcat-react",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build"
