@@ -5,6 +5,7 @@ samples/
 tests/
 coverage/
 package-lock.json
-tsconfig.*.json
+tsconfig*.json
 .gitignore
 media/
+.github/
