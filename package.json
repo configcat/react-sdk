@@ -1,6 +1,6 @@
 {
   "name": "configcat-react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "scripts": {
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc",
