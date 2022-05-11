@@ -15,7 +15,7 @@ ConfigCat is a <a href="https://configcat.com" target="_blank">hosted feature fl
 
 ## Getting Started
 
-ConfigCat React SDK builts on our configcat-js SDK (TODO link here). It uses Context API (requires React **16.3** or later) and Hook API (requires React **16.8** or later) to provide a better integration in your React application.
+ConfigCat React SDK builts on our <a href="https://github.com/configcat/js-sdk" target="_blank">configcat-js</a> SDK. It uses Context API (requires React **16.3** or later) and Hook API (requires React **16.8** or later) to provide a better integration in your React application.
 
 ### 1. Install package:
 
