@@ -5,17 +5,12 @@ import { HttpConfigFetcher } from "./configcatclient/ConfigFetcher";
 import { LocalStorageCache } from "./configcatclient/Cache";
 import CONFIGCAT_SDK_VERSION from "./configcatclient/Version";
 import ConfigCatContext from "./ConfigCatContext";
-
-export type IReactAutoPollOptions = configcatcommon.IAutoPollOptions;
-
-export type IReactLazyLoadingOptions = configcatcommon.ILazyLoadingOptions;
-
-export type IReactManualPollOptions = configcatcommon.IManualPollOptions;
+import { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from "./configcatclient/Exports";
 
 type ConfigCatProviderProps = {
   sdkKey: string;
-  pollingMode: PollingMode;
-  options: IReactAutoPollOptions | IReactLazyLoadingOptions | IReactManualPollOptions | undefined
+  pollingMode?: PollingMode | undefined;
+  options?: IReactAutoPollOptions | IReactLazyLoadingOptions | IReactManualPollOptions | undefined
 };
 
 type ConfigCatProviderState = {
