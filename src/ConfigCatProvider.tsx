@@ -1,13 +1,25 @@
 import React, { Component, PropsWithChildren } from "react";
+import * as configcatcommon from "configcat-common";
+import { PollingMode } from "./configcatclient/PollingMode";
+import { HttpConfigFetcher } from "./configcatclient/ConfigFetcher";
+import { LocalStorageCache } from "./configcatclient/Cache";
+import CONFIGCAT_SDK_VERSION from "./configcatclient/Version";
 import ConfigCatContext from "./ConfigCatContext";
-import { IConfigCatClient } from "configcat-common";
+
+export type IReactAutoPollOptions = configcatcommon.IAutoPollOptions;
+
+export type IReactLazyLoadingOptions = configcatcommon.ILazyLoadingOptions;
+
+export type IReactManualPollOptions = configcatcommon.IManualPollOptions;
 
 type ConfigCatProviderProps = {
-  client: IConfigCatClient;
+  sdkKey: string;
+  pollingMode: PollingMode;
+  options: IReactAutoPollOptions | IReactLazyLoadingOptions | IReactManualPollOptions | undefined
 };
 
 type ConfigCatProviderState = {
-  client: IConfigCatClient;
+  client: configcatcommon.IConfigCatClient;
 };
 
 class ConfigCatProvider extends Component<
@@ -15,16 +27,59 @@ class ConfigCatProvider extends Component<
   ConfigCatProviderState,
   {}
 > {
+
+  private client: configcatcommon.IConfigCatClient;
   constructor(props: ConfigCatProviderProps) {
     super(props);
 
+    switch (props.pollingMode) {
+      case PollingMode.LazyLoad:
+        this.client = configcatcommon.createClientWithLazyLoad(
+          props.sdkKey,
+          {
+            configFetcher: new HttpConfigFetcher(),
+            cache: new LocalStorageCache(),
+            sdkType: "ConfigCat-React",
+            sdkVersion: CONFIGCAT_SDK_VERSION
+          },
+          props.options
+        )
+        break;
+      case PollingMode.ManualPoll:
+        this.client = configcatcommon.createClientWithManualPoll(
+          props.sdkKey,
+          {
+            configFetcher: new HttpConfigFetcher(),
+            cache: new LocalStorageCache(),
+            sdkType: "ConfigCat-React",
+            sdkVersion: CONFIGCAT_SDK_VERSION
+          },
+          props.options
+        )
+        break;
+      case PollingMode.AutoPoll:
+      default:
+        this.client = configcatcommon.createClientWithAutoPoll(
+          props.sdkKey,
+          {
+            configFetcher: new HttpConfigFetcher(),
+            cache: new LocalStorageCache(),
+            sdkType: "ConfigCat-React",
+            sdkVersion: CONFIGCAT_SDK_VERSION
+          },
+          props.options
+        )
+        break;
+    }
     // TODO remove when client supports 'ready' callback
-    this.state = { client: props.client };
+    this.setState({
+      client: this.client,
+    });
   }
 
-  componentDidUpdate(props: ConfigCatProviderProps) {
+  componentDidUpdate() {
     this.setState({
-      client: props.client,
+      client: this.client,
     });
   }
 
