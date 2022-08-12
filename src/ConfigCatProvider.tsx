@@ -80,12 +80,10 @@ class ConfigCatProvider extends Component<
         )
         break;
     }
-
     return client;
   }
 
   render() {
-    console.log('statecske: ' + this.state);
     return (
       <ConfigCatContext.Provider value={this.state}>
         {this.props.children}

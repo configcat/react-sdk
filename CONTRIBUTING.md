@@ -4,7 +4,7 @@ ConfigCat SDK is an open source project. Feedback and contribution are welcome. 
 
 ## Submitting bug reports and feature requests
 
-The ConfigCat SDK team monitors the [issue tracker](https://github.com/configcat/common-js/issues) in the SDK repository. Bug reports and feature requests specific to this SDK should be filed in this issue tracker. The team will respond to all newly filed issues.
+The ConfigCat SDK team monitors the [issue tracker](https://github.com/configcat/react-sdk/issues) in the SDK repository. Bug reports and feature requests specific to this SDK should be filed in this issue tracker. The team will respond to all newly filed issues.
 
 ## Submitting pull requests
 
