@@ -9,8 +9,12 @@ const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 afterEach(cleanup)
 
 it("Default initialization fails without SDK Key", async () => {
-    expect(() => render(<ConfigCatProvider sdkKey=""/>))
+    const spy = jest.spyOn(console, 'error');
+    spy.mockImplementation(() => { });
+
+    expect(() => render(<ConfigCatProvider sdkKey="" />))
         .toThrow("Invalid 'apiKey' value");
+    spy.mockRestore();
 });
 
 it("Default initialization works", async () => {
@@ -37,22 +41,30 @@ it("AutoPoll advanced initialization works", () => {
 });
 
 it("AutoPoll initialization wrong pollIntervalSeconds parameter fails", () => {
+    const spy = jest.spyOn(console, 'error');
+    spy.mockImplementation(() => { });
+
     expect(() =>
         render(<ConfigCatProvider
             sdkKey={sdkKey}
             pollingMode={PollingMode.AutoPoll}
             options={{ pollIntervalSeconds: -1, maxInitWaitTimeSeconds: 20 }} />))
         .toThrow("Invalid 'pollIntervalSeconds' value");
+    spy.mockRestore();
 });
 
 
 it("AutoPoll initialization wrong maxInitWaitTimeSeconds parameter fails", () => {
+    const spy = jest.spyOn(console, 'error');
+    spy.mockImplementation(() => { });
+
     expect(() =>
         render(<ConfigCatProvider
             sdkKey={sdkKey}
             pollingMode={PollingMode.AutoPoll}
             options={{ maxInitWaitTimeSeconds: -1 }} />))
         .toThrow("Invalid 'maxInitWaitTimeSeconds' value");
+    spy.mockRestore();
 });
 
 it("ManualPoll simple initialization works", () => {
@@ -60,11 +72,15 @@ it("ManualPoll simple initialization works", () => {
 });
 
 it("ManualPoll initialization wrong requestTimeoutMs fails", () => {
+    const spy = jest.spyOn(console, 'error');
+    spy.mockImplementation(() => { });
+
     expect(() =>
         render(<ConfigCatProvider sdkKey={sdkKey}
             pollingMode={PollingMode.ManualPoll}
             options={{ requestTimeoutMs: -1 }} />))
         .toThrow("Invalid 'requestTimeoutMs' value");
+    spy.mockRestore();
 });
 
 
@@ -80,9 +96,14 @@ it("LazyLoad advanced initialization works", () => {
 });
 
 it("LazyLoad initialization with wrong cacheTimeToLiveSeconds fails", () => {
+    const spy = jest.spyOn(console, 'error');
+    spy.mockImplementation(() => { });
+
     expect(() =>
         render(<ConfigCatProvider sdkKey={sdkKey}
             pollingMode={PollingMode.LazyLoad}
             options={{ cacheTimeToLiveSeconds: -1 }} />))
-        .toThrow("Invalid 'cacheTimeToLiveSeconds' value");
+        .toThrow("Invalid 'cacheTimeToLiveSeconds' value. Value must be greater than zero.");
+
+    spy.mockRestore();
 });

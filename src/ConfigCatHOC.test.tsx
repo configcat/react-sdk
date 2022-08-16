@@ -32,18 +32,22 @@ class TestHOCComponent extends React.Component<
 }
 
 it("withConfigCatClient without provider should fail", async () => {
+    const spy = jest.spyOn(console, 'error');
+    spy.mockImplementation(() => { });
+
     const TestComponent = () => {
         const TestHocComponentWithConfigCatClient = withConfigCatClient(TestHOCComponent);
-        return (<TestHocComponentWithConfigCatClient/>);
+        return (<TestHocComponentWithConfigCatClient />);
     };
     expect(() => render(<TestComponent />))
         .toThrow("withConfigCatClient must be used within a ConfigCatProvider!");
+    spy.mockRestore();
 });
 
 it("withConfigCatClient default settings should work", async () => {
     const TestComponent = () => {
         const TestHocComponentWithConfigCatClient = withConfigCatClient(TestHOCComponent);
-        return (<TestHocComponentWithConfigCatClient/>);
+        return (<TestHocComponentWithConfigCatClient />);
     };
     render(<ConfigCatProvider sdkKey={sdkKey}><TestComponent /></ConfigCatProvider>);
     await screen.findByText("Feature flag value: Cat", undefined, { timeout: 2000 });

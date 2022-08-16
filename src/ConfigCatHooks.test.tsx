@@ -9,12 +9,15 @@ const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 afterEach(cleanup)
 
 it("useConfigCatClient without provider should fail", async () => {
+    const spy = jest.spyOn(console, 'error');
+	spy.mockImplementation(() => {});
     const TestComponent = () => {
         useConfigCatClient();
         return (< div />);
     };
     expect(() => render(<TestComponent />))
         .toThrow("useConfigCatClient hook must be used in ConfigCatProvider!");
+    spy.mockRestore();
 });
 
 it("useConfigCatClient with provider forceRefresh() should work", async () => {
@@ -29,12 +32,16 @@ it("useConfigCatClient with provider forceRefresh() should work", async () => {
 });
 
 it("useFeatureFlag without provider should fail", async () => {
+    const spy = jest.spyOn(console, 'error');
+    spy.mockImplementation(() => { });
     const TestComponent = () => {
         useFeatureFlag('test', false);
         return (< div />);
     };
     expect(() => render(<TestComponent />))
         .toThrow("useFeatureFlag hook must be used in ConfigCatProvider!");
+
+    spy.mockRestore();
 });
 
 
@@ -43,7 +50,7 @@ it("useFeatureFlag default settings should work", async () => {
         const featureFlag = useFeatureFlag('stringDefaultCat', 'NOT_CAT');
         return (< div>Feature flag value: {featureFlag}</div>);
     };
-    render(<ConfigCatProvider sdkKey={sdkKey}><TestComponent /></ConfigCatProvider>);
+    await render(<ConfigCatProvider sdkKey={sdkKey}><TestComponent /></ConfigCatProvider>);
     await screen.findByText("Feature flag value: Cat", undefined, { timeout: 2000 });
 });
 
@@ -61,7 +68,7 @@ it("useFeatureFlag Lazy loading with default settings should work", async () => 
         const featureFlag = useFeatureFlag('stringDefaultCat', 'NOT_CAT');
         return (< div>Feature flag value: {featureFlag}</div>);
     };
-    render(<ConfigCatProvider sdkKey={sdkKey} pollingMode={PollingMode.LazyLoad}><TestComponent /></ConfigCatProvider>);
+    await render(<ConfigCatProvider sdkKey={sdkKey} pollingMode={PollingMode.LazyLoad}><TestComponent /></ConfigCatProvider>);
     await screen.findByText("Feature flag value: Cat", undefined, { timeout: 2000 });
 });
 
@@ -72,6 +79,8 @@ it("useFeatureFlag Manual poll without forceRefresh should show default value", 
     };
     render(<ConfigCatProvider sdkKey={sdkKey} pollingMode={PollingMode.ManualPoll}><TestComponent /></ConfigCatProvider>);
     await screen.findByText("Feature flag value: NOT_CAT", undefined, { timeout: 2000 });
+    var values = await screen.findAllByText("Feature flag value: Cat", undefined, { timeout: 2000 });
+    expect(values.length === 0);
 });
 
 
@@ -82,6 +91,6 @@ it("useFeatureFlag Manual poll with forceRefresh should work", async () => {
         const featureFlag = useFeatureFlag('stringDefaultCat', 'NOT_CAT');
         return (< div>Feature flag value: {featureFlag}</div>);
     };
-    render(<ConfigCatProvider sdkKey={sdkKey} pollingMode={PollingMode.ManualPoll}><TestComponent /></ConfigCatProvider>);
+    await render(<ConfigCatProvider sdkKey={sdkKey} pollingMode={PollingMode.ManualPoll}><TestComponent /></ConfigCatProvider>);
     await screen.findByText("Feature flag value: Cat", undefined, { timeout: 2000 });
 });
