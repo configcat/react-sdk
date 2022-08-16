@@ -27,7 +27,7 @@ npm i configcat-react
 
 ### 2. Go to the <a href="https://app.configcat.com/sdkkey" target="_blank">ConfigCat Dashboard</a> to get your *SDK Key*:
 
-![SDK-KEY](https://raw.githubusercontent.com/ConfigCat/js-sdk/master/media/readme02-3.png  "SDK-KEY")
+![SDK-KEY](https://raw.githubusercontent.com/ConfigCat/react-sdk/master/media/readme02-3.png  "SDK-KEY")
 
 ### 3. Import and initialize ConfigCatProvider
 
