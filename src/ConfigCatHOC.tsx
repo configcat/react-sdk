@@ -27,7 +27,7 @@ function withConfigCatClient<P>(
       {(context: ConfigCatContextData | undefined) => {
         if (context === undefined) {
           throw new Error(
-            "ConfigCatContext.Consumer must be used within a ConfigCatProvider"
+            "withConfigCatClient must be used within a ConfigCatProvider!"
           );
         }
         return (

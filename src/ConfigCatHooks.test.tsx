@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { render, cleanup, waitFor, screen } from '@testing-library/react';
+import { render, cleanup, screen } from '@testing-library/react';
 import ConfigCatProvider from "./ConfigCatProvider";
 import { useConfigCatClient, useFeatureFlag } from './ConfigCatHooks';
 import { PollingMode } from './configcatclient/PollingMode';

@@ -10,7 +10,7 @@ import { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOption
 type ConfigCatProviderProps = {
   sdkKey: string;
   pollingMode?: PollingMode | undefined;
-  options?: IReactAutoPollOptions | IReactLazyLoadingOptions | IReactManualPollOptions | undefined
+  options?: IReactAutoPollOptions | IReactLazyLoadingOptions | IReactManualPollOptions | undefined;
 };
 
 type ConfigCatProviderState = {
@@ -68,6 +68,8 @@ class ConfigCatProvider extends Component<
         break;
       case PollingMode.AutoPoll:
       default:
+        const options = this.props.options as IReactAutoPollOptions;
+        const configChanged = options?.configChanged;
         client = configcatcommon.createClientWithAutoPoll(
           this.props.sdkKey,
           {
@@ -76,11 +78,15 @@ class ConfigCatProvider extends Component<
             sdkType: "ConfigCat-React",
             sdkVersion: CONFIGCAT_SDK_VERSION
           },
-          this.props.options
+          {...this.props.options, }
         )
         break;
     }
     return client;
+  }
+
+  configChanged = ()=>{
+    
   }
 
   render() {
