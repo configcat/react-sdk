@@ -54,37 +54,39 @@ The React hooks (`useFeatureFlag`) way:
 ```js
 function ButtonComponent() {
   const isAwesomeFeatureEnabled = useFeatureFlag(
-    "isawesomefeatureenabled",
+    "isAwesomeFeatureEnabled",
     false
   );
 
   return (
-    <button
-      disabled={!isAwesomeFeatureEnabled}
-      onClick={() => alert("ConfigCat <3 React")}
-    >
-      isAwesomeFeature
-    </button>
+    <div>Feature flag value: {this.state.isAwesomeFeatureEnabled ? 'ON' : 'OFF'}</div>
   );
 }
 ```
 
 The React HOC (`WithConfigCatClientProps`) way:
 ```js
-function ButtonComponent() {
-  const isAwesomeFeatureEnabled = useFeatureFlag(
-    "isawesomefeatureenabled",
-    false
-  );
+class TestHOCComponent extends React.Component<
+    WithConfigCatClientProps,
+    { isAwesomeFeatureEnabled: string }
+> {
+    constructor(props: WithConfigCatClientProps) {
+        super(props);
 
-  return (
-    <button
-      disabled={!isAwesomeFeatureEnabled}
-      onClick={() => alert("ConfigCat <3 React")}
-    >
-      isAwesomeFeature
-    </button>
-  );
+        this.state = { isAwesomeFeatureEnabled: false };
+    }
+
+    componentDidMount() {
+        this.props
+            .getValue("isAwesomeFeatureEnabled", false)
+            .then((v: boolean) => this.setState({ isAwesomeFeatureEnabled: v }));
+    }
+
+    render() {
+        return (
+            <div>Feature flag value: {this.state.isAwesomeFeatureEnabled ? 'ON' : 'OFF'}</div>
+        );
+    }
 }
 ```
 
