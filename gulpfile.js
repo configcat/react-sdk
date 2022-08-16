@@ -2,8 +2,8 @@ var gulp = require('gulp');
 var replace = require('gulp-replace');
 var fs = require('fs');
 
-const OUT_ESM = 'lib/esm/configcatclient';
-const OUT_CJS = 'lib/cjs/configcatclient';
+const OUT_ESM = 'lib/esm';
+const OUT_CJS = 'lib/cjs';
 
 function updateVersion(dst, file){
 

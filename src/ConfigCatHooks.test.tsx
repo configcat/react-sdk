@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { render, cleanup, screen } from '@testing-library/react';
 import ConfigCatProvider from "./ConfigCatProvider";
 import { useConfigCatClient, useFeatureFlag } from './ConfigCatHooks';
-import { PollingMode } from './configcatclient/PollingMode';
+import { PollingMode } from './PollingMode';
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 

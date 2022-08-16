@@ -1,15 +1,15 @@
 import React from 'react';
 import { render, cleanup } from '@testing-library/react';
-import { PollingMode } from "./configcatclient/PollingMode";
+import { PollingMode } from "./PollingMode";
 import ConfigCatProvider from "./ConfigCatProvider";
-import { DataGovernance } from './configcatclient/Exports';
+import { DataGovernance } from './Exports';
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 
 afterEach(cleanup)
 
 it("Default initialization fails without SDK Key", async () => {
-    expect(() => render(<ConfigCatProvider />))
+    expect(() => render(<ConfigCatProvider sdkKey=""/>))
         .toThrow("Invalid 'apiKey' value");
 });
 
