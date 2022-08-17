@@ -3,6 +3,7 @@ import { IConfigCatClient } from "configcat-common";
 
 export interface ConfigCatContextData {
   client: IConfigCatClient;
+  lastUpdated?: Date;
 }
 
 const ConfigCatContext = React.createContext<ConfigCatContextData | undefined>(

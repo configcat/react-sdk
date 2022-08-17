@@ -1,4 +1,4 @@
-import React, { Component, PropsWithChildren } from "react";
+import React, { Component, PropsWithChildren, useEffect } from "react";
 import * as configcatcommon from "configcat-common";
 import { PollingMode } from "./PollingMode";
 import { HttpConfigFetcher } from "./ConfigFetcher";
@@ -15,6 +15,7 @@ type ConfigCatProviderProps = {
 
 type ConfigCatProviderState = {
   client: configcatcommon.IConfigCatClient;
+  lastUpdated?: Date;
 };
 
 class ConfigCatProvider extends Component<
@@ -29,18 +30,12 @@ class ConfigCatProvider extends Component<
     this.state = { client };
   }
 
-  componentDidUpdate() {
-    this.state?.client?.dispose();
-    const client = this.initializeConfigCatClient();
-    this.setState({ client });
-  }
-
   componentWillUnmount() {
     this.state?.client?.dispose();
   }
 
   private initializeConfigCatClient() {
-    const {pollingMode, sdkKey, options} = this.props;
+    const { pollingMode, sdkKey, options } = this.props;
     switch (pollingMode) {
       case PollingMode.LazyLoad:
         return configcatcommon.createClientWithLazyLoad(
@@ -66,6 +61,8 @@ class ConfigCatProvider extends Component<
         )
       case PollingMode.AutoPoll:
       default:
+        const autoPollOptions: IReactAutoPollOptions = { ...options };
+        autoPollOptions.configChanged = this.reactConfigChanged(autoPollOptions.configChanged);
         return configcatcommon.createClientWithAutoPoll(
           sdkKey,
           {
@@ -74,8 +71,17 @@ class ConfigCatProvider extends Component<
             sdkType: "ConfigCat-React",
             sdkVersion: CONFIGCAT_SDK_VERSION
           },
-          options
+          autoPollOptions
         )
+    }
+  }
+
+  reactConfigChanged: (originalConfigChanged?: () => void) => (() => void) = (originalConfigChanged?: () => void) => {
+    return () => {
+      this.setState({ lastUpdated: new Date() });
+      if (originalConfigChanged) {
+        originalConfigChanged();
+      }
     }
   }
 
