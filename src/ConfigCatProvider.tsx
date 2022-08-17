@@ -1,4 +1,4 @@
-import React, { Component, PropsWithChildren, useEffect } from "react";
+import React, { Component, PropsWithChildren } from "react";
 import * as configcatcommon from "configcat-common";
 import { PollingMode } from "./PollingMode";
 import { HttpConfigFetcher } from "./ConfigFetcher";
