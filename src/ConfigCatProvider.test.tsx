@@ -1,5 +1,5 @@
-import React from 'react';
-import { render, cleanup } from '@testing-library/react';
+import React, { useState } from 'react';
+import { render, cleanup, screen } from '@testing-library/react';
 import { PollingMode } from "./PollingMode";
 import ConfigCatProvider from "./ConfigCatProvider";
 import { DataGovernance } from '.';
@@ -65,6 +65,23 @@ it("AutoPoll initialization wrong maxInitWaitTimeSeconds parameter fails", () =>
             options={{ maxInitWaitTimeSeconds: -1 }} />))
         .toThrow("Invalid 'maxInitWaitTimeSeconds' value");
     spy.mockRestore();
+});
+
+it("AutoPoll configChanged callback works", async () => {
+    const TestComponent = () => {
+        const [isConfigChanged, setIsConfigChanged] = useState(false);
+
+        return (<ConfigCatProvider
+            sdkKey={sdkKey}
+            pollingMode={PollingMode.AutoPoll}
+            options={{ configChanged: () => { setIsConfigChanged(true) } }}>
+            <div>Config changed: {isConfigChanged ? 'True' : 'False'}</div>
+        </ConfigCatProvider>);
+    };
+
+    render(<TestComponent />)
+
+    await screen.findByText("Config changed: True", undefined, { timeout: 2000 });
 });
 
 it("ManualPoll simple initialization works", () => {

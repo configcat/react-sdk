@@ -14,6 +14,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    name: Test with react-scripts and report coverage
     steps:
       - uses: actions/checkout@v2
 
