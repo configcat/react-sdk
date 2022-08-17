@@ -40,47 +40,43 @@ class ConfigCatProvider extends Component<
   }
 
   private initializeConfigCatClient() {
-    let client: configcatcommon.IConfigCatClient;
-    switch (this.props.pollingMode) {
+    const {pollingMode, sdkKey, options} = this.props;
+    switch (pollingMode) {
       case PollingMode.LazyLoad:
-        client = configcatcommon.createClientWithLazyLoad(
-          this.props.sdkKey,
+        return configcatcommon.createClientWithLazyLoad(
+          sdkKey,
           {
             configFetcher: new HttpConfigFetcher(),
             cache: new LocalStorageCache(),
             sdkType: "ConfigCat-React",
             sdkVersion: CONFIGCAT_SDK_VERSION
           },
-          this.props.options
+          options
         )
-        break;
       case PollingMode.ManualPoll:
-        client = configcatcommon.createClientWithManualPoll(
-          this.props.sdkKey,
+        return configcatcommon.createClientWithManualPoll(
+          sdkKey,
           {
             configFetcher: new HttpConfigFetcher(),
             cache: new LocalStorageCache(),
             sdkType: "ConfigCat-React",
             sdkVersion: CONFIGCAT_SDK_VERSION
           },
-          this.props.options
+          options
         )
-        break;
       case PollingMode.AutoPoll:
       default:
-        client = configcatcommon.createClientWithAutoPoll(
-          this.props.sdkKey,
+        return configcatcommon.createClientWithAutoPoll(
+          sdkKey,
           {
             configFetcher: new HttpConfigFetcher(),
             cache: new LocalStorageCache(),
             sdkType: "ConfigCat-React",
             sdkVersion: CONFIGCAT_SDK_VERSION
           },
-          this.props.options
+          options
         )
-        break;
     }
-    return client;
   }
 
   render() {
