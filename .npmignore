@@ -9,3 +9,7 @@ tsconfig*.json
 .gitignore
 media/
 .github/
+*.test.*
+update-samples.sh
+setupTests.*
+gulpfile.js
