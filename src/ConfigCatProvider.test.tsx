@@ -2,7 +2,7 @@ import React from 'react';
 import { render, cleanup } from '@testing-library/react';
 import { PollingMode } from "./PollingMode";
 import ConfigCatProvider from "./ConfigCatProvider";
-import { DataGovernance } from './Exports';
+import { DataGovernance } from '.';
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 

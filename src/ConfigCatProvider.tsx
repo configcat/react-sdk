@@ -5,7 +5,7 @@ import { HttpConfigFetcher } from "./ConfigFetcher";
 import { LocalStorageCache } from "./Cache";
 import CONFIGCAT_SDK_VERSION from "./Version";
 import ConfigCatContext from "./ConfigCatContext";
-import { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from "./Exports";
+import { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from ".";
 
 type ConfigCatProviderProps = {
   sdkKey: string;
