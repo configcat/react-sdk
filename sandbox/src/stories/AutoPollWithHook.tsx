@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { ConfigCatProvider, useConfigCatClient, useFeatureFlag } from '../../../lib/esm';
 
-export const AutoPollPageComponent = (args: { featureFlagKey: string }) => {
+export const AutoPollPageWithHookComponent = (args: { featureFlagKey: string }) => {
   const client = useConfigCatClient();
   const isAwesomeFeatureEnabled = useFeatureFlag(args.featureFlagKey, false);
   return (
@@ -19,7 +19,7 @@ export const AutoPollPageComponent = (args: { featureFlagKey: string }) => {
 };
 
 
-export const AutoPollPage = (args: { sdkKey: string, pollIntervalSeconds: number, featureFlagKey: string }) => {
+export const AutoPollWithHookPage = (args: { sdkKey: string, pollIntervalSeconds: number, featureFlagKey: string }) => {
 
   const [configLastChanged, setConfigLastChanged] = useState<Date | undefined>(undefined);
   const [logs, setLogs] = useState<string>('');
@@ -44,7 +44,7 @@ export const AutoPollPage = (args: { sdkKey: string, pollIntervalSeconds: number
           setConfigLastChanged(new Date());
         }
       }}>
-        <AutoPollPageComponent featureFlagKey={args.featureFlagKey}></AutoPollPageComponent>
+        <AutoPollPageWithHookComponent featureFlagKey={args.featureFlagKey}></AutoPollPageWithHookComponent>
         <div>Config last changed at: {configLastChanged?.toISOString() ?? 'N/A'}</div>
 
         <div>
