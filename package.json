@@ -12,6 +12,9 @@
   "main": "lib/cjs/index.js",
   "types": "lib/esm/index.d.ts",
   "module": "lib/esm/index.js",
+  "files": [
+    "/lib"
+  ],
   "keywords": [
     "configcat",
     "config",

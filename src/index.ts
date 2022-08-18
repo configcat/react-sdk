@@ -17,6 +17,8 @@ export type IReactLazyLoadingOptions = configcatcommon.ILazyLoadingOptions;
 
 export type IReactManualPollOptions = configcatcommon.IManualPollOptions;
 
+export type IReactConfigCatLogger = configcatcommon.IConfigCatLogger;
+
 export const DataGovernance = {
     /** Select this if your feature flags are published to all global CDN nodes. */
     Global: configcatcommon.DataGovernance.Global,
