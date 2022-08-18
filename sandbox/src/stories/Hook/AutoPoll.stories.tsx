@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 import { AutoPollPage } from './AutoPoll';
 
 export default {
-  title: 'Tests/AutoPoll',
+  title: 'Showcase/Hook/AutoPoll',
   component: AutoPollPage,
   parameters: {
     // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout
