@@ -36,43 +36,23 @@ class ConfigCatProvider extends Component<
 
   private initializeConfigCatClient() {
     const { pollingMode, sdkKey, options } = this.props;
+    const configCatKernel = {
+      configFetcher: new HttpConfigFetcher(),
+      cache: new LocalStorageCache(),
+      sdkType: "ConfigCat-React",
+      sdkVersion: CONFIGCAT_SDK_VERSION
+    };
+
     switch (pollingMode) {
       case PollingMode.LazyLoad:
-        return configcatcommon.createClientWithLazyLoad(
-          sdkKey,
-          {
-            configFetcher: new HttpConfigFetcher(),
-            cache: new LocalStorageCache(),
-            sdkType: "ConfigCat-React",
-            sdkVersion: CONFIGCAT_SDK_VERSION
-          },
-          options
-        )
+        return configcatcommon.createClientWithLazyLoad(sdkKey, configCatKernel, options);
       case PollingMode.ManualPoll:
-        return configcatcommon.createClientWithManualPoll(
-          sdkKey,
-          {
-            configFetcher: new HttpConfigFetcher(),
-            cache: new LocalStorageCache(),
-            sdkType: "ConfigCat-React",
-            sdkVersion: CONFIGCAT_SDK_VERSION
-          },
-          options
-        )
+        return configcatcommon.createClientWithManualPoll(sdkKey, configCatKernel, options);
       case PollingMode.AutoPoll:
       default:
         const autoPollOptions: IReactAutoPollOptions = { ...options };
         autoPollOptions.configChanged = this.reactConfigChanged(autoPollOptions.configChanged);
-        return configcatcommon.createClientWithAutoPoll(
-          sdkKey,
-          {
-            configFetcher: new HttpConfigFetcher(),
-            cache: new LocalStorageCache(),
-            sdkType: "ConfigCat-React",
-            sdkVersion: CONFIGCAT_SDK_VERSION
-          },
-          autoPollOptions
-        )
+        return configcatcommon.createClientWithAutoPoll(sdkKey, configCatKernel, autoPollOptions);
     }
   }
 

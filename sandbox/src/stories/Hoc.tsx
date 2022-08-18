@@ -1,25 +1,35 @@
-import React, { useCallback, useState } from 'react';
-import { ConfigCatProvider, useConfigCatClient, useFeatureFlag } from '../../../lib/esm';
+import React, { useState } from 'react';
+import { ConfigCatProvider, withConfigCatClient, WithConfigCatClientProps } from 'configcat-react';
 
-export const AutoPollPageWithHookComponent = (args: { featureFlagKey: string }) => {
-  const client = useConfigCatClient();
-  const isAwesomeFeatureEnabled = useFeatureFlag(args.featureFlagKey, false);
-  return (
-    <div>
+
+class HocComponent extends React.Component<
+  { featureFlagKey: string } & WithConfigCatClientProps,
+  { isEnabled: boolean }
+> {
+  constructor(props: { featureFlagKey: string } & WithConfigCatClientProps) {
+    super(props);
+
+    this.state = { isEnabled: false };
+  }
+
+  componentDidMount() {
+    this.props
+      .getValue(this.props.featureFlagKey, false)
+      .then((v: boolean) => this.setState({ isEnabled: v }));
+  }
+
+  render() {
+    return (
       <div>
-        <button onClick={useCallback(async () => { await client.forceRefreshAsync() }, [client])} >Force refresh</button>
+        {this.props.featureFlagKey} evaluated to {this.state.isEnabled ? 'True' : 'False'}
       </div>
+    );
+  }
+}
 
-      <div>
-        {args.featureFlagKey} evaluated to {isAwesomeFeatureEnabled ? 'True' : 'False'}
-      </div>
+const ConfigCatHocComponent = withConfigCatClient(HocComponent);
 
-    </div>
-  );
-};
-
-
-export const AutoPollWithHookPage = (args: { sdkKey: string, pollIntervalSeconds: number, featureFlagKey: string }) => {
+export const HocPage = (args: { sdkKey: string, pollIntervalSeconds: number, featureFlagKey: string }) => {
 
   const [configLastChanged, setConfigLastChanged] = useState<Date | undefined>(undefined);
   const [logs, setLogs] = useState<string>('');
@@ -29,7 +39,7 @@ export const AutoPollWithHookPage = (args: { sdkKey: string, pollIntervalSeconds
   }
   return (
     <article>
-      <h1>Auto poll tests</h1>
+      <h1>HOC tests</h1>
       <p></p>
       <ConfigCatProvider sdkKey={args.sdkKey} options={{
         pollIntervalSeconds: args.pollIntervalSeconds,
@@ -44,11 +54,11 @@ export const AutoPollWithHookPage = (args: { sdkKey: string, pollIntervalSeconds
           setConfigLastChanged(new Date());
         }
       }}>
-        <AutoPollPageWithHookComponent featureFlagKey={args.featureFlagKey}></AutoPollPageWithHookComponent>
+        <ConfigCatHocComponent featureFlagKey={args.featureFlagKey}></ConfigCatHocComponent>
         <div>Config last changed at: {configLastChanged?.toISOString() ?? 'N/A'}</div>
 
         <div>
-          Logs:
+          ConfigCatClient Logs:
           <textarea readOnly value={logs} style={{ "height": "auto", "width": "100%" }} rows={30} />
         </div>
       </ConfigCatProvider>

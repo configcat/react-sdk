@@ -17,6 +17,7 @@ const getValueFunction = (client: IConfigCatClient) => {
 export interface WithConfigCatClientProps {
   configCatClient: IConfigCatClient;
   getValue: GetValueType;
+  lastUpdated?: Date;
 }
 
 function withConfigCatClient<P>(
@@ -34,6 +35,7 @@ function withConfigCatClient<P>(
           <WrappedComponent
             configCatClient={context.client}
             getValue={getValueFunction(context.client)}
+            lastUpdated={context.lastUpdated}
             {...(props as P)}
           />
         );
