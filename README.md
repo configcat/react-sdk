@@ -77,11 +77,22 @@ class TestHOCComponent extends React.Component<
     }
 
     componentDidMount() {
+        this.evaluateFeatureFlag();
+    }
+
+    componentDidUpdate(prevProps: any) {
+      // To achieve hot reload on config.json updates.
+      if (prevProps?.lastUpdated !== this.props.lastUpdated) {
+        this.evaluateFeatureFlag();
+      }
+    }
+
+    evaluateFeatureFlag(){
         this.props
             .getValue("isAwesomeFeatureEnabled", false)
             .then((v: boolean) => this.setState({ isAwesomeFeatureEnabled: v }));
     }
-
+    
     render() {
         return (
             <div>Feature flag value: {this.state.isAwesomeFeatureEnabled ? 'ON' : 'OFF'}</div>

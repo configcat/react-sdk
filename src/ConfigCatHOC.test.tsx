@@ -23,6 +23,7 @@ class TestHOCComponent extends React.Component<
     }
 
     componentDidUpdate(prevProps: any) {
+        // To achieve hot reload on config.json updates.
         if (prevProps?.lastUpdated !== this.props.lastUpdated) {
             this.evaluateFeatureFlag();
         }
