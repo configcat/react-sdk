@@ -13,6 +13,16 @@ class HocComponent extends React.Component<
   }
 
   componentDidMount() {
+    this.evaluateFeatureFlag();
+  }
+
+  componentDidUpdate(prevProps: any) {
+    if (prevProps?.lastUpdated !== this.props.lastUpdated) {
+      this.evaluateFeatureFlag();
+    }
+  }
+
+  evaluateFeatureFlag() {
     this.props
       .getValue(this.props.featureFlagKey, false)
       .then((v: boolean) => this.setState({ isEnabled: v }));
