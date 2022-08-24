@@ -10,7 +10,7 @@ afterEach(cleanup)
 
 it("useConfigCatClient without provider should fail", async () => {
     const spy = jest.spyOn(console, 'error');
-	spy.mockImplementation(() => {});
+    spy.mockImplementation(() => { });
     const TestComponent = () => {
         useConfigCatClient();
         return (< div />);
@@ -47,7 +47,7 @@ it("useFeatureFlag without provider should fail", async () => {
 
 it("useFeatureFlag default settings should work", async () => {
     const TestComponent = () => {
-        const featureFlag = useFeatureFlag('stringDefaultCat', 'NOT_CAT');
+        const { value: featureFlag } = useFeatureFlag('stringDefaultCat', 'NOT_CAT');
         return (< div>Feature flag value: {featureFlag}</div>);
     };
     await render(<ConfigCatProvider sdkKey={sdkKey}><TestComponent /></ConfigCatProvider>);
@@ -56,7 +56,7 @@ it("useFeatureFlag default settings should work", async () => {
 
 it("useFeatureFlag Auto poll with default settings should work", async () => {
     const TestComponent = () => {
-        const featureFlag = useFeatureFlag('stringDefaultCat', 'NOT_CAT');
+        const { value: featureFlag } = useFeatureFlag('stringDefaultCat', 'NOT_CAT');
         return (< div>Feature flag value: {featureFlag}</div>);
     };
     render(<ConfigCatProvider sdkKey={sdkKey} pollingMode={PollingMode.AutoPoll}><TestComponent /></ConfigCatProvider>);
@@ -65,7 +65,7 @@ it("useFeatureFlag Auto poll with default settings should work", async () => {
 
 it("useFeatureFlag Lazy loading with default settings should work", async () => {
     const TestComponent = () => {
-        const featureFlag = useFeatureFlag('stringDefaultCat', 'NOT_CAT');
+        const { value: featureFlag } = useFeatureFlag('stringDefaultCat', 'NOT_CAT');
         return (< div>Feature flag value: {featureFlag}</div>);
     };
     await render(<ConfigCatProvider sdkKey={sdkKey} pollingMode={PollingMode.LazyLoad}><TestComponent /></ConfigCatProvider>);
@@ -74,7 +74,7 @@ it("useFeatureFlag Lazy loading with default settings should work", async () => 
 
 it("useFeatureFlag Manual poll without forceRefresh should show default value", async () => {
     const TestComponent = () => {
-        const featureFlag = useFeatureFlag('stringDefaultCat', 'NOT_CAT');
+        const { value: featureFlag } = useFeatureFlag('stringDefaultCat', 'NOT_CAT');
         return (< div>Feature flag value: {featureFlag}</div>);
     };
     render(<ConfigCatProvider sdkKey={sdkKey} pollingMode={PollingMode.ManualPoll}><TestComponent /></ConfigCatProvider>);
@@ -88,7 +88,7 @@ it("useFeatureFlag Manual poll with forceRefresh should work", async () => {
     const TestComponent = () => {
         const client = useConfigCatClient();
         useEffect(() => client.forceRefresh(() => { }));
-        const featureFlag = useFeatureFlag('stringDefaultCat', 'NOT_CAT');
+        const { value: featureFlag } = useFeatureFlag('stringDefaultCat', 'NOT_CAT');
         return (< div>Feature flag value: {featureFlag}</div>);
     };
     await render(<ConfigCatProvider sdkKey={sdkKey} pollingMode={PollingMode.ManualPoll}><TestComponent /></ConfigCatProvider>);

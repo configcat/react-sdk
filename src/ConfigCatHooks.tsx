@@ -8,12 +8,13 @@ function useFeatureFlag(key: string, defaultValue: any, user?: User | undefined)
     if (configCatContext === undefined) throw Error("useFeatureFlag hook must be used in ConfigCatProvider!");
 
     const [featureFlagValue, setFeatureFlag] = useState(defaultValue);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        configCatContext.client.getValue(key, defaultValue, v => setFeatureFlag(v), user);
+        configCatContext.client.getValue(key, defaultValue, v => { setFeatureFlag(v); setLoading(false) }, user);
     }, [configCatContext, key, defaultValue, user]);
 
-    return featureFlagValue;
+    return {value: featureFlagValue, loading};
 }
 
 function useConfigCatClient() {
@@ -24,4 +25,4 @@ function useConfigCatClient() {
     return configCatContext.client;
 }
 
-export {useFeatureFlag, useConfigCatClient};
+export { useFeatureFlag, useConfigCatClient };

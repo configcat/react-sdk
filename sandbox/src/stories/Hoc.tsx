@@ -4,12 +4,12 @@ import { ConfigCatProvider, withConfigCatClient, WithConfigCatClientProps } from
 
 class HocComponent extends React.Component<
   { featureFlagKey: string } & WithConfigCatClientProps,
-  { isEnabled: boolean }
+  { isEnabled: boolean, loading: boolean }
 > {
   constructor(props: { featureFlagKey: string } & WithConfigCatClientProps) {
     super(props);
 
-    this.state = { isEnabled: false };
+    this.state = { isEnabled: false, loading: true };
   }
 
   componentDidMount() {
@@ -26,15 +26,16 @@ class HocComponent extends React.Component<
   evaluateFeatureFlag() {
     this.props
       .getValue(this.props.featureFlagKey, false)
-      .then((v: boolean) => this.setState({ isEnabled: v }));
+      .then((v: boolean) => this.setState({ isEnabled: v, loading: false }));
   }
 
   render() {
-    return (
-      <div>
-        {this.props.featureFlagKey} evaluated to {this.state.isEnabled ? 'True' : 'False'}
-      </div>
-    );
+    return this.state.loading ?
+      (<div>Loading...</div>) : (
+        <div>
+          {this.props.featureFlagKey} evaluated to {this.state.isEnabled ? 'True' : 'False'}
+        </div>
+      );
   }
 }
 

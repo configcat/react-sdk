@@ -3,17 +3,19 @@ import { useConfigCatClient, useFeatureFlag, ConfigCatProvider } from 'configcat
 
 export const HookComponent = (args: { featureFlagKey: string }) => {
   const client = useConfigCatClient();
-  const isFeatureEnabled = useFeatureFlag(args.featureFlagKey, false);
+  const { value: isFeatureEnabled, loading } = useFeatureFlag(args.featureFlagKey, false);
+
   return (
     <div>
       <div>
         <button onClick={useCallback(async () => { await client.forceRefreshAsync() }, [client])} >Force refresh</button>
       </div>
 
-      <div>
-        {args.featureFlagKey} evaluated to {isFeatureEnabled ? 'True' : 'False'}
-      </div>
-
+      {loading ?
+        (<div>Loading...</div>) :
+        (<div>
+          {args.featureFlagKey} evaluated to {isFeatureEnabled ? 'True' : 'False'}
+        </div>)}
     </div>
   );
 };
