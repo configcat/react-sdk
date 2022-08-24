@@ -53,13 +53,10 @@ export default App;
 The React hooks (`useFeatureFlag`) way:
 ```js
 function ButtonComponent() {
-  const isAwesomeFeatureEnabled = useFeatureFlag(
-    "isAwesomeFeatureEnabled",
-    false
-  );
+  const { value: isAwesomeFeatureEnabled, loading } = useFeatureFlag("isAwesomeFeatureEnabled", false);
 
-  return (
-    <div>Feature flag value: {this.state.isAwesomeFeatureEnabled ? 'ON' : 'OFF'}</div>
+  return loading ? (<div>Loading...</div>) : (
+    <div>Feature flag value: {isAwesomeFeatureEnabled ? 'ON' : 'OFF'}</div>
   );
 }
 ```
@@ -73,7 +70,7 @@ class TestHOCComponent extends React.Component<
     constructor(props: WithConfigCatClientProps) {
         super(props);
 
-        this.state = { isAwesomeFeatureEnabled: false };
+        this.state = { isAwesomeFeatureEnabled: false, loading: true };
     }
 
     componentDidMount() {
@@ -90,11 +87,11 @@ class TestHOCComponent extends React.Component<
     evaluateFeatureFlag(){
         this.props
             .getValue("isAwesomeFeatureEnabled", false)
-            .then((v: boolean) => this.setState({ isAwesomeFeatureEnabled: v }));
+            .then((v: boolean) => this.setState({ isAwesomeFeatureEnabled: v, loading: false }));
     }
     
     render() {
-        return (
+        return loading ? (<div>Loading...</div>) : (
             <div>Feature flag value: {this.state.isAwesomeFeatureEnabled ? 'ON' : 'OFF'}</div>
         );
     }
