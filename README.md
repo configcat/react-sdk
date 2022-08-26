@@ -13,6 +13,16 @@ Target a specific group of users first with new ideas. Supports A/B/n testing an
 
 ConfigCat is a <a href="https://configcat.com" target="_blank">hosted feature flag service</a>. Manage feature toggles across frontend, backend, mobile, desktop apps. <a href="https://configcat.com" target="_blank">Alternative to LaunchDarkly</a>. Management app + feature flag SDKs.
 
+
+[![REACT CI](https://github.com/configcat/react-sdk/actions/workflows/react-ci.yml/badge.svg)](https://github.com/configcat/react-sdk/actions/workflows/react-ci.yml)
+[![codecov](https://codecov.io/gh/configcat/react-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/configcat/react-sdk) 
+[![Known Vulnerabilities](https://snyk.io/test/github/configcat/react-sdk/badge.svg?targetFile=package.json)](https://snyk.io/test/github/configcat/react-sdk?targetFile=package.json) 
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=configcat_react-sdk&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=configcat_react-sdk) 
+[![Tree Shaking](https://badgen.net/bundlephobia/tree-shaking/configcat-react)](https://bundlephobia.com/result?p=configcat-react) 
+![License](https://img.shields.io/github/license/configcat/react-sdk.svg) 
+[![](https://data.jsdelivr.com/v1/package/npm/configcat-react/badge)](https://www.jsdelivr.com/package/npm/configcat-react)
+[![NPM](https://nodei.co/npm/configcat-react.png)](https://nodei.co/npm/configcat-react/)
+
 ## Getting Started
 
 The ConfigCat React SDK uses the Context API (requires React **16.3** or later) and Hook API (requires React **16.8** or later) to provide a better integration in your React application.
@@ -110,16 +120,6 @@ The frontend/mobile SDKs are running in your users' browsers/devices. The SDK is
 This SDK key is read-only, it only allows downloading your config.json file, but nobody can make any changes with it in your ConfigCat account.  
 Suppose you don't want your SDK key or the content of your config.json file visible to your users. In that case, we recommend you use the SDK only in your backend applications and call a backend endpoint in your frontend/mobile application to evaluate the feature flags for a specific application customer.  
 Also, we recommend using [sensitive targeting comparators](https://configcat.com/docs/advanced/targeting/#sensitive-text-comparators) in the targeting rules of those feature flags that are used in the frontend/mobile SDKs.
-
-## Browser compatibility
-This SDK should be compatible with all modern browsers.
-
-The SDK is [tested](https://github.com/configcat/react-sdk/actions/workflows/react-ci.yml) against the following browsers:
-- Chrome (stable, latest, beta)
-- Chromium (64.0.3282.0, 72.0.3626.0, 80.0.3987.0)
-- Firefox (latest, latest-beta, 84.0).
-
-These tests are running on each pull request, before each deploy, and on a daily basis. 
 
 ## Need help?
 https://configcat.com/support
