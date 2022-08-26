@@ -1,25 +1,24 @@
 import React from "react";
 import { WithConfigCatClientProps } from "configcat-react";
-import { FeatureFlags } from "./ConfigCat";
 
 class ButtonClassComponent extends React.Component<
   { text: string } & WithConfigCatClientProps,
-  { isEnabled: boolean }
+  { isEnabled: boolean, loading: boolean }
 > {
   constructor(props: { text: string } & WithConfigCatClientProps) {
     super(props);
 
-    this.state = { isEnabled: false };
+    this.state = { isEnabled: false, loading: true };
   }
 
   componentDidMount() {
     this.props
-      .getValue(FeatureFlags.isawesomefeatureenabled, false)
-      .then((v: boolean) => this.setState({ isEnabled: v }));
+      .getValue("isAwesomeFeatureEnabled", false)
+      .then((v: boolean) => this.setState({ isEnabled: v, loading: false }));
   }
 
   render() {
-    return (
+    return this.state.loading ? (<div>Loading...</div>) : (
       <button
         disabled={!this.state.isEnabled}
         onClick={() => alert("ConfigCat <3 React")}

@@ -12,12 +12,12 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
+        <div>
           <ConfigCatButtonClassComponent text={"Feature Enabled (with HOC)"} />
-        </p>
-        <p>
+        </div>
+        <div>
           <ButtonFunctionComponent text={"Feature Enabled (with HOOKS)"} />
-        </p>
+        </div>
       </header>
     </div>
   );
