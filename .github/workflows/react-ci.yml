@@ -12,8 +12,9 @@ on:
   workflow_dispatch:
   
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
+    name: Test with react-scripts and report coverage
     steps:
       - uses: actions/checkout@v2
 
@@ -23,12 +24,19 @@ jobs:
         
       - name: Install dependencies
         run: |
+          npm install codecov -g
           npm install
           
       - name: Build
         run: |
           npm run build
-        
+      
+      - name: Test
+        run: npm run test -- --coverage
+
+      - name: Upload coverage report
+        run: codecov
+
       - name: 📦Pack
         run: npm pack
 
@@ -38,7 +46,7 @@ jobs:
           path: configcat-react*.tgz
         
   publish:
-    needs: build
+    needs: [test]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags')
     steps:

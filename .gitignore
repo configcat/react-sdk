@@ -61,3 +61,6 @@ lib/
 .idea/
 dist/
 .DS_Store
+
+/sandbox/node_modules
+/sandbox/build

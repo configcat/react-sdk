@@ -1,13 +1,21 @@
 import React, { Component, PropsWithChildren } from "react";
+import * as configcatcommon from "configcat-common";
+import { PollingMode } from "./PollingMode";
+import { HttpConfigFetcher } from "./ConfigFetcher";
+import { LocalStorageCache } from "./Cache";
+import CONFIGCAT_SDK_VERSION from "./Version";
 import ConfigCatContext from "./ConfigCatContext";
-import { IConfigCatClient } from "configcat-common";
+import { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from ".";
 
 type ConfigCatProviderProps = {
-  client: IConfigCatClient;
+  sdkKey: string;
+  pollingMode?: PollingMode;
+  options?: IReactAutoPollOptions | IReactLazyLoadingOptions | IReactManualPollOptions;
 };
 
 type ConfigCatProviderState = {
-  client: IConfigCatClient;
+  client: configcatcommon.IConfigCatClient;
+  lastUpdated?: Date;
 };
 
 class ConfigCatProvider extends Component<
@@ -15,17 +23,46 @@ class ConfigCatProvider extends Component<
   ConfigCatProviderState,
   {}
 > {
+
   constructor(props: ConfigCatProviderProps) {
     super(props);
-
-    // TODO remove when client supports 'ready' callback
-    this.state = { client: props.client };
+    const client = this.initializeConfigCatClient();
+    this.state = { client };
   }
 
-  componentDidUpdate(props: ConfigCatProviderProps) {
-    this.setState({
-      client: props.client,
-    });
+  componentWillUnmount() {
+    this.state?.client?.dispose();
+  }
+
+  private initializeConfigCatClient() {
+    const { pollingMode, sdkKey, options } = this.props;
+    const configCatKernel = {
+      configFetcher: new HttpConfigFetcher(),
+      cache: new LocalStorageCache(),
+      sdkType: "ConfigCat-React",
+      sdkVersion: CONFIGCAT_SDK_VERSION
+    };
+
+    switch (pollingMode) {
+      case PollingMode.LazyLoad:
+        return configcatcommon.createClientWithLazyLoad(sdkKey, configCatKernel, options);
+      case PollingMode.ManualPoll:
+        return configcatcommon.createClientWithManualPoll(sdkKey, configCatKernel, options);
+      case PollingMode.AutoPoll:
+      default:
+        const autoPollOptions: IReactAutoPollOptions = { ...options };
+        autoPollOptions.configChanged = this.reactConfigChanged(autoPollOptions.configChanged);
+        return configcatcommon.createClientWithAutoPoll(sdkKey, configCatKernel, autoPollOptions);
+    }
+  }
+
+  reactConfigChanged: (originalConfigChanged?: () => void) => (() => void) = (originalConfigChanged?: () => void) => {
+    return () => {
+      this.setState({ lastUpdated: new Date() });
+      if (originalConfigChanged) {
+        originalConfigChanged();
+      }
+    }
   }
 
   render() {

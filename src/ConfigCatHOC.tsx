@@ -17,6 +17,7 @@ const getValueFunction = (client: IConfigCatClient) => {
 export interface WithConfigCatClientProps {
   configCatClient: IConfigCatClient;
   getValue: GetValueType;
+  lastUpdated?: Date;
 }
 
 function withConfigCatClient<P>(
@@ -27,13 +28,14 @@ function withConfigCatClient<P>(
       {(context: ConfigCatContextData | undefined) => {
         if (context === undefined) {
           throw new Error(
-            "ConfigCatContext.Consumer must be used within a ConfigCatProvider"
+            "withConfigCatClient must be used within a ConfigCatProvider!"
           );
         }
         return (
           <WrappedComponent
             configCatClient={context.client}
             getValue={getValueFunction(context.client)}
+            lastUpdated={context.lastUpdated}
             {...(props as P)}
           />
         );
