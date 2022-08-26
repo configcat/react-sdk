@@ -13,3 +13,5 @@ media/
 update-samples.sh
 setupTests.*
 gulpfile.js
+sandbox/
+*.tgz
