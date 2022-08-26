@@ -9,8 +9,8 @@ import { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOption
 
 type ConfigCatProviderProps = {
   sdkKey: string;
-  pollingMode?: PollingMode | undefined;
-  options?: IReactAutoPollOptions | IReactLazyLoadingOptions | IReactManualPollOptions | undefined;
+  pollingMode?: PollingMode;
+  options?: IReactAutoPollOptions | IReactLazyLoadingOptions | IReactManualPollOptions;
 };
 
 type ConfigCatProviderState = {

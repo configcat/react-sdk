@@ -79,7 +79,7 @@ it("useFeatureFlag Manual poll without forceRefresh should show default value", 
     };
     render(<ConfigCatProvider sdkKey={sdkKey} pollingMode={PollingMode.ManualPoll}><TestComponent /></ConfigCatProvider>);
     await screen.findByText("Feature flag value: NOT_CAT", undefined, { timeout: 2000 });
-    var values = await screen.findAllByText("Feature flag value: Cat", undefined, { timeout: 2000 });
+    const values = await screen.findAllByText("Feature flag value: Cat", undefined, { timeout: 2000 });
     expect(values.length === 0);
 });
 

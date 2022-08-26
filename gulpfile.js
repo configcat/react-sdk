@@ -1,6 +1,6 @@
-var gulp = require('gulp');
-var replace = require('gulp-replace');
-var fs = require('fs');
+const gulp = require('gulp');
+const replace = require('gulp-replace');
+const fs = require('fs');
 
 const OUT_ESM = 'lib/esm';
 const OUT_CJS = 'lib/cjs';
