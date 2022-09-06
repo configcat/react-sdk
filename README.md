@@ -1,4 +1,4 @@
-# ConfigCat SDK for React applications (alpha version)
+# ConfigCat SDK for React applications
 
 https://configcat.com
 
