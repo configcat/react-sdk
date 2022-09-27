@@ -2,6 +2,7 @@ import withConfigCatClient, { GetValueType, WithConfigCatClientProps } from "./C
 import { useFeatureFlag, useConfigCatClient } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
 import * as configcatcommon from "configcat-common";
+import { PollingMode } from "./PollingMode";
 
 export function createConsoleLogger(logLevel: configcatcommon.LogLevel): configcatcommon.IConfigCatLogger {
     return configcatcommon.createConsoleLogger(logLevel);
@@ -52,5 +53,6 @@ export {
     useConfigCatClient,
     withConfigCatClient,
     WithConfigCatClientProps,
-    GetValueType
+    GetValueType,
+    PollingMode
 }
