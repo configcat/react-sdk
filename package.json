@@ -34,8 +34,8 @@
     "configcat-common": "^6.0.0"
   },
   "peerDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
