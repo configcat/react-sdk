@@ -3,14 +3,14 @@
   "version": "1.0.4",
   "scripts": {
     "build": "npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc && gulp esm",
-    "build:cjs": "tsc --module commonjs --outDir lib/cjs && gulp cjs",
+    "build:esm": "tsc -p tsconfig.esm.json && gulp esm",
+    "build:cjs": "tsc -p tsconfig.cjs.json && gulp cjs",
     "prepare": "npm run build",
     "test": "react-scripts test"
   },
   "description": "ConfigCat is a configuration as a service that lets you manage your features and configurations without actually deploying new code.",
   "main": "lib/cjs/index.js",
-  "types": "lib/esm/index.d.ts",
+  "types": "lib/types/index.d.ts",
   "module": "lib/esm/index.js",
   "keywords": [
     "configcat",
@@ -31,7 +31,8 @@
   "homepage": "https://configcat.com",
   "license": "MIT",
   "dependencies": {
-    "configcat-common": "^6.0.1"
+    "configcat-common": "^7.0.1",
+    "tslib": "^2.4.1"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
