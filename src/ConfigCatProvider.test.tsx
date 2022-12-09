@@ -12,7 +12,7 @@ it("Default initialization fails without SDK Key", async () => {
     spy.mockImplementation(() => { });
 
     expect(() => render(<ConfigCatProvider sdkKey="" />))
-        .toThrow("Invalid 'apiKey' value");
+        .toThrow("Invalid 'sdkKey' value");
     spy.mockRestore();
 });
 

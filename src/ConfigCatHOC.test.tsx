@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, cleanup, screen } from '@testing-library/react';
+import { render, cleanup, screen, act } from '@testing-library/react';
 import ConfigCatProvider from "./ConfigCatProvider";
 import { withConfigCatClient, WithConfigCatClientProps } from '.';
 
@@ -32,7 +32,7 @@ class TestHOCComponent extends React.Component<
     evaluateFeatureFlag() {
         this.props
             .getValue("stringDefaultCat", "NOT_CAT")
-            .then((v: string) => this.setState({ stringDefaultCatValue: v }));
+            .then((v: string) => act(() => this.setState({ stringDefaultCatValue: v })));
     }
 
     render() {

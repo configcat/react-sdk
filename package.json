@@ -6,7 +6,7 @@
     "build:esm": "tsc -p tsconfig.build.esm.json && gulp esm",
     "build:cjs": "tsc -p tsconfig.build.cjs.json && gulp cjs",
     "prepare": "npm run build",
-    "test": "react-scripts test"
+    "test": "react-scripts test --detectOpenHandles"
   },
   "description": "ConfigCat is a configuration as a service that lets you manage your features and configurations without actually deploying new code.",
   "main": "lib/cjs/index.js",
