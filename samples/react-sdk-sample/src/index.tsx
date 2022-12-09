@@ -3,14 +3,14 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { ConfigCatProvider, createConsoleLogger } from "configcat-react";
+import { ConfigCatProvider, createConsoleLogger, LogLevel } from "configcat-react";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <ConfigCatProvider sdkKey="zVPVCO5_LS9VnDcpIDE84g/zVPVCBScEzDn-VNq0dnYog" options={{logger: createConsoleLogger(3)}}>
+    <ConfigCatProvider sdkKey="zVPVCO5_LS9VnDcpIDE84g/zVPVCBScEzDn-VNq0dnYog" options={{logger: createConsoleLogger(LogLevel.Info)}}>
       <App />
     </ConfigCatProvider>
   </React.StrictMode>
