@@ -2,23 +2,23 @@ import withConfigCatClient, { GetValueType, WithConfigCatClientProps } from "./C
 import { useFeatureFlag, useConfigCatClient } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
 import * as configcatcommon from "configcat-common";
-import { PollingMode } from "./PollingMode";
+import { FlagOverrides, IAutoPollOptions, IConfigCatLogger, ILazyLoadingOptions, IManualPollOptions, LogLevel, MapOverrideDataSource, PollingMode } from "configcat-common";
 
-export function createConsoleLogger(logLevel: configcatcommon.LogLevel): configcatcommon.IConfigCatLogger {
+export function createConsoleLogger(logLevel: LogLevel): IConfigCatLogger {
     return configcatcommon.createConsoleLogger(logLevel);
 }
 
-export function createFlagOverridesFromMap(map: { [name: string]: any }, behaviour: number): configcatcommon.FlagOverrides {
-    return new configcatcommon.FlagOverrides(new configcatcommon.MapOverrideDataSource(map), behaviour);
+export function createFlagOverridesFromMap(map: { [name: string]: any }, behaviour: number): FlagOverrides {
+    return new FlagOverrides(new MapOverrideDataSource(map), behaviour);
 }
 
-export type IReactAutoPollOptions = configcatcommon.IAutoPollOptions;
+export type IReactAutoPollOptions = IAutoPollOptions;
 
-export type IReactLazyLoadingOptions = configcatcommon.ILazyLoadingOptions;
+export type IReactLazyLoadingOptions = ILazyLoadingOptions;
 
-export type IReactManualPollOptions = configcatcommon.IManualPollOptions;
+export type IReactManualPollOptions = IManualPollOptions;
 
-export type IReactConfigCatLogger = configcatcommon.IConfigCatLogger;
+export type IReactConfigCatLogger = IConfigCatLogger;
 
 export const DataGovernance = {
     /** Select this if your feature flags are published to all global CDN nodes. */

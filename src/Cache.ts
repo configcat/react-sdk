@@ -23,6 +23,10 @@ export class LocalStorageCache implements ICache {
             const configString: string | null = localStorage.getItem(key);
             if (configString) {
                 const config: ProjectConfig = JSON.parse(atob(configString));
+                // JSON.parse creates a plain object instance, so we need to manually restore the prototype
+                // (so we don't run into ""... is not a function" errors).
+                (Object.setPrototypeOf || ((o, proto) => o["__proto__"] = proto))(config, ProjectConfig.prototype);
+
                 if (config) {
                     this.cache[key] = config;
                     return config;

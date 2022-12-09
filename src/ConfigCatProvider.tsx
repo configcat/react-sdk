@@ -1,6 +1,6 @@
 import React, { Component, PropsWithChildren } from "react";
 import * as configcatcommon from "configcat-common";
-import { PollingMode } from "./PollingMode";
+import { IConfigCatClient, PollingMode, ProjectConfig } from "configcat-common";
 import { HttpConfigFetcher } from "./ConfigFetcher";
 import { LocalStorageCache } from "./Cache";
 import CONFIGCAT_SDK_VERSION from "./Version";
@@ -14,7 +14,7 @@ type ConfigCatProviderProps = {
 };
 
 type ConfigCatProviderState = {
-  client: configcatcommon.IConfigCatClient;
+  client: IConfigCatClient;
   lastUpdated?: Date;
 };
 
@@ -35,7 +35,7 @@ class ConfigCatProvider extends Component<
   }
 
   private initializeConfigCatClient() {
-    const { pollingMode, sdkKey, options } = this.props;
+    let { pollingMode, sdkKey, options } = this.props;
     const configCatKernel = {
       configFetcher: new HttpConfigFetcher(),
       cache: new LocalStorageCache(),
@@ -43,26 +43,20 @@ class ConfigCatProvider extends Component<
       sdkVersion: CONFIGCAT_SDK_VERSION
     };
 
-    switch (pollingMode) {
-      case PollingMode.LazyLoad:
-        return configcatcommon.createClientWithLazyLoad(sdkKey, configCatKernel, options);
-      case PollingMode.ManualPoll:
-        return configcatcommon.createClientWithManualPoll(sdkKey, configCatKernel, options);
-      case PollingMode.AutoPoll:
-      default:
-        const autoPollOptions: IReactAutoPollOptions = { ...options };
-        autoPollOptions.configChanged = this.reactConfigChanged(autoPollOptions.configChanged);
-        return configcatcommon.createClientWithAutoPoll(sdkKey, configCatKernel, autoPollOptions);
-    }
+    pollingMode ??= PollingMode.AutoPoll;
+
+    options ??= {};
+    const userSetupHooks = options.setupHooks;
+    options.setupHooks = hooks => {
+      hooks.on("configChanged", newConfig => this.reactConfigChanged(newConfig));
+      userSetupHooks?.(hooks);
+    };
+
+    return configcatcommon.getClient(sdkKey, pollingMode, options, configCatKernel);
   }
 
-  reactConfigChanged: (originalConfigChanged?: () => void) => (() => void) = (originalConfigChanged?: () => void) => {
-    return () => {
-      this.setState({ lastUpdated: new Date() });
-      if (originalConfigChanged) {
-        originalConfigChanged();
-      }
-    }
+  reactConfigChanged(newConfig: ProjectConfig) {
+    this.setState({ lastUpdated: new Date(newConfig.Timestamp) });
   }
 
   render() {
