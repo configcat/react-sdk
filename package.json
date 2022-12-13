@@ -3,8 +3,8 @@
   "version": "1.0.4",
   "scripts": {
     "build": "npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc -p tsconfig.esm.json && gulp esm",
-    "build:cjs": "tsc -p tsconfig.cjs.json && gulp cjs",
+    "build:esm": "tsc -p tsconfig.build.esm.json && gulp esm",
+    "build:cjs": "tsc -p tsconfig.build.cjs.json && gulp cjs",
     "prepare": "npm run build",
     "test": "react-scripts test"
   },
