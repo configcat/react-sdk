@@ -2,50 +2,23 @@ import withConfigCatClient, { GetValueType, WithConfigCatClientProps } from "./C
 import { useFeatureFlag, useConfigCatClient } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
 import * as configcatcommon from "configcat-common";
-import { PollingMode } from "./PollingMode";
+import { FlagOverrides, IAutoPollOptions, IConfigCatLogger, ILazyLoadingOptions, IManualPollOptions, LogLevel, MapOverrideDataSource } from "configcat-common";
 
-export function createConsoleLogger(logLevel: configcatcommon.LogLevel): configcatcommon.IConfigCatLogger {
+export function createConsoleLogger(logLevel: LogLevel): IConfigCatLogger {
     return configcatcommon.createConsoleLogger(logLevel);
 }
 
-export function createFlagOverridesFromMap(map: { [name: string]: any }, behaviour: number): configcatcommon.FlagOverrides {
-    return new configcatcommon.FlagOverrides(new configcatcommon.MapOverrideDataSource(map), behaviour);
+export function createFlagOverridesFromMap(map: { [name: string]: any }, behaviour: number): FlagOverrides {
+    return new FlagOverrides(new MapOverrideDataSource(map), behaviour);
 }
 
-export type IReactAutoPollOptions = configcatcommon.IAutoPollOptions;
+export type IReactAutoPollOptions = IAutoPollOptions;
 
-export type IReactLazyLoadingOptions = configcatcommon.ILazyLoadingOptions;
+export type IReactLazyLoadingOptions = ILazyLoadingOptions;
 
-export type IReactManualPollOptions = configcatcommon.IManualPollOptions;
+export type IReactManualPollOptions = IManualPollOptions;
 
-export type IReactConfigCatLogger = configcatcommon.IConfigCatLogger;
-
-export const DataGovernance = {
-    /** Select this if your feature flags are published to all global CDN nodes. */
-    Global: configcatcommon.DataGovernance.Global,
-    /** Select this if your feature flags are published to CDN nodes only in the EU. */
-    EuOnly: configcatcommon.DataGovernance.EuOnly
-};
-
-export const OverrideBehaviour = {
-    /**
-     * When evaluating values, the SDK will not use feature flags and settings from the ConfigCat CDN, but it will use
-     * all feature flags and settings that are loaded from local-override sources.
-     */
-    LocalOnly: configcatcommon.OverrideBehaviour.LocalOnly,
-    /**
-     * When evaluating values, the SDK will use all feature flags and settings that are downloaded from the ConfigCat CDN,
-     * plus all feature flags and settings that are loaded from local-override sources. If a feature flag or a setting is
-     * defined both in the fetched and the local-override source then the local-override version will take precedence.
-     */
-    LocalOverRemote: configcatcommon.OverrideBehaviour.LocalOverRemote,
-    /**
-     * When evaluating values, the SDK will use all feature flags and settings that are downloaded from the ConfigCat CDN,
-     * plus all feature flags and settings that are loaded from local-override sources. If a feature flag or a setting is
-     * defined both in the fetched and the local-override source then the fetched version will take precedence.
-     */
-    RemoteOverLocal: configcatcommon.OverrideBehaviour.RemoteOverLocal,
-};
+export type IReactConfigCatLogger = IConfigCatLogger;
 
 export {
     ConfigCatProvider,
@@ -54,5 +27,40 @@ export {
     withConfigCatClient,
     WithConfigCatClientProps,
     GetValueType,
-    PollingMode
 }
+
+/* Public types re-export from common-js */
+
+// These exports should be kept in sync with the exports listed in the section "Public types for end users" of common-js/src/index.ts!
+
+export { PollingMode } from "configcat-common";
+
+export type { IOptions } from "configcat-common";
+
+export type { IAutoPollOptions, IManualPollOptions, ILazyLoadingOptions } from "configcat-common";
+
+export { DataGovernance } from "configcat-common";
+
+export type { IConfigCatLogger } from "configcat-common";
+
+export { LogLevel } from "configcat-common";
+
+export type { ICache } from "configcat-common";
+
+export { ProjectConfig, RolloutRule, RolloutPercentageItem, Setting } from "configcat-common";
+
+export type { IConfigCatClient } from "configcat-common";
+
+export { SettingKeyValue } from "configcat-common";
+
+export type { IEvaluationDetails, SettingTypeOf, SettingValue, VariationIdTypeOf, VariationIdValue } from "configcat-common";
+
+export { User } from "configcat-common";
+
+export type { IOverrideDataSource } from "configcat-common";
+
+export { FlagOverrides, MapOverrideDataSource, OverrideBehaviour } from "configcat-common";
+
+export { RefreshResult } from "configcat-common";
+
+export type { IProvidesHooks, HookEvents } from "configcat-common";

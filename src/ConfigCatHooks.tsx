@@ -11,7 +11,8 @@ function useFeatureFlag(key: string, defaultValue: any, user?: User | undefined)
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        configCatContext.client.getValue(key, defaultValue, v => { setFeatureFlag(v); setLoading(false) }, user);
+        configCatContext.client.getValueAsync(key, defaultValue, user)
+            .then(v => { setFeatureFlag(v); setLoading(false) });
     }, [configCatContext, key, defaultValue, user]);
 
     return {value: featureFlagValue, loading};

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { render, cleanup, screen } from '@testing-library/react';
-import { PollingMode } from "./PollingMode";
+import { PollingMode, DataGovernance } from "configcat-common";
 import ConfigCatProvider from "./ConfigCatProvider";
-import { DataGovernance } from '.';
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 
@@ -13,7 +12,7 @@ it("Default initialization fails without SDK Key", async () => {
     spy.mockImplementation(() => { });
 
     expect(() => render(<ConfigCatProvider sdkKey="" />))
-        .toThrow("Invalid 'apiKey' value");
+        .toThrow("Invalid 'sdkKey' value");
     spy.mockRestore();
 });
 
