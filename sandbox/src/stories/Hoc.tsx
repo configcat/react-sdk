@@ -65,7 +65,7 @@ export const HocPage = (args: { sdkKey: string, pollIntervalSeconds: number, fea
         },
         setupHooks: (hooks) => {
           hooks.on('clientReady', () => setConfigLastChanged(new Date()));
-          hooks.on('configChanged', () => setConfigLastChanged(new Date()));
+          hooks.on('configChanged', newConfig =>setConfigLastChanged(new Date(newConfig.Timestamp)));
         }
       }}>
         <ConfigCatHocComponent featureFlagKey={args.featureFlagKey}></ConfigCatHocComponent>

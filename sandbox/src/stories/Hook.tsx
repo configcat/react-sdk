@@ -46,7 +46,7 @@ export const HookPage = (args: { sdkKey: string, pollIntervalSeconds: number, fe
         },
         setupHooks: (hooks) => {
           hooks.on('clientReady', ()=>setConfigLastChanged(new Date()));
-          hooks.on('configChanged', ()=>setConfigLastChanged(new Date()));
+          hooks.on('configChanged', newConfig =>setConfigLastChanged(new Date(newConfig.Timestamp)));
         }
       }}>
         <HookComponent featureFlagKey={args.featureFlagKey}></HookComponent>
