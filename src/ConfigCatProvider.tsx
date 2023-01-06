@@ -48,6 +48,7 @@ class ConfigCatProvider extends Component<
     options ??= {};
     const userSetupHooks = options.setupHooks;
     options.setupHooks = hooks => {
+      hooks.on("clientReady", () => this.clientReady());
       hooks.on("configChanged", newConfig => this.reactConfigChanged(newConfig));
       userSetupHooks?.(hooks);
     };
@@ -57,6 +58,10 @@ class ConfigCatProvider extends Component<
 
   reactConfigChanged(newConfig: ProjectConfig) {
     this.setState({ lastUpdated: new Date(newConfig.Timestamp) });
+  }
+
+  clientReady(){
+    this.setState({ lastUpdated: new Date() });
   }
 
   render() {

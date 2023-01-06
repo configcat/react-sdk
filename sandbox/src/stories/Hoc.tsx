@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ConfigCatProvider, withConfigCatClient, WithConfigCatClientProps } from 'configcat-react';
+import { ConfigCatProvider, LogLevel, withConfigCatClient, WithConfigCatClientProps } from 'configcat-react';
 
 
 class HocComponent extends React.Component<
@@ -56,14 +56,16 @@ export const HocPage = (args: { sdkKey: string, pollIntervalSeconds: number, fea
       <ConfigCatProvider sdkKey={args.sdkKey} options={{
         pollIntervalSeconds: args.pollIntervalSeconds,
         logger: {
+          level: LogLevel.Debug,
           debug(message) { log(message, 'debug'); },
           info(message) { log(message, 'info'); },
           error(message) { log(message, 'error'); },
           warn(message) { log(message, 'warn'); },
           log(message) { log(message, 'log'); },
         },
-        configChanged: () => {
-          setConfigLastChanged(new Date());
+        setupHooks: (hooks) => {
+          hooks.on('clientReady', () => setConfigLastChanged(new Date()));
+          hooks.on('configChanged', newConfig =>setConfigLastChanged(new Date(newConfig.Timestamp)));
         }
       }}>
         <ConfigCatHocComponent featureFlagKey={args.featureFlagKey}></ConfigCatHocComponent>

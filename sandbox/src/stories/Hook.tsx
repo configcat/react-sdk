@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import { useConfigCatClient, useFeatureFlag, ConfigCatProvider } from 'configcat-react';
+import { useConfigCatClient, useFeatureFlag, ConfigCatProvider, LogLevel } from 'configcat-react';
 
 export const HookComponent = (args: { featureFlagKey: string }) => {
   const client = useConfigCatClient();
-  const { value: isFeatureEnabled, loading } = useFeatureFlag(args.featureFlagKey, false);
+  const userObject = {identifier: 'asdad121212sd'};
+  const { value: isFeatureEnabled, loading } = useFeatureFlag(args.featureFlagKey, false, userObject);
 
   return (
     <div>
@@ -36,14 +37,16 @@ export const HookPage = (args: { sdkKey: string, pollIntervalSeconds: number, fe
       <ConfigCatProvider sdkKey={args.sdkKey} options={{
         pollIntervalSeconds: args.pollIntervalSeconds,
         logger: {
+          level: LogLevel.Debug,
           debug(message) { log(message, 'debug'); },
           info(message) { log(message, 'info'); },
           error(message) { log(message, 'error'); },
           warn(message) { log(message, 'warn'); },
           log(message) { log(message, 'log'); },
         },
-        configChanged: () => {
-          setConfigLastChanged(new Date());
+        setupHooks: (hooks) => {
+          hooks.on('clientReady', ()=>setConfigLastChanged(new Date()));
+          hooks.on('configChanged', newConfig =>setConfigLastChanged(new Date(newConfig.Timestamp)));
         }
       }}>
         <HookComponent featureFlagKey={args.featureFlagKey}></HookComponent>
