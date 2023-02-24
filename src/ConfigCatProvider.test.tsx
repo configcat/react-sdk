@@ -5,7 +5,7 @@ import ConfigCatProvider from "./ConfigCatProvider";
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 
-afterEach(cleanup)
+afterEach(cleanup);
 
 it("Default initialization fails without SDK Key", async () => {
   const spy = jest.spyOn(console, 'error');
@@ -72,12 +72,12 @@ it("AutoPoll configChanged callback works", async () => {
     return (<ConfigCatProvider
       sdkKey={sdkKey}
       pollingMode={PollingMode.AutoPoll}
-      options={{ configChanged: () => { setIsConfigChanged(true) } }}>
+      options={{ configChanged: () => { setIsConfigChanged(true); } }}>
       <div>Config changed: {isConfigChanged ? 'True' : 'False'}</div>
     </ConfigCatProvider>);
   };
 
-  render(<TestComponent />)
+  render(<TestComponent />);
 
   await screen.findByText("Config changed: True", undefined, { timeout: 2000 });
 });

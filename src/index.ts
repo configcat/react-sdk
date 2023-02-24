@@ -27,7 +27,7 @@ export {
   withConfigCatClient,
   WithConfigCatClientProps,
   GetValueType,
-}
+};
 
 /* Public types re-export from common-js */
 

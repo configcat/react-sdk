@@ -5,7 +5,7 @@ import { withConfigCatClient, WithConfigCatClientProps } from '.';
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 
-afterEach(cleanup)
+afterEach(cleanup);
 
 class TestHOCComponent extends React.Component<
 /* eslint-disable @typescript-eslint/indent */

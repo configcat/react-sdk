@@ -13,7 +13,7 @@ function useFeatureFlag(key: string, defaultValue: any, user?: User | undefined)
 
   useEffect(() => {
     configCatContext.client.getValueAsync(key, defaultValue, userState)
-      .then(v => { setFeatureFlag(v); setLoading(false) });
+      .then(v => { setFeatureFlag(v); setLoading(false); });
   }, [configCatContext, key, defaultValue]);
 
   return { value: featureFlagValue, loading };

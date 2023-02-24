@@ -6,7 +6,7 @@ import { PollingMode } from 'configcat-common';
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 
-afterEach(cleanup)
+afterEach(cleanup);
 
 it("useConfigCatClient without provider should fail", async () => {
   const spy = jest.spyOn(console, 'error');
@@ -24,7 +24,7 @@ it("useConfigCatClient with provider forceRefresh() should work", async () => {
   const TestComponent = () => {
     const [refreshed, setRefreshed] = useState(false);
     const client = useConfigCatClient();
-    useEffect(() => client.forceRefresh(() => { setRefreshed(true) }));
+    useEffect(() => client.forceRefresh(() => { setRefreshed(true); }));
     return (<div>{refreshed ? 'Refreshed' : 'Waiting'}</div>);
   };
   render(<ConfigCatProvider sdkKey={sdkKey}><TestComponent /></ConfigCatProvider>);
