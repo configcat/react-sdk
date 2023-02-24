@@ -1,10 +1,10 @@
+import type { IAutoPollOptions, IConfigCatLogger, ILazyLoadingOptions, IManualPollOptions, LogLevel } from "configcat-common";
+import * as configcatcommon from "configcat-common";
+import { FlagOverrides, MapOverrideDataSource } from "configcat-common";
 import type { GetValueType, WithConfigCatClientProps } from "./ConfigCatHOC";
 import withConfigCatClient from "./ConfigCatHOC";
-import { useFeatureFlag, useConfigCatClient } from "./ConfigCatHooks";
+import { useConfigCatClient, useFeatureFlag } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
-import * as configcatcommon from "configcat-common";
-import type { IAutoPollOptions, IConfigCatLogger, ILazyLoadingOptions, IManualPollOptions, LogLevel } from "configcat-common";
-import { FlagOverrides, MapOverrideDataSource } from "configcat-common";
 
 export function createConsoleLogger(logLevel: LogLevel): IConfigCatLogger {
   return configcatcommon.createConsoleLogger(logLevel);

@@ -1,6 +1,6 @@
+import { cleanup, render, screen } from "@testing-library/react";
+import { DataGovernance, PollingMode } from "configcat-common";
 import React, { useState } from "react";
-import { render, cleanup, screen } from "@testing-library/react";
-import { PollingMode, DataGovernance } from "configcat-common";
 import ConfigCatProvider from "./ConfigCatProvider";
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";

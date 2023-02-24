@@ -1,5 +1,5 @@
 import type { IConfigCatClient, User } from "configcat-common";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import ConfigCatContext from "./ConfigCatContext";
 
 function useFeatureFlag(key: string, defaultValue: any, user?: User | undefined): {

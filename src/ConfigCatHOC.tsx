@@ -1,5 +1,5 @@
-import React from "react";
 import type { IConfigCatClient, User } from "configcat-common";
+import React from "react";
 import type { ConfigCatContextData } from "./ConfigCatContext";
 import ConfigCatContext from "./ConfigCatContext";
 

@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { render, cleanup, screen } from "@testing-library/react";
-import ConfigCatProvider from "./ConfigCatProvider";
-import { useConfigCatClient, useFeatureFlag } from "./ConfigCatHooks";
+import { cleanup, render, screen } from "@testing-library/react";
 import { PollingMode } from "configcat-common";
+import React, { useEffect, useState } from "react";
+import { useConfigCatClient, useFeatureFlag } from "./ConfigCatHooks";
+import ConfigCatProvider from "./ConfigCatProvider";
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 

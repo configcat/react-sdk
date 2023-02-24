@@ -1,7 +1,8 @@
+import { act, cleanup, render, screen } from "@testing-library/react";
 import React from "react";
-import { render, cleanup, screen, act } from "@testing-library/react";
 import ConfigCatProvider from "./ConfigCatProvider";
-import { withConfigCatClient, WithConfigCatClientProps } from ".";
+import type { WithConfigCatClientProps } from ".";
+import { withConfigCatClient } from ".";
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 
