@@ -177,6 +177,14 @@
             ],
             "@typescript-eslint/no-import-type-side-effects": "warn"
           }
+        },
+        {
+          "files": [
+            "*.tsx"
+          ],
+          "rules": {
+            "@typescript-eslint/naming-convention": "off"
+          }
         }
       ]
     }
