@@ -32,7 +32,7 @@ class ConfigCatProvider extends Component<
     this.state = { client };
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.state?.client?.dispose();
   }
 
@@ -59,15 +59,15 @@ class ConfigCatProvider extends Component<
     return configcatcommon.getClient(sdkKey, pollingMode, options, configCatKernel);
   }
 
-  reactConfigChanged(newConfig: ProjectConfig) {
+  reactConfigChanged(newConfig: ProjectConfig): void {
     this.setState({ lastUpdated: new Date(newConfig.Timestamp) });
   }
 
-  clientReady() {
+  clientReady(): void {
     this.setState({ lastUpdated: new Date() });
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <ConfigCatContext.Provider value={this.state}>
         {this.props.children}

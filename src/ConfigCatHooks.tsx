@@ -1,8 +1,11 @@
-import { User } from "configcat-common";
+import { IConfigCatClient, User } from "configcat-common";
 import { useContext, useState, useEffect } from "react";
 import ConfigCatContext from "./ConfigCatContext";
 
-function useFeatureFlag(key: string, defaultValue: any, user?: User | undefined) {
+function useFeatureFlag(key: string, defaultValue: any, user?: User | undefined): {
+  value: any;
+  loading: boolean;
+} {
   const configCatContext = useContext(ConfigCatContext);
 
   if (configCatContext === void 0) throw Error("useFeatureFlag hook must be used in ConfigCatProvider!");
@@ -19,7 +22,7 @@ function useFeatureFlag(key: string, defaultValue: any, user?: User | undefined)
   return { value: featureFlagValue, loading };
 }
 
-function useConfigCatClient() {
+function useConfigCatClient(): IConfigCatClient {
   const configCatContext = useContext(ConfigCatContext);
 
   if (configCatContext === void 0) throw Error("useConfigCatClient hook must be used in ConfigCatProvider!");
