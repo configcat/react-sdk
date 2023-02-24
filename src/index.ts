@@ -5,11 +5,11 @@ import * as configcatcommon from "configcat-common";
 import { FlagOverrides, IAutoPollOptions, IConfigCatLogger, ILazyLoadingOptions, IManualPollOptions, LogLevel, MapOverrideDataSource } from "configcat-common";
 
 export function createConsoleLogger(logLevel: LogLevel): IConfigCatLogger {
-    return configcatcommon.createConsoleLogger(logLevel);
+  return configcatcommon.createConsoleLogger(logLevel);
 }
 
 export function createFlagOverridesFromMap(map: { [name: string]: any }, behaviour: number): FlagOverrides {
-    return new FlagOverrides(new MapOverrideDataSource(map), behaviour);
+  return new FlagOverrides(new MapOverrideDataSource(map), behaviour);
 }
 
 export type IReactAutoPollOptions = IAutoPollOptions;
@@ -21,12 +21,12 @@ export type IReactManualPollOptions = IManualPollOptions;
 export type IReactConfigCatLogger = IConfigCatLogger;
 
 export {
-    ConfigCatProvider,
-    useFeatureFlag,
-    useConfigCatClient,
-    withConfigCatClient,
-    WithConfigCatClientProps,
-    GetValueType,
+  ConfigCatProvider,
+  useFeatureFlag,
+  useConfigCatClient,
+  withConfigCatClient,
+  WithConfigCatClientProps,
+  GetValueType,
 }
 
 /* Public types re-export from common-js */

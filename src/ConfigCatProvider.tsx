@@ -19,9 +19,11 @@ type ConfigCatProviderState = {
 };
 
 class ConfigCatProvider extends Component<
+/* eslint-disable @typescript-eslint/indent */
   PropsWithChildren<ConfigCatProviderProps>,
   ConfigCatProviderState,
   {}
+/* eslint-enable @typescript-eslint/indent */
 > {
 
   constructor(props: ConfigCatProviderProps) {
