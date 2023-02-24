@@ -16,7 +16,7 @@ function useFeatureFlag(key: string, defaultValue: any, user?: User | undefined)
       .then(v => { setFeatureFlag(v); setLoading(false) });
   }, [configCatContext, key, defaultValue]);
 
-  return {value: featureFlagValue, loading};
+  return { value: featureFlagValue, loading };
 }
 
 function useConfigCatClient() {

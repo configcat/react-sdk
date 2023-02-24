@@ -5,7 +5,7 @@ const fs = require('fs');
 const OUT_ESM = 'lib/esm';
 const OUT_CJS = 'lib/cjs';
 
-function updateVersion(dst, file){
+function updateVersion(dst, file) {
 
   const VERSION = JSON.parse(fs.readFileSync('./package.json')).version;
 
@@ -14,11 +14,11 @@ function updateVersion(dst, file){
     .pipe(gulp.dest(dst));
 }
 
-function updateVersion_esm(){
+function updateVersion_esm() {
   return updateVersion(OUT_ESM, 'Version.js');
 }
 
-function updateVersion_cjs(){
+function updateVersion_cjs() {
   return updateVersion(OUT_CJS, 'Version.js');
 }
 

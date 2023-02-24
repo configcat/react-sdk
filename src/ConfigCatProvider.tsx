@@ -62,7 +62,7 @@ class ConfigCatProvider extends Component<
     this.setState({ lastUpdated: new Date(newConfig.Timestamp) });
   }
 
-  clientReady(){
+  clientReady() {
     this.setState({ lastUpdated: new Date() });
   }
 
