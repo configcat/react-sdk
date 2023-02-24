@@ -44,7 +44,6 @@ it("useFeatureFlag without provider should fail", async () => {
   spy.mockRestore();
 });
 
-
 it("useFeatureFlag default settings should work", async () => {
   const TestComponent = () => {
     const { value: featureFlag } = useFeatureFlag('stringDefaultCat', 'NOT_CAT');
@@ -82,7 +81,6 @@ it("useFeatureFlag Manual poll without forceRefresh should show default value", 
   const values = await screen.findAllByText("Feature flag value: Cat", undefined, { timeout: 2000 });
   expect(values.length === 0);
 });
-
 
 it("useFeatureFlag Manual poll with forceRefresh should work", async () => {
   const TestComponent = () => {

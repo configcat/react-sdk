@@ -52,7 +52,6 @@ it("AutoPoll initialization wrong pollIntervalSeconds parameter fails", () => {
   spy.mockRestore();
 });
 
-
 it("AutoPoll initialization wrong maxInitWaitTimeSeconds parameter fails", () => {
   const spy = jest.spyOn(console, 'error');
   spy.mockImplementation(() => { });
@@ -98,7 +97,6 @@ it("ManualPoll initialization wrong requestTimeoutMs fails", () => {
     .toThrow("Invalid 'requestTimeoutMs' value");
   spy.mockRestore();
 });
-
 
 it("LazyLoad simple initialization works", () => {
   render(<ConfigCatProvider sdkKey={sdkKey}
