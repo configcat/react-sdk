@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { render, cleanup, screen } from '@testing-library/react';
+import React, { useState } from "react";
+import { render, cleanup, screen } from "@testing-library/react";
 import { PollingMode, DataGovernance } from "configcat-common";
 import ConfigCatProvider from "./ConfigCatProvider";
 
@@ -7,8 +7,8 @@ const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 
 afterEach(cleanup);
 
-it("Default initialization fails without SDK Key", async () => {
-  const spy = jest.spyOn(console, 'error');
+it("Default initialization fails without SDK Key", () => {
+  const spy = jest.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   expect(() => render(<ConfigCatProvider sdkKey="" />))
@@ -16,12 +16,12 @@ it("Default initialization fails without SDK Key", async () => {
   spy.mockRestore();
 });
 
-it("Default initialization works", async () => {
+it("Default initialization works", () => {
   render(<ConfigCatProvider
     sdkKey={sdkKey} />);
 });
 
-it("Default initialization works with Datagovernance", async () => {
+it("Default initialization works with Datagovernance", () => {
   render(<ConfigCatProvider
     sdkKey={sdkKey} options={{ dataGovernance: DataGovernance.EuOnly }} />);
 });
@@ -40,7 +40,7 @@ it("AutoPoll advanced initialization works", () => {
 });
 
 it("AutoPoll initialization wrong pollIntervalSeconds parameter fails", () => {
-  const spy = jest.spyOn(console, 'error');
+  const spy = jest.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   expect(() =>
@@ -53,7 +53,7 @@ it("AutoPoll initialization wrong pollIntervalSeconds parameter fails", () => {
 });
 
 it("AutoPoll initialization wrong maxInitWaitTimeSeconds parameter fails", () => {
-  const spy = jest.spyOn(console, 'error');
+  const spy = jest.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   expect(() =>
@@ -73,13 +73,13 @@ it("AutoPoll configChanged callback works", async () => {
       sdkKey={sdkKey}
       pollingMode={PollingMode.AutoPoll}
       options={{ configChanged: () => { setIsConfigChanged(true); } }}>
-      <div>Config changed: {isConfigChanged ? 'True' : 'False'}</div>
+      <div>Config changed: {isConfigChanged ? "True" : "False"}</div>
     </ConfigCatProvider>);
   };
 
   render(<TestComponent />);
 
-  await screen.findByText("Config changed: True", undefined, { timeout: 2000 });
+  await screen.findByText("Config changed: True", void 0, { timeout: 2000 });
 });
 
 it("ManualPoll simple initialization works", () => {
@@ -87,7 +87,7 @@ it("ManualPoll simple initialization works", () => {
 });
 
 it("ManualPoll initialization wrong requestTimeoutMs fails", () => {
-  const spy = jest.spyOn(console, 'error');
+  const spy = jest.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   expect(() =>
@@ -110,7 +110,7 @@ it("LazyLoad advanced initialization works", () => {
 });
 
 it("LazyLoad initialization with wrong cacheTimeToLiveSeconds fails", () => {
-  const spy = jest.spyOn(console, 'error');
+  const spy = jest.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   expect(() =>

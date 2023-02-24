@@ -5,7 +5,7 @@ import ConfigCatContext from "./ConfigCatContext";
 function useFeatureFlag(key: string, defaultValue: any, user?: User | undefined) {
   const configCatContext = useContext(ConfigCatContext);
 
-  if (configCatContext === undefined) throw Error("useFeatureFlag hook must be used in ConfigCatProvider!");
+  if (configCatContext === void 0) throw Error("useFeatureFlag hook must be used in ConfigCatProvider!");
 
   const [featureFlagValue, setFeatureFlag] = useState(defaultValue);
   const [loading, setLoading] = useState(true);
@@ -22,7 +22,7 @@ function useFeatureFlag(key: string, defaultValue: any, user?: User | undefined)
 function useConfigCatClient() {
   const configCatContext = useContext(ConfigCatContext);
 
-  if (configCatContext === undefined) throw Error("useConfigCatClient hook must be used in ConfigCatProvider!");
+  if (configCatContext === void 0) throw Error("useConfigCatClient hook must be used in ConfigCatProvider!");
 
   return configCatContext.client;
 }

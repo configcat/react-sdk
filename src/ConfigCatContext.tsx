@@ -7,7 +7,7 @@ export interface ConfigCatContextData {
 }
 
 const ConfigCatContext = React.createContext<ConfigCatContextData | undefined>(
-  undefined
+  void 0
 );
 
 ConfigCatContext.displayName = "ConfigCatContext";

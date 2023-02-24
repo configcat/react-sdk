@@ -1,7 +1,7 @@
-import React from 'react';
-import { render, cleanup, screen, act } from '@testing-library/react';
+import React from "react";
+import { render, cleanup, screen, act } from "@testing-library/react";
 import ConfigCatProvider from "./ConfigCatProvider";
-import { withConfigCatClient, WithConfigCatClientProps } from '.';
+import { withConfigCatClient, WithConfigCatClientProps } from ".";
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 
@@ -43,8 +43,8 @@ class TestHOCComponent extends React.Component<
   }
 }
 
-it("withConfigCatClient without provider should fail", async () => {
-  const spy = jest.spyOn(console, 'error');
+it("withConfigCatClient without provider should fail", () => {
+  const spy = jest.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   const TestComponent = () => {
@@ -62,5 +62,5 @@ it("withConfigCatClient default settings should work", async () => {
     return (<TestHocComponentWithConfigCatClient />);
   };
   render(<ConfigCatProvider sdkKey={sdkKey}><TestComponent /></ConfigCatProvider>);
-  await screen.findByText("Feature flag value: Cat", undefined, { timeout: 2000 });
+  await screen.findByText("Feature flag value: Cat", void 0, { timeout: 2000 });
 });

@@ -37,7 +37,8 @@ class ConfigCatProvider extends Component<
   }
 
   private initializeConfigCatClient() {
-    let { pollingMode, sdkKey, options } = this.props;
+    let { pollingMode, options } = this.props;
+    const { sdkKey } = this.props;
     const configCatKernel = {
       configFetcher: new HttpConfigFetcher(),
       cache: new LocalStorageCache(),
