@@ -1,4 +1,4 @@
-import { IConfigCatClient, User } from "configcat-common";
+import type { IConfigCatClient, User } from "configcat-common";
 import { useContext, useState, useEffect } from "react";
 import ConfigCatContext from "./ConfigCatContext";
 

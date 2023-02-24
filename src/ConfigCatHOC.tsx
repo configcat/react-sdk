@@ -1,6 +1,7 @@
 import React from "react";
-import { IConfigCatClient, User } from "configcat-common";
-import ConfigCatContext, { ConfigCatContextData } from "./ConfigCatContext";
+import type { IConfigCatClient, User } from "configcat-common";
+import type { ConfigCatContextData } from "./ConfigCatContext";
+import ConfigCatContext from "./ConfigCatContext";
 
 export type GetValueType = (
   key: string,

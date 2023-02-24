@@ -1,11 +1,13 @@
-import React, { Component, PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
+import React, { Component } from "react";
 import * as configcatcommon from "configcat-common";
-import { IConfigCatClient, PollingMode, ProjectConfig } from "configcat-common";
+import type { IConfigCatClient, ProjectConfig } from "configcat-common";
+import { PollingMode } from "configcat-common";
 import { HttpConfigFetcher } from "./ConfigFetcher";
 import { LocalStorageCache } from "./Cache";
 import CONFIGCAT_SDK_VERSION from "./Version";
 import ConfigCatContext from "./ConfigCatContext";
-import { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from ".";
+import type { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from ".";
 
 type ConfigCatProviderProps = {
   sdkKey: string;
