@@ -1,5 +1,5 @@
+import type { IConfigCatClient } from "configcat-common";
 import React from "react";
-import { IConfigCatClient } from "configcat-common";
 
 export interface ConfigCatContextData {
   client: IConfigCatClient;
@@ -7,7 +7,7 @@ export interface ConfigCatContextData {
 }
 
 const ConfigCatContext = React.createContext<ConfigCatContextData | undefined>(
-  undefined
+  void 0
 );
 
 ConfigCatContext.displayName = "ConfigCatContext";

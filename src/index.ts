@@ -1,15 +1,17 @@
-import withConfigCatClient, { GetValueType, WithConfigCatClientProps } from "./ConfigCatHOC";
-import { useFeatureFlag, useConfigCatClient } from "./ConfigCatHooks";
-import ConfigCatProvider from "./ConfigCatProvider";
+import type { IAutoPollOptions, IConfigCatLogger, ILazyLoadingOptions, IManualPollOptions, LogLevel } from "configcat-common";
 import * as configcatcommon from "configcat-common";
-import { FlagOverrides, IAutoPollOptions, IConfigCatLogger, ILazyLoadingOptions, IManualPollOptions, LogLevel, MapOverrideDataSource } from "configcat-common";
+import { FlagOverrides, MapOverrideDataSource } from "configcat-common";
+import type { GetValueType, WithConfigCatClientProps } from "./ConfigCatHOC";
+import withConfigCatClient from "./ConfigCatHOC";
+import { useConfigCatClient, useFeatureFlag } from "./ConfigCatHooks";
+import ConfigCatProvider from "./ConfigCatProvider";
 
 export function createConsoleLogger(logLevel: LogLevel): IConfigCatLogger {
-    return configcatcommon.createConsoleLogger(logLevel);
+  return configcatcommon.createConsoleLogger(logLevel);
 }
 
 export function createFlagOverridesFromMap(map: { [name: string]: any }, behaviour: number): FlagOverrides {
-    return new FlagOverrides(new MapOverrideDataSource(map), behaviour);
+  return new FlagOverrides(new MapOverrideDataSource(map), behaviour);
 }
 
 export type IReactAutoPollOptions = IAutoPollOptions;
@@ -20,14 +22,8 @@ export type IReactManualPollOptions = IManualPollOptions;
 
 export type IReactConfigCatLogger = IConfigCatLogger;
 
-export {
-    ConfigCatProvider,
-    useFeatureFlag,
-    useConfigCatClient,
-    withConfigCatClient,
-    WithConfigCatClientProps,
-    GetValueType,
-}
+export type { WithConfigCatClientProps, GetValueType };
+export { ConfigCatProvider, useFeatureFlag, useConfigCatClient, withConfigCatClient };
 
 /* Public types re-export from common-js */
 

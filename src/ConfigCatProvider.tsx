@@ -1,11 +1,13 @@
-import React, { Component, PropsWithChildren } from "react";
+import type { IConfigCatClient, ProjectConfig } from "configcat-common";
 import * as configcatcommon from "configcat-common";
-import { IConfigCatClient, PollingMode, ProjectConfig } from "configcat-common";
-import { HttpConfigFetcher } from "./ConfigFetcher";
+import { PollingMode } from "configcat-common";
+import type { PropsWithChildren } from "react";
+import React, { Component } from "react";
 import { LocalStorageCache } from "./Cache";
-import CONFIGCAT_SDK_VERSION from "./Version";
 import ConfigCatContext from "./ConfigCatContext";
-import { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from ".";
+import { HttpConfigFetcher } from "./ConfigFetcher";
+import CONFIGCAT_SDK_VERSION from "./Version";
+import type { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from ".";
 
 type ConfigCatProviderProps = {
   sdkKey: string;
@@ -19,9 +21,11 @@ type ConfigCatProviderState = {
 };
 
 class ConfigCatProvider extends Component<
+/* eslint-disable @typescript-eslint/indent */
   PropsWithChildren<ConfigCatProviderProps>,
   ConfigCatProviderState,
   {}
+/* eslint-enable @typescript-eslint/indent */
 > {
 
   constructor(props: ConfigCatProviderProps) {
@@ -30,12 +34,13 @@ class ConfigCatProvider extends Component<
     this.state = { client };
   }
 
-  componentWillUnmount() {
+  componentWillUnmount(): void {
     this.state?.client?.dispose();
   }
 
   private initializeConfigCatClient() {
-    let { pollingMode, sdkKey, options } = this.props;
+    let { pollingMode, options } = this.props;
+    const { sdkKey } = this.props;
     const configCatKernel = {
       configFetcher: new HttpConfigFetcher(),
       cache: new LocalStorageCache(),
@@ -56,15 +61,15 @@ class ConfigCatProvider extends Component<
     return configcatcommon.getClient(sdkKey, pollingMode, options, configCatKernel);
   }
 
-  reactConfigChanged(newConfig: ProjectConfig) {
+  reactConfigChanged(newConfig: ProjectConfig): void {
     this.setState({ lastUpdated: new Date(newConfig.Timestamp) });
   }
 
-  clientReady(){
+  clientReady(): void {
     this.setState({ lastUpdated: new Date() });
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <ConfigCatContext.Provider value={this.state}>
         {this.props.children}
