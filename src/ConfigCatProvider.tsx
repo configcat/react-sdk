@@ -8,6 +8,7 @@ import ConfigCatContext from "./ConfigCatContext";
 import { HttpConfigFetcher } from "./ConfigFetcher";
 import CONFIGCAT_SDK_VERSION from "./Version";
 import type { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from ".";
+import { stat } from "fs";
 
 type ConfigCatProviderProps = {
   sdkKey: string;
@@ -21,7 +22,7 @@ type ConfigCatProviderState = {
 };
 
 class ConfigCatProvider extends Component<
-/* eslint-disable @typescript-eslint/indent */
+  /* eslint-disable @typescript-eslint/indent */
   PropsWithChildren<ConfigCatProviderProps>,
   ConfigCatProviderState,
   {}
@@ -62,10 +63,18 @@ class ConfigCatProvider extends Component<
   }
 
   reactConfigChanged(newConfig: ProjectConfig): void {
+    if (!this.state) {
+      // Initialization phase will set state anyway.
+      return;
+    }
     this.setState({ lastUpdated: new Date(newConfig.Timestamp) });
   }
 
   clientReady(): void {
+    if (!this.state) {
+      // Initialization phase will set state anyway.
+      return;
+    }
     this.setState({ lastUpdated: new Date() });
   }
 
