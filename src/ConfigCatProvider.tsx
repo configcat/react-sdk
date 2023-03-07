@@ -21,7 +21,7 @@ type ConfigCatProviderState = {
 };
 
 class ConfigCatProvider extends Component<
-/* eslint-disable @typescript-eslint/indent */
+  /* eslint-disable @typescript-eslint/indent */
   PropsWithChildren<ConfigCatProviderProps>,
   ConfigCatProviderState,
   {}
@@ -62,10 +62,18 @@ class ConfigCatProvider extends Component<
   }
 
   reactConfigChanged(newConfig: ProjectConfig): void {
+    if (!this.state) {
+      // Initialization phase will set state anyway.
+      return;
+    }
     this.setState({ lastUpdated: new Date(newConfig.Timestamp) });
   }
 
   clientReady(): void {
+    if (!this.state) {
+      // Initialization phase will set state anyway.
+      return;
+    }
     this.setState({ lastUpdated: new Date() });
   }
 
