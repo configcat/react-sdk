@@ -8,7 +8,6 @@ import ConfigCatContext from "./ConfigCatContext";
 import { HttpConfigFetcher } from "./ConfigFetcher";
 import CONFIGCAT_SDK_VERSION from "./Version";
 import type { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from ".";
-import { stat } from "fs";
 
 type ConfigCatProviderProps = {
   sdkKey: string;
