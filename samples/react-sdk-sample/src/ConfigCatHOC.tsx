@@ -11,7 +11,18 @@ class ButtonClassComponent extends React.Component<
     this.state = { isEnabled: false, loading: true };
   }
 
+  componentDidUpdate(prevProps: any) {
+    // To achieve hot reload on config.json updates.
+    if (prevProps?.lastUpdated !== this.props.lastUpdated) {
+      this.evaluateFeatureFlag();
+    }
+  }
+
   componentDidMount() {
+    this.evaluateFeatureFlag();
+  }
+
+  evaluateFeatureFlag() {
     this.props
       .getValue("isAwesomeFeatureEnabled", false)
       .then((v: boolean) => this.setState({ isEnabled: v, loading: false }));

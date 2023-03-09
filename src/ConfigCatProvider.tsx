@@ -20,6 +20,8 @@ type ConfigCatProviderState = {
   lastUpdated?: Date;
 };
 
+const initializedClients = new Map<string, number>();
+
 class ConfigCatProvider extends Component<
   /* eslint-disable @typescript-eslint/indent */
   PropsWithChildren<ConfigCatProviderProps>,
@@ -34,12 +36,25 @@ class ConfigCatProvider extends Component<
     this.state = { client };
   }
 
+  componentDidMount(): void {
+    this.state?.client?.on("clientReady", () => this.clientReady());
+    this.state?.client?.on("configChanged", newConfig => this.reactConfigChanged(newConfig));
+  }
+
   componentWillUnmount(): void {
-    this.state?.client?.dispose();
+    this.state?.client?.removeListener("clientReady", () => this.clientReady());
+    this.state?.client?.removeListener("configChanged", newConfig => this.reactConfigChanged(newConfig));
+
+    initializedClients.set(this.props.sdkKey, (initializedClients.get(this.props.sdkKey) ?? 1) - 1);
+
+    if (initializedClients.get(this.props.sdkKey) === 0) {
+      this.state?.client?.dispose();
+      initializedClients.delete(this.props.sdkKey);
+    }
   }
 
   private initializeConfigCatClient() {
-    let { pollingMode, options } = this.props;
+    const { pollingMode, options } = this.props;
     const { sdkKey } = this.props;
     const configCatKernel = {
       configFetcher: new HttpConfigFetcher(),
@@ -48,32 +63,15 @@ class ConfigCatProvider extends Component<
       sdkVersion: CONFIGCAT_SDK_VERSION
     };
 
-    pollingMode ??= PollingMode.AutoPoll;
-
-    options ??= {};
-    const userSetupHooks = options.setupHooks;
-    options.setupHooks = hooks => {
-      hooks.on("clientReady", () => this.clientReady());
-      hooks.on("configChanged", newConfig => this.reactConfigChanged(newConfig));
-      userSetupHooks?.(hooks);
-    };
-
-    return configcatcommon.getClient(sdkKey, pollingMode, options, configCatKernel);
+    initializedClients.set(sdkKey, (initializedClients.get(sdkKey) ?? 0) + 1);
+    return configcatcommon.getClient(sdkKey, pollingMode ?? PollingMode.AutoPoll, options, configCatKernel);
   }
 
   reactConfigChanged(newConfig: ProjectConfig): void {
-    if (!this.state) {
-      // Initialization phase will set state anyway.
-      return;
-    }
     this.setState({ lastUpdated: new Date(newConfig.Timestamp) });
   }
 
   clientReady(): void {
-    if (!this.state) {
-      // Initialization phase will set state anyway.
-      return;
-    }
     this.setState({ lastUpdated: new Date() });
   }
 
