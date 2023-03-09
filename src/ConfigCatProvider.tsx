@@ -37,12 +37,12 @@ class ConfigCatProvider extends Component<
   }
 
   componentDidMount(): void {
-    this.state?.client?.on("clientReady", () => this.clientReady);
+    this.state?.client?.on("clientReady", () => this.clientReady());
     this.state?.client?.on("configChanged", newConfig => this.reactConfigChanged(newConfig));
   }
 
   componentWillUnmount(): void {
-    this.state?.client?.removeListener("clientReady", () => this.clientReady);
+    this.state?.client?.removeListener("clientReady", () => this.clientReady());
     this.state?.client?.removeListener("configChanged", newConfig => this.reactConfigChanged(newConfig));
 
     initializedClients.set(this.props.sdkKey, (initializedClients.get(this.props.sdkKey) ?? 1) - 1);
