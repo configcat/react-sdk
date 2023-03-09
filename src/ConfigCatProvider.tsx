@@ -45,11 +45,9 @@ class ConfigCatProvider extends Component<
     this.state?.client?.removeListener("clientReady", () => this.clientReady);
     this.state?.client?.removeListener("configChanged", newConfig => this.reactConfigChanged(newConfig));
 
-    if (initializedClients.has(this.props.sdkKey)) {
-      initializedClients.set(this.props.sdkKey, initializedClients[this.props.sdkKey]--);
-    }
+    initializedClients.set(this.props.sdkKey, (initializedClients.get(this.props.sdkKey) ?? 1) - 1);
 
-    if (initializedClients[this.props.sdkKey] === 0) {
+    if (initializedClients.get(this.props.sdkKey) === 0) {
       this.state?.client?.dispose();
       initializedClients.delete(this.props.sdkKey);
     }
@@ -65,7 +63,7 @@ class ConfigCatProvider extends Component<
       sdkVersion: CONFIGCAT_SDK_VERSION
     };
 
-    initializedClients.set(sdkKey, initializedClients[sdkKey]++);
+    initializedClients.set(sdkKey, (initializedClients.get(sdkKey) ?? 0) + 1);
     return configcatcommon.getClient(sdkKey, pollingMode ?? PollingMode.AutoPoll, options, configCatKernel);
   }
 
