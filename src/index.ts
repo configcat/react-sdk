@@ -39,7 +39,11 @@ export { DataGovernance } from "configcat-common";
 
 export type { IConfigCatLogger } from "configcat-common";
 
+export type { LogEventId, LogMessage } from "configcat-common";
+
 export { LogLevel } from "configcat-common";
+
+export { FormattableLogMessage } from "configcat-common";
 
 export type { ICache } from "configcat-common";
 
@@ -49,7 +53,7 @@ export type { IConfigCatClient } from "configcat-common";
 
 export { SettingKeyValue } from "configcat-common";
 
-export type { IEvaluationDetails, SettingTypeOf, SettingValue, VariationIdTypeOf, VariationIdValue } from "configcat-common";
+export type { IEvaluationDetails, SettingTypeOf, SettingValue, VariationIdValue } from "configcat-common";
 
 export { User } from "configcat-common";
 
