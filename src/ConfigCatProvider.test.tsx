@@ -60,7 +60,7 @@ it("AutoPoll initialization wrong maxInitWaitTimeSeconds parameter fails", () =>
     render(<ConfigCatProvider
       sdkKey={sdkKey}
       pollingMode={PollingMode.AutoPoll}
-      options={{ maxInitWaitTimeSeconds: -1 }} />))
+      options={{ maxInitWaitTimeSeconds: 2147484 }} />))
     .toThrow("Invalid 'maxInitWaitTimeSeconds' value");
   spy.mockRestore();
 });
@@ -72,7 +72,7 @@ it("AutoPoll configChanged callback works", async () => {
     return (<ConfigCatProvider
       sdkKey={sdkKey}
       pollingMode={PollingMode.AutoPoll}
-      options={{ configChanged: () => { setIsConfigChanged(true); } }}>
+      options={{ setupHooks: hooks => hooks.on("configChanged", () => setIsConfigChanged(true)) }}>
       <div>Config changed: {isConfigChanged ? "True" : "False"}</div>
     </ConfigCatProvider>);
   };
@@ -117,7 +117,7 @@ it("LazyLoad initialization with wrong cacheTimeToLiveSeconds fails", () => {
     render(<ConfigCatProvider sdkKey={sdkKey}
       pollingMode={PollingMode.LazyLoad}
       options={{ cacheTimeToLiveSeconds: -1 }} />))
-    .toThrow("Invalid 'cacheTimeToLiveSeconds' value. Value must be greater than zero.");
+    .toThrow("Invalid 'cacheTimeToLiveSeconds' value");
 
   spy.mockRestore();
 });
