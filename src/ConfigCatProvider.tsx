@@ -1,6 +1,6 @@
-import type { IConfigCatClient, ProjectConfig } from "configcat-common";
+import type { IConfig, IConfigCatClient, IConfigCatKernel } from "configcat-common";
+import { ExternalConfigCache, PollingMode } from "configcat-common";
 import * as configcatcommon from "configcat-common";
-import { PollingMode } from "configcat-common";
 import type { PropsWithChildren } from "react";
 import React, { Component } from "react";
 import { LocalStorageCache } from "./Cache";
@@ -23,7 +23,7 @@ type ConfigCatProviderState = {
 const initializedClients = new Map<string, number>();
 
 class ConfigCatProvider extends Component<
-  /* eslint-disable @typescript-eslint/indent */
+/* eslint-disable @typescript-eslint/indent */
   PropsWithChildren<ConfigCatProviderProps>,
   ConfigCatProviderState,
   {}
@@ -56,19 +56,19 @@ class ConfigCatProvider extends Component<
   private initializeConfigCatClient() {
     const { pollingMode, options } = this.props;
     const { sdkKey } = this.props;
-    const configCatKernel = {
+    const configCatKernel: IConfigCatKernel = {
       configFetcher: new HttpConfigFetcher(),
-      cache: new LocalStorageCache(),
       sdkType: "ConfigCat-React",
-      sdkVersion: CONFIGCAT_SDK_VERSION
+      sdkVersion: CONFIGCAT_SDK_VERSION,
+      defaultCacheFactory: options => new ExternalConfigCache(new LocalStorageCache(), options.logger)
     };
 
     initializedClients.set(sdkKey, (initializedClients.get(sdkKey) ?? 0) + 1);
     return configcatcommon.getClient(sdkKey, pollingMode ?? PollingMode.AutoPoll, options, configCatKernel);
   }
 
-  reactConfigChanged(newConfig: ProjectConfig): void {
-    this.setState({ lastUpdated: new Date(newConfig.Timestamp) });
+  reactConfigChanged(_newConfig: IConfig): void {
+    this.setState({ lastUpdated: new Date() });
   }
 
   clientReady(): void {
