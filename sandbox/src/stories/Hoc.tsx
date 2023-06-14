@@ -57,15 +57,11 @@ export const HocPage = (args: { sdkKey: string, pollIntervalSeconds: number, fea
         pollIntervalSeconds: args.pollIntervalSeconds,
         logger: {
           level: LogLevel.Debug,
-          debug(message) { log(message, 'debug'); },
-          info(message) { log(message, 'info'); },
-          error(message) { log(message, 'error'); },
-          warn(message) { log(message, 'warn'); },
-          log(message) { log(message, 'log'); },
+          log(level, _eventId, message, _ex) { log(message.toString(), LogLevel[level].toLowerCase()); }
         },
         setupHooks: (hooks) => {
           hooks.on('clientReady', () => setConfigLastChanged(new Date()));
-          hooks.on('configChanged', newConfig =>setConfigLastChanged(new Date(newConfig.Timestamp)));
+          hooks.on('configChanged', _newConfig => setConfigLastChanged(new Date()));
         }
       }}>
         <ConfigCatHocComponent featureFlagKey={args.featureFlagKey}></ConfigCatHocComponent>
