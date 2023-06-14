@@ -1,16 +1,16 @@
-import type { IConfigCatClient, User } from "configcat-common";
+import type { IConfigCatClient, SettingTypeOf, SettingValue, User } from "configcat-common";
 import { useContext, useEffect, useState } from "react";
 import ConfigCatContext from "./ConfigCatContext";
 
-function useFeatureFlag(key: string, defaultValue: any, user?: User | undefined): {
-  value: any;
+function useFeatureFlag<T extends SettingValue>(key: string, defaultValue: T, user?: User): {
+  value: SettingTypeOf<T>;
   loading: boolean;
 } {
   const configCatContext = useContext(ConfigCatContext);
 
   if (configCatContext === void 0) throw Error("useFeatureFlag hook must be used in ConfigCatProvider!");
 
-  const [featureFlagValue, setFeatureFlag] = useState(defaultValue);
+  const [featureFlagValue, setFeatureFlag] = useState(defaultValue as SettingTypeOf<T>);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
