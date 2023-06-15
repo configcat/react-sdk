@@ -14,6 +14,7 @@ function useFeatureFlag<T extends SettingValue>(key: string, defaultValue: T, us
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     configCatContext.client.getValueAsync(key, defaultValue, user)
       .then(v => { setFeatureFlag(v); setLoading(false); });
   }, [configCatContext, key, defaultValue, JSON.stringify(user)]);
