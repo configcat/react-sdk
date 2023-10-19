@@ -1,49 +1,78 @@
-import type { IConfigFetcher, IFetchResponse, OptionsBase } from "configcat-common";
+import type {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosRequestHeaders,
+  AxiosResponse,
+} from "axios";
+import axios from "axios";
+import type {
+  IConfigFetcher,
+  IFetchResponse,
+  OptionsBase,
+} from "configcat-common";
 import { FetchError } from "configcat-common";
 
 export class HttpConfigFetcher implements IConfigFetcher {
-  private handleStateChange(httpRequest: XMLHttpRequest, resolve: (value: IFetchResponse) => void, reject: (reason?: any) => void) {
-    try {
-      if (httpRequest.readyState === 4) {
-        const { status: statusCode, statusText: reasonPhrase } = httpRequest;
+  async fetchLogic(
+    options: OptionsBase,
+    lastEtag: string | null
+  ): Promise<IFetchResponse> {
+    // If we are not running in browser set the If-None-Match header.
+    const headers: AxiosRequestHeaders | { "If-None-Match": string } =
+      typeof window !== "undefined" || !lastEtag
+        ? ({} as AxiosRequestHeaders)
+        : { "If-None-Match": lastEtag };
 
-        if (statusCode === 200) {
-          const eTag: string | undefined = httpRequest.getResponseHeader("ETag") ?? void 0;
-          resolve({ statusCode, reasonPhrase, eTag, body: httpRequest.responseText });
-        }
-        // The readystatechange event is emitted even in the case of abort or error.
-        // We can detect this by checking for zero status code (see https://stackoverflow.com/a/19247992/8656352).
-        else if (statusCode) {
-          resolve({ statusCode, reasonPhrase });
-        }
-      }
+    const axiosConfig: AxiosRequestConfig<string> = {
+      method: "get",
+      timeout: options.requestTimeoutMs,
+      url: options.getUrl(),
+      headers: headers,
+      responseType: "text",
+      transformResponse: (data: any) => data,
+    };
+
+    let response: AxiosResponse<string> | undefined;
+    try {
+      response = await axios(axiosConfig);
     }
     catch (err) {
-      reject(err);
+      ({ response } = err as AxiosError<string>);
+      if (response) {
+        const { status: statusCode, statusText: reasonPhrase } = response;
+        return { statusCode, reasonPhrase };
+      }
+      else if ((err as AxiosError<string>).request) {
+        const { code, message } = err as AxiosError<string>;
+        switch (code) {
+          case "ERR_CANCELED":
+            throw new FetchError("abort");
+          case "ECONNABORTED":
+            // Axios ambiguously use ECONNABORTED instead of ETIMEDOUT, so we need this additional check to detect timeout
+            // (see https://github.com/axios/axios/issues/1543#issuecomment-558166483)
+            if (message.indexOf("timeout") >= 0) {
+              throw new FetchError("timeout", options.requestTimeoutMs);
+            }
+            break;
+          default:
+            break;
+        }
+        throw new FetchError("failure", err);
+      }
+
+      throw err;
     }
-  }
 
-  fetchLogic(options: OptionsBase, _: string | null): Promise<IFetchResponse> {
-    return new Promise<IFetchResponse>((resolve, reject) => {
-      try {
-        options.logger.debug("HttpConfigFetcher.fetchLogic() called.");
+    if (!response) {
+      throw new Error("Response is undefined");
+    }
 
-        const httpRequest: XMLHttpRequest = new XMLHttpRequest();
+    const { status: statusCode, statusText: reasonPhrase } = response;
+    if (response.status === 200) {
+      const eTag = response.headers.etag as string;
+      return { statusCode, reasonPhrase, eTag, body: response.data };
+    }
 
-        httpRequest.onreadystatechange = () => this.handleStateChange(httpRequest, resolve, reject);
-        httpRequest.ontimeout = () => reject(new FetchError("timeout", options.requestTimeoutMs));
-        httpRequest.onabort = () => reject(new FetchError("abort"));
-        httpRequest.onerror = () => reject(new FetchError("failure"));
-
-        httpRequest.open("GET", options.getUrl(), true);
-        httpRequest.timeout = options.requestTimeoutMs;
-        // NOTE: It's intentional that we don't specify the If-None-Match header.
-        // The browser automatically handles it, adding it manually would cause an unnecessary CORS OPTIONS request.
-        httpRequest.send(null);
-      }
-      catch (err) {
-        reject(err);
-      }
-    });
+    return { statusCode, reasonPhrase };
   }
 }
