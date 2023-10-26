@@ -1,4 +1,6 @@
-import { ConfigCatProvider } from "../../../lib/types";
+"use client";
+
+import { ConfigCatProvider } from "configcat-react";
 import { ClientFlagDemo } from "./ClientFlagDemo";
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

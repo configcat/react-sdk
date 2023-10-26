@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 "use client";
 
-import { useFeatureFlag } from "../../../lib/types";
+import { useFeatureFlag } from "configcat-react";
 
 export const ClientFlagDemo = () => {
   const { value: isFlagEnabled, loading } = useFeatureFlag(
-    "isFlagEnabled",
+    "isAwesomeFeatureEnabled",
     false
   );
 
