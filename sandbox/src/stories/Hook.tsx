@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
-import { useConfigCatClient, useFeatureFlag, ConfigCatProvider, LogLevel } from 'configcat-react';
+import { useConfigCatClient, useFeatureFlag, ConfigCatProvider, LogLevel, User } from 'configcat-react';
 
 export const HookComponent = (args: { featureFlagKey: string }) => {
   const client = useConfigCatClient();
-  const userObject = {identifier: 'asdad121212sd'};
+  const userObject = new User('asdad121212sd');
   const { value: isFeatureEnabled, loading } = useFeatureFlag(args.featureFlagKey, false, userObject);
 
   return (
