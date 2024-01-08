@@ -1,4 +1,4 @@
-import { LocalStorageCache, fromUtf8Base64, toUtf8Base64 } from "../src/Cache";
+import { LocalStorageCache, fromUtf8Base64, getLocalStorage, toUtf8Base64 } from "../src/Cache";
 
 describe("Base64 encode/decode test", () => {
   let allBmpChars = "";
@@ -22,11 +22,15 @@ describe("Base64 encode/decode test", () => {
 
 describe("LocalStorageCache cache tests", () => {
   it("LocalStorageCache works with non latin 1 characters", () => {
-    const cache = new LocalStorageCache();
+    const localStorage = getLocalStorage();
+    expect(localStorage).not.toBeNull();
+
+    const cache = new LocalStorageCache(localStorage!);
     const key = "testkey";
     const text = "äöüÄÖÜçéèñışğâ¢™✓😀";
     cache.set(key, text);
     const retrievedValue = cache.get(key);
     expect(retrievedValue).toStrictEqual(text);
+    expect(window.localStorage.getItem(key)).toStrictEqual("w6TDtsO8w4TDlsOcw6fDqcOow7HEscWfxJ/DosKi4oSi4pyT8J+YgA==");
   });
 });
