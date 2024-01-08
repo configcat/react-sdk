@@ -16,5 +16,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "esModuleInterop": true
-  }
+  },
+  "exclude": [
+    "**/node_modules/",
+    "lib/",
+    "samples/"
+  ]
 }
