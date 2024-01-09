@@ -1,5 +1,5 @@
 import type { IConfig, IConfigCatClient, IConfigCatKernel } from "configcat-common";
-import { ExternalConfigCache, PollingMode } from "configcat-common";
+import { PollingMode } from "configcat-common";
 import * as configcatcommon from "configcat-common";
 import type { PropsWithChildren } from "react";
 import React, { Component } from "react";
@@ -56,12 +56,11 @@ class ConfigCatProvider extends Component<
   private initializeConfigCatClient() {
     const { pollingMode, options } = this.props;
     const { sdkKey } = this.props;
-    const configCatKernel: IConfigCatKernel = {
+    const configCatKernel: IConfigCatKernel = LocalStorageCache.setup({
       configFetcher: new HttpConfigFetcher(),
       sdkType: "ConfigCat-React",
       sdkVersion: CONFIGCAT_SDK_VERSION,
-      defaultCacheFactory: options => new ExternalConfigCache(new LocalStorageCache(), options.logger)
-    };
+    });
 
     initializedClients.set(sdkKey, (initializedClients.get(sdkKey) ?? 0) + 1);
     return configcatcommon.getClient(sdkKey, pollingMode ?? PollingMode.AutoPoll, options, configCatKernel);
