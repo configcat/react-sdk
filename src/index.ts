@@ -1,30 +1,10 @@
-import type { IAutoPollOptions, IConfigCatLogger, ILazyLoadingOptions, IManualPollOptions, LogLevel, OverrideBehaviour, SettingValue } from "configcat-common";
-import * as configcatcommon from "configcat-common";
-import { FlagOverrides, MapOverrideDataSource } from "configcat-common";
+import type { IAutoPollOptions, IConfigCatLogger, ILazyLoadingOptions, IManualPollOptions } from "configcat-common";
 import type { GetValueType, WithConfigCatClientProps } from "./ConfigCatHOC";
 import withConfigCatClient from "./ConfigCatHOC";
 import { useConfigCatClient, useFeatureFlag } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
 
-/**
- * Creates an instance of `ConfigCatConsoleLogger`.
- * @param logLevel Log level (the minimum level to use for filtering log events).
- */
-export function createConsoleLogger(logLevel: LogLevel): IConfigCatLogger {
-  return configcatcommon.createConsoleLogger(logLevel);
-}
-
-/**
- * Creates an instance of `FlagOverrides` that uses a map data source.
- * @param map The map that contains the overrides.
- * @param behaviour The override behaviour.
- * Specifies whether the local values should override the remote values
- * or local values should only be used when a remote value doesn't exist
- * or the local values should be used only.
- */
-export function createFlagOverridesFromMap(map: { [name: string]: NonNullable<SettingValue> }, behaviour: OverrideBehaviour): FlagOverrides {
-  return new FlagOverrides(new MapOverrideDataSource(map), behaviour);
-}
+export { createConsoleLogger, createFlagOverridesFromMap } from "configcat-common";
 
 /** Options used to configure the ConfigCat SDK in the case of Auto Polling mode. */
 export type IReactAutoPollOptions = IAutoPollOptions;
