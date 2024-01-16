@@ -1,6 +1,5 @@
 import type { IConfig, IConfigCatClient, IConfigCatKernel } from "configcat-common";
-import { PollingMode } from "configcat-common";
-import * as configcatcommon from "configcat-common";
+import { PollingMode, getClient } from "configcat-common";
 import type { PropsWithChildren } from "react";
 import React, { Component } from "react";
 import { LocalStorageCache } from "./Cache";
@@ -63,7 +62,7 @@ class ConfigCatProvider extends Component<
     });
 
     initializedClients.set(sdkKey, (initializedClients.get(sdkKey) ?? 0) + 1);
-    return configcatcommon.getClient(sdkKey, pollingMode ?? PollingMode.AutoPoll, options, configCatKernel);
+    return getClient(sdkKey, pollingMode ?? PollingMode.AutoPoll, options, configCatKernel);
   }
 
   reactConfigChanged(_newConfig: IConfig): void {

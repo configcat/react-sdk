@@ -1,6 +1,6 @@
 {
   "name": "configcat-react",
-  "version": "4.2.0",
+  "version": "4.3.0",
   "scripts": {
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p tsconfig.build.esm.json && gulp esm",
@@ -33,7 +33,7 @@
   "homepage": "https://configcat.com",
   "license": "MIT",
   "dependencies": {
-    "configcat-common": "^9.1.0",
+    "configcat-common": "9.2.0",
     "tslib": "^2.4.1"
   },
   "peerDependencies": {
