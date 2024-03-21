@@ -15,14 +15,14 @@ type ConfigCatProviderProps = {
 };
 
 type ConfigCatProviderState = {
-  client: IConfigCatClient;
+  client?: IConfigCatClient;
   lastUpdated?: Date;
 };
 
 const initializedClients = new Map<string, number>();
 
 class ConfigCatProvider extends Component<
-/* eslint-disable @typescript-eslint/indent */
+  /* eslint-disable @typescript-eslint/indent */
   PropsWithChildren<ConfigCatProviderProps>,
   ConfigCatProviderState,
   {}
@@ -31,18 +31,18 @@ class ConfigCatProvider extends Component<
 
   constructor(props: ConfigCatProviderProps) {
     super(props);
-    const client = this.initializeConfigCatClient();
-    this.state = { client };
+    this.state = {};
   }
 
   componentDidMount(): void {
-    this.state?.client?.on("clientReady", () => this.clientReady());
-    this.state?.client?.on("configChanged", newConfig => this.reactConfigChanged(newConfig));
+    this.setState({ client: this.initializeConfigCatClient(), lastUpdated: new Date() });
+    this.state.client?.on("clientReady", () => this.clientReady());
+    this.state.client?.on("configChanged", newConfig => this.reactConfigChanged(newConfig));
   }
 
   componentWillUnmount(): void {
-    this.state?.client?.removeListener("clientReady", () => this.clientReady());
-    this.state?.client?.removeListener("configChanged", newConfig => this.reactConfigChanged(newConfig));
+    this.state.client?.removeListener("clientReady", () => this.clientReady());
+    this.state.client?.removeListener("configChanged", newConfig => this.reactConfigChanged(newConfig));
 
     initializedClients.set(this.props.sdkKey, (initializedClients.get(this.props.sdkKey) ?? 1) - 1);
 

@@ -2,7 +2,7 @@ import type { IConfigCatClient } from "configcat-common";
 import React from "react";
 
 export interface ConfigCatContextData {
-  client: IConfigCatClient;
+  client?: IConfigCatClient;
   lastUpdated?: Date;
 }
 

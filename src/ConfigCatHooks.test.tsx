@@ -24,7 +24,7 @@ it("useConfigCatClient with provider forceRefresh() should work", async () => {
   const TestComponent = () => {
     const [refreshed, setRefreshed] = useState(false);
     const client = useConfigCatClient();
-    useEffect(() => { client.forceRefreshAsync().then(() => setRefreshed(true)); });
+    useEffect(() => { client?.forceRefreshAsync().then(() => setRefreshed(true)); });
     return (<div>{refreshed ? "Refreshed" : "Waiting"}</div>);
   };
   render(<ConfigCatProvider sdkKey={sdkKey}><TestComponent /></ConfigCatProvider>);
@@ -85,7 +85,7 @@ it("useFeatureFlag Manual poll without forceRefresh should show default value", 
 it("useFeatureFlag Manual poll with forceRefresh should work", async () => {
   const TestComponent = () => {
     const client = useConfigCatClient();
-    useEffect(() => { client.forceRefreshAsync().then(() => { }); });
+    useEffect(() => { client?.forceRefreshAsync().then(() => { }); });
     const { value: featureFlag } = useFeatureFlag("stringDefaultCat", "NOT_CAT");
     return (< div>Feature flag value: {featureFlag}</div>);
   };

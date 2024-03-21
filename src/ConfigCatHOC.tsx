@@ -9,14 +9,14 @@ export type GetValueType = <T extends SettingValue>(
   user?: User
 ) => Promise<SettingTypeOf<T>>;
 
-const getValueFunction = (client: IConfigCatClient) => {
+const getValueFunction = (client?: IConfigCatClient) => {
   return async function <T extends SettingValue>(key: string, defaultValue: T, user?: User) {
-    return await client.getValueAsync(key, defaultValue, user);
+    return await client?.getValueAsync(key, defaultValue, user) ?? defaultValue as SettingTypeOf<T>;
   };
 };
 
 export interface WithConfigCatClientProps {
-  configCatClient: IConfigCatClient;
+  configCatClient?: IConfigCatClient;
   getValue: GetValueType;
   lastUpdated?: Date;
 }
