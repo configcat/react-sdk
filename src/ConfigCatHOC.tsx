@@ -1,3 +1,5 @@
+'use client'
+
 import type { IConfigCatClient, SettingTypeOf, SettingValue, User } from "configcat-common";
 import React from "react";
 import type { ConfigCatContextData } from "./ConfigCatContext";

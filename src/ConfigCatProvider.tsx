@@ -1,3 +1,5 @@
+'use client'
+
 import type { IConfig, IConfigCatClient, IConfigCatKernel } from "configcat-common";
 import { PollingMode, getClient } from "configcat-common";
 import type { PropsWithChildren } from "react";

@@ -1,3 +1,5 @@
+'use client'
+
 import type { IConfigCatClient, SettingTypeOf, SettingValue, User } from "configcat-common";
 import { useContext, useEffect, useState } from "react";
 import ConfigCatContext from "./ConfigCatContext";

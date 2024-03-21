@@ -1,3 +1,5 @@
+'use client'
+
 import type { IAutoPollOptions, IConfigCatLogger, ILazyLoadingOptions, IManualPollOptions } from "configcat-common";
 import type { GetValueType, WithConfigCatClientProps } from "./ConfigCatHOC";
 import withConfigCatClient from "./ConfigCatHOC";
