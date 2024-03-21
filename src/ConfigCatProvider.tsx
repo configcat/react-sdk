@@ -21,13 +21,7 @@ type ConfigCatProviderState = {
 
 const initializedClients = new Map<string, number>();
 
-class ConfigCatProvider extends Component<
-  /* eslint-disable @typescript-eslint/indent */
-  PropsWithChildren<ConfigCatProviderProps>,
-  ConfigCatProviderState,
-  {}
-/* eslint-enable @typescript-eslint/indent */
-> {
+class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderProps>, ConfigCatProviderState, {}> {
 
   constructor(props: ConfigCatProviderProps) {
     super(props);

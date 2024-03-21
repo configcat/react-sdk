@@ -8,12 +8,7 @@ const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 
 afterEach(cleanup);
 
-class TestHOCComponent extends React.Component<
-  /* eslint-disable @typescript-eslint/indent */
-  WithConfigCatClientProps,
-  { stringDefaultCatValue: string }
-/* eslint-enable @typescript-eslint/indent */
-> {
+class TestHOCComponent extends React.Component<WithConfigCatClientProps, { stringDefaultCatValue: string }> {
   constructor(props: WithConfigCatClientProps) {
     super(props);
 
