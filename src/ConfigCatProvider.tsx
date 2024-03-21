@@ -43,7 +43,7 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
     initializedClients.set(this.props.sdkKey, (initializedClients.get(this.props.sdkKey) ?? 1) - 1);
 
     if (initializedClients.get(this.props.sdkKey) === 0) {
-      this.state?.client?.dispose();
+      this.state.client?.dispose();
       initializedClients.delete(this.props.sdkKey);
     }
   }
