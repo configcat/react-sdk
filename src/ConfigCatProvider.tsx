@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import type { ClientCacheState, HookEvents, IConfig, IConfigCatClient, IConfigCatClientSnapshot, IConfigCatKernel, IEvaluationDetails, RefreshResult, SettingKeyValue, SettingTypeOf, SettingValue, User } from "configcat-common";
 import { PollingMode, getClient } from "configcat-common";

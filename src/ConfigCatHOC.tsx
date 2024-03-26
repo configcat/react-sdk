@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import type { IConfigCatClient, SettingTypeOf, SettingValue, User } from "configcat-common";
 import React from "react";
