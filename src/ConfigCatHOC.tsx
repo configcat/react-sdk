@@ -11,14 +11,14 @@ export type GetValueType = <T extends SettingValue>(
   user?: User
 ) => Promise<SettingTypeOf<T>>;
 
-const getValueFunction = (client?: IConfigCatClient) => {
+const getValueFunction = (client: IConfigCatClient) => {
   return async function <T extends SettingValue>(key: string, defaultValue: T, user?: User) {
-    return await client?.getValueAsync(key, defaultValue, user) ?? defaultValue as SettingTypeOf<T>;
+    return await client.getValueAsync(key, defaultValue, user);
   };
 };
 
 export interface WithConfigCatClientProps {
-  configCatClient?: IConfigCatClient;
+  configCatClient: IConfigCatClient;
   getValue: GetValueType;
   lastUpdated?: Date;
 }
@@ -29,7 +29,7 @@ function withConfigCatClient<P>(
   return (props: P) => (
     <ConfigCatContext.Consumer>
       {(context: ConfigCatContextData | undefined) => {
-        if (context === void 0) {
+        if (!context) {
           throw new Error(
             "withConfigCatClient must be used within a ConfigCatProvider!"
           );

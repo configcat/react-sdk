@@ -16,9 +16,6 @@ function useFeatureFlag<T extends SettingValue>(key: string, defaultValue: T, us
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!configCatContext.client) {
-      return;
-    }
     configCatContext.client.getValueAsync(key, defaultValue, user)
       .then(v => { setFeatureFlag(v); setLoading(false); });
   }, [configCatContext, key, defaultValue, JSON.stringify(user)]);
@@ -26,10 +23,10 @@ function useFeatureFlag<T extends SettingValue>(key: string, defaultValue: T, us
   return { value: featureFlagValue, loading };
 }
 
-function useConfigCatClient(): IConfigCatClient | undefined {
+function useConfigCatClient(): IConfigCatClient {
   const configCatContext = useContext(ConfigCatContext);
 
-  if (configCatContext === void 0) throw Error("useConfigCatClient hook must be used in ConfigCatProvider!");
+  if (!configCatContext) throw Error("useConfigCatClient hook must be used in ConfigCatProvider!");
 
   return configCatContext.client;
 }
