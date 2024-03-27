@@ -1,3 +1,5 @@
+"use client";
+
 import type { IConfigCatClient } from "configcat-common";
 import React from "react";
 

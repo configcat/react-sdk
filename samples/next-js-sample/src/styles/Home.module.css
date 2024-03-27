@@ -1,0 +1,16 @@
+.main {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 64px;
+}
+
+.heart {
+  font-size: 2em;
+}

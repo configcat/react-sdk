@@ -1,6 +1,6 @@
 {
   "name": "configcat-react",
-  "version": "4.4.0",
+  "version": "4.5.0",
   "scripts": {
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p tsconfig.build.esm.json && gulp esm",
@@ -46,7 +46,7 @@
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^27.5.0",
     "@types/node": "^18.11.18",
-    "@types/react": "^18.0.17",
+    "@types/react": "^18.2.21",
     "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",

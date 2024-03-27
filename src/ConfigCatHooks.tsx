@@ -1,3 +1,5 @@
+"use client";
+
 import type { IConfigCatClient, SettingTypeOf, SettingValue, User } from "configcat-common";
 import { useContext, useEffect, useState } from "react";
 import ConfigCatContext from "./ConfigCatContext";
@@ -24,7 +26,7 @@ function useFeatureFlag<T extends SettingValue>(key: string, defaultValue: T, us
 function useConfigCatClient(): IConfigCatClient {
   const configCatContext = useContext(ConfigCatContext);
 
-  if (configCatContext === void 0) throw Error("useConfigCatClient hook must be used in ConfigCatProvider!");
+  if (!configCatContext) throw Error("useConfigCatClient hook must be used in ConfigCatProvider!");
 
   return configCatContext.client;
 }

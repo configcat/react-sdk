@@ -1,3 +1,5 @@
+"use client";
+
 import type { IConfigCatClient, SettingTypeOf, SettingValue, User } from "configcat-common";
 import React from "react";
 import type { ConfigCatContextData } from "./ConfigCatContext";
@@ -27,7 +29,7 @@ function withConfigCatClient<P>(
   return (props: P) => (
     <ConfigCatContext.Consumer>
       {(context: ConfigCatContextData | undefined) => {
-        if (context === void 0) {
+        if (!context) {
           throw new Error(
             "withConfigCatClient must be used within a ConfigCatProvider!"
           );
