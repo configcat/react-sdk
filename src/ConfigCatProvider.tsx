@@ -29,7 +29,7 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
   constructor(props: ConfigCatProviderProps) {
     super(props);
 
-    const client: IConfigCatClient = typeof window !== "undefined" && typeof window.document !== "undefined"
+    const client: IConfigCatClient = !isServerContext()
       ? this.initializeConfigCatClient()
       : new ConfigCatClientStub();
 
@@ -90,6 +90,10 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
       </ConfigCatContext.Provider>
     );
   }
+}
+
+function isServerContext() {
+  return typeof XMLHttpRequest === "undefined";
 }
 
 function serverContextNotSupported(): Error {
