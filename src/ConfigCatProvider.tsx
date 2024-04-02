@@ -29,7 +29,7 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
   constructor(props: ConfigCatProviderProps) {
     super(props);
 
-    const client: IConfigCatClient = typeof window !== "undefined" && typeof window.document !== "undefined"
+    const client: IConfigCatClient = !isServerContext()
       ? this.initializeConfigCatClient()
       : new ConfigCatClientStub();
 
@@ -90,6 +90,28 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
       </ConfigCatContext.Provider>
     );
   }
+}
+
+declare let Deno: any;
+
+function isServerContext() {
+  if (typeof XMLHttpRequest === "undefined") {
+    return true;
+  }
+
+  // Detect server runtime environment based on
+  // * https://github.com/flexdinesh/browser-or-node
+  // * https://bun.sh/guides/util/detect-bun
+  let pv;
+  if (typeof process !== "undefined" && (pv = process.versions) != null && ((pv.node ?? pv.bun) != null)) {
+    return true;
+  }
+
+  if (typeof Deno !== "undefined" && Deno.version?.deno != null) {
+    return true;
+  }
+
+  return false;
 }
 
 function serverContextNotSupported(): Error {
