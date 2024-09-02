@@ -2,15 +2,16 @@
 
 import type { IConfigCatClient, SettingTypeOf, SettingValue, User } from "configcat-common";
 import { useContext, useEffect, useState } from "react";
-import ConfigCatContext from "./ConfigCatContext";
+import ConfigCatContext, { getOrCreateConfigCatContext } from "./ConfigCatContext";
+import { createConfigCatProviderError } from "./ConfigCatProvider";
 
-function useFeatureFlag<T extends SettingValue>(key: string, defaultValue: T, user?: User): {
+function useFeatureFlag<T extends SettingValue>(key: string, defaultValue: T, user?: User, configId?: string): {
   value: SettingTypeOf<T>;
   loading: boolean;
 } {
   const configCatContext = useContext(ConfigCatContext);
 
-  if (configCatContext === void 0) throw Error("useFeatureFlag hook must be used in ConfigCatProvider!");
+  if (!configCatContext) throw createConfigCatProviderError("useFeatureFlag", configId);
 
   const [featureFlagValue, setFeatureFlag] = useState(defaultValue as SettingTypeOf<T>);
   const [loading, setLoading] = useState(true);
@@ -23,10 +24,11 @@ function useFeatureFlag<T extends SettingValue>(key: string, defaultValue: T, us
   return { value: featureFlagValue, loading };
 }
 
-function useConfigCatClient(): IConfigCatClient {
-  const configCatContext = useContext(ConfigCatContext);
+function useConfigCatClient(configId?: string): IConfigCatClient {
 
-  if (!configCatContext) throw Error("useConfigCatClient hook must be used in ConfigCatProvider!");
+  const configCatContext = useContext(configId ? getOrCreateConfigCatContext(configId) : ConfigCatContext);
+
+  if (!configCatContext) throw createConfigCatProviderError("useConfigCatClient", configId);
 
   return configCatContext.client;
 }

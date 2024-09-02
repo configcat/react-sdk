@@ -14,4 +14,23 @@ const ConfigCatContext = React.createContext<ConfigCatContextData | undefined>(
 
 ConfigCatContext.displayName = "ConfigCatContext";
 
+const ConfigCatContextRegistry = new Map<string, React.Context<ConfigCatContextData | undefined>>();
+
+export function getOrCreateConfigCatContext(configId: string): React.Context<ConfigCatContextData | undefined> {
+
+  let context: React.Context<ConfigCatContextData | undefined> | undefined = ConfigCatContextRegistry.get(configId.toLowerCase());
+
+  if (!context) {
+    context = React.createContext<ConfigCatContextData | undefined>(
+      void 0
+    );
+
+    context.displayName = "ConfigCatContext_" + configId;
+
+    ConfigCatContextRegistry.set(configId.toLowerCase(), context);
+  }
+
+  return context;
+}
+
 export default ConfigCatContext;

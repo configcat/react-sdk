@@ -16,7 +16,7 @@ it("useConfigCatClient without provider should fail", () => {
     return (< div />);
   };
   expect(() => render(<TestComponent />))
-    .toThrow("useConfigCatClient hook must be used in ConfigCatProvider!");
+    .toThrow("useConfigCatClient must be used in ConfigCatProvider!");
   spy.mockRestore();
 });
 
@@ -39,7 +39,7 @@ it("useFeatureFlag without provider should fail", () => {
     return (< div />);
   };
   expect(() => render(<TestComponent />))
-    .toThrow("useFeatureFlag hook must be used in ConfigCatProvider!");
+    .toThrow("useFeatureFlag must be used in ConfigCatProvider!");
 
   spy.mockRestore();
 });

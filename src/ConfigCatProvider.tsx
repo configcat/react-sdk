@@ -5,7 +5,7 @@ import { PollingMode, getClient } from "configcat-common";
 import type { PropsWithChildren } from "react";
 import React, { Component } from "react";
 import { LocalStorageCache } from "./Cache";
-import ConfigCatContext from "./ConfigCatContext";
+import ConfigCatContext, { type ConfigCatContextData, getOrCreateConfigCatContext } from "./ConfigCatContext";
 import { HttpConfigFetcher } from "./ConfigFetcher";
 import CONFIGCAT_SDK_VERSION from "./Version";
 import type { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from ".";
@@ -14,6 +14,7 @@ type ConfigCatProviderProps = {
   sdkKey: string;
   pollingMode?: PollingMode;
   options?: IReactAutoPollOptions | IReactLazyLoadingOptions | IReactManualPollOptions;
+  configId?: string;
 };
 
 type ConfigCatProviderState = {
@@ -84,10 +85,13 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
   }
 
   render(): JSX.Element {
+
+    const context: React.Context<ConfigCatContextData | undefined> = this.props.configId ? getOrCreateConfigCatContext(this.props.configId) : ConfigCatContext;
+
     return (
-      <ConfigCatContext.Provider value={this.state}>
+      <context.Provider value={this.state}>
         {this.props.children}
-      </ConfigCatContext.Provider>
+      </context.Provider>
     );
   }
 }
@@ -104,97 +108,84 @@ function serverContextNotSupported(): Error {
 }
 
 class ConfigCatClientStub implements IConfigCatClient {
-  readonly isOffline = true;
-
-  getValueAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: User | undefined): Promise<SettingTypeOf<T>> {
+  getValueAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: User): Promise<SettingTypeOf<T>> {
     throw serverContextNotSupported();
   }
-
-  getValueDetailsAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: User | undefined): Promise<IEvaluationDetails<SettingTypeOf<T>>> {
+  getValueDetailsAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: User): Promise<IEvaluationDetails<SettingTypeOf<T>>> {
     throw serverContextNotSupported();
   }
 
   getAllKeysAsync(): Promise<string[]> {
     throw serverContextNotSupported();
   }
-
-  getAllValuesAsync(_user?: User | undefined): Promise<SettingKeyValue<SettingValue>[]> {
+  getAllValuesAsync(_user?: User): Promise<SettingKeyValue<SettingValue>[]> {
     throw serverContextNotSupported();
   }
-
-  getAllValueDetailsAsync(_user?: User | undefined): Promise<IEvaluationDetails<SettingValue>[]> {
+  getAllValueDetailsAsync(_user?: User): Promise<IEvaluationDetails<SettingValue>[]> {
     throw serverContextNotSupported();
   }
-
   getKeyAndValueAsync(_variationId: string): Promise<SettingKeyValue<SettingValue> | null> {
     throw serverContextNotSupported();
   }
-
   forceRefreshAsync(): Promise<RefreshResult> {
     throw serverContextNotSupported();
   }
-
   waitForReady(): Promise<ClientCacheState> {
     throw serverContextNotSupported();
   }
-
   snapshot(): IConfigCatClientSnapshot {
     throw serverContextNotSupported();
   }
-
   setDefaultUser(_defaultUser: User): void {
     throw serverContextNotSupported();
   }
-
   clearDefaultUser(): void {
     throw serverContextNotSupported();
   }
-
+  isOffline: boolean;
   setOnline(): void {
     throw serverContextNotSupported();
   }
-
   setOffline(): void {
     throw serverContextNotSupported();
   }
-
-  dispose(): void { }
-
+  dispose(): void {
+    throw serverContextNotSupported();
+  }
   addListener<TEventName extends keyof HookEvents>(_eventName: TEventName, _listener: (...args: HookEvents[TEventName]) => void): this {
     throw serverContextNotSupported();
   }
-
   on<TEventName extends keyof HookEvents>(_eventName: TEventName, _listener: (...args: HookEvents[TEventName]) => void): this {
     throw serverContextNotSupported();
   }
-
   once<TEventName extends keyof HookEvents>(_eventName: TEventName, _listener: (...args: HookEvents[TEventName]) => void): this {
     throw serverContextNotSupported();
   }
-
   removeListener<TEventName extends keyof HookEvents>(_eventName: TEventName, _listener: (...args: HookEvents[TEventName]) => void): this {
     throw serverContextNotSupported();
   }
-
   off<TEventName extends keyof HookEvents>(_eventName: TEventName, _listener: (...args: HookEvents[TEventName]) => void): this {
     throw serverContextNotSupported();
   }
-
-  removeAllListeners(_eventName?: keyof HookEvents | undefined): this {
+  removeAllListeners(_eventName?: keyof HookEvents): this {
     throw serverContextNotSupported();
   }
-
   listeners(_eventName: keyof HookEvents): Function[] {
     throw serverContextNotSupported();
   }
-
   listenerCount(_eventName: keyof HookEvents): number {
     throw serverContextNotSupported();
   }
-
   eventNames(): (keyof HookEvents)[] {
     throw serverContextNotSupported();
   }
+}
+
+export function createConfigCatProviderError(methodName: string, configId?: string): Error {
+
+  const configIdText: string = configId ? ` with configId="${configId}"` : "";
+
+  return Error(`${methodName} must be used in ConfigCatProvider${configIdText}!`);
 }
 
 export default ConfigCatProvider;
