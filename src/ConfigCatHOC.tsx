@@ -2,7 +2,7 @@
 
 import type { IConfigCatClient, SettingTypeOf, SettingValue, User } from "configcat-common";
 import React from "react";
-import type { ConfigCatContextData } from "./ConfigCatContext";
+import { type ConfigCatContextData, getOrCreateConfigCatContext } from "./ConfigCatContext";
 import ConfigCatContext from "./ConfigCatContext";
 
 export type GetValueType = <T extends SettingValue>(
@@ -24,10 +24,14 @@ export interface WithConfigCatClientProps {
 }
 
 function withConfigCatClient<P>(
-  WrappedComponent: React.ComponentType<P & WithConfigCatClientProps>
+  WrappedComponent: React.ComponentType<P & WithConfigCatClientProps>,
+  configId?: string
 ): React.ComponentType<Omit<P, keyof WithConfigCatClientProps>> {
+
+  const configCatContext = configId ? getOrCreateConfigCatContext(configId) : ConfigCatContext;
+
   return (props: P) => (
-    <ConfigCatContext.Consumer>
+    <configCatContext.Consumer>
       {(context: ConfigCatContextData | undefined) => {
         if (!context) {
           throw new Error(
@@ -43,7 +47,7 @@ function withConfigCatClient<P>(
           />
         );
       }}
-    </ConfigCatContext.Consumer>
+    </configCatContext.Consumer>
   );
 }
 

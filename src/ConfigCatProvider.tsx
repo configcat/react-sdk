@@ -5,7 +5,7 @@ import { PollingMode, getClient } from "configcat-common";
 import type { PropsWithChildren } from "react";
 import React, { Component } from "react";
 import { LocalStorageCache } from "./Cache";
-import ConfigCatContext from "./ConfigCatContext";
+import ConfigCatContext, { type ConfigCatContextData, getOrCreateConfigCatContext } from "./ConfigCatContext";
 import { HttpConfigFetcher } from "./ConfigFetcher";
 import CONFIGCAT_SDK_VERSION from "./Version";
 import type { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from ".";
@@ -14,6 +14,7 @@ type ConfigCatProviderProps = {
   sdkKey: string;
   pollingMode?: PollingMode;
   options?: IReactAutoPollOptions | IReactLazyLoadingOptions | IReactManualPollOptions;
+  configId?: string;
 };
 
 type ConfigCatProviderState = {
@@ -84,10 +85,13 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
   }
 
   render(): JSX.Element {
+
+    const context: React.Context<ConfigCatContextData | undefined> = this.props.configId ? getOrCreateConfigCatContext(this.props.configId) : ConfigCatContext;
+
     return (
-      <ConfigCatContext.Provider value={this.state}>
+      <context.Provider value={this.state}>
         {this.props.children}
-      </ConfigCatContext.Provider>
+      </context.Provider>
     );
   }
 }
@@ -104,6 +108,33 @@ function serverContextNotSupported(): Error {
 }
 
 class ConfigCatClientStub implements IConfigCatClient {
+  getValue<T extends SettingValue>(_key: string, _defaultValue: T, _callback: (value: SettingTypeOf<T>) => void, _user?: User): void {
+    throw serverContextNotSupported();
+  }
+  getValueDetails<T extends SettingValue>(_key: string, _defaultValue: T, _callback: (evaluationDetails: IEvaluationDetails<SettingTypeOf<T>>) => void, _user?: User): void {
+    throw serverContextNotSupported();
+  }
+  forceRefresh(_callback: (result: RefreshResult) => void): void {
+    throw serverContextNotSupported();
+  }
+  getAllKeys(_callback: (value: string[]) => void): void {
+    throw serverContextNotSupported();
+  }
+  getAllVariationIds(_callback: (variationIds: string[]) => void, _user?: User): void {
+    throw serverContextNotSupported();
+  }
+  getAllVariationIdsAsync(_user?: User): Promise<string[]> {
+    throw serverContextNotSupported();
+  }
+  getKeyAndValue(_variationId: string, _callback: (settingkeyAndValue: SettingKeyValue<SettingValue> | null) => void): void {
+    throw serverContextNotSupported();
+  }
+  getAllValues(_callback: (result: SettingKeyValue<SettingValue>[]) => void, _user?: User): void {
+    throw serverContextNotSupported();
+  }
+  getAllValueDetails(_callback: (result: IEvaluationDetails<SettingValue>[]) => void, _user?: User): void {
+    throw serverContextNotSupported();
+  }
   readonly isOffline = true;
 
   getValueAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: User | undefined): Promise<SettingTypeOf<T>> {

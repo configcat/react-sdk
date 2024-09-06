@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { ConfigCatProvider, LogLevel, withConfigCatClient, WithConfigCatClientProps } from 'configcat-react';
+import { User } from 'configcat-common';
 
 
-class HocComponent extends React.Component<
+export class HocComponent extends React.Component<
   { featureFlagKey: string } & WithConfigCatClientProps,
   { isEnabled: boolean, loading: boolean }
 > {
-  constructor(props: { featureFlagKey: string } & WithConfigCatClientProps) {
+  constructor(props: { featureFlagKey: string, user?: User } & WithConfigCatClientProps) {
     super(props);
 
     this.state = { isEnabled: false, loading: true };
@@ -25,7 +26,7 @@ class HocComponent extends React.Component<
 
   evaluateFeatureFlag() {
     this.props
-      .getValue(this.props.featureFlagKey, false)
+      .getValue(this.props.featureFlagKey, false, this.props.user)
       .then((v: boolean) => this.setState({ isEnabled: v, loading: false }));
   }
 
