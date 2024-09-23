@@ -3,7 +3,7 @@
 import type { IAutoPollOptions, IConfigCatLogger, ILazyLoadingOptions, IManualPollOptions } from "configcat-common";
 import type { GetValueType, WithConfigCatClientProps } from "./ConfigCatHOC";
 import withConfigCatClient from "./ConfigCatHOC";
-import { useConfigCatClient, useConfigCatClientByConfigId, useFeatureFlag, useFeatureFlagByConfigId } from "./ConfigCatHooks";
+import { useConfigCatClient, useFeatureFlag } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
 
 export { createConsoleLogger, createFlagOverridesFromMap } from "configcat-common";
@@ -20,7 +20,7 @@ export type IReactManualPollOptions = IManualPollOptions;
 export type IReactConfigCatLogger = IConfigCatLogger;
 
 export type { WithConfigCatClientProps, GetValueType };
-export { ConfigCatProvider, useFeatureFlag, useConfigCatClient, withConfigCatClient, useFeatureFlagByConfigId, useConfigCatClientByConfigId };
+export { ConfigCatProvider, useFeatureFlag, useConfigCatClient, withConfigCatClient };
 
 /* Public types re-export from common-js */
 

@@ -4,7 +4,7 @@ import { User } from 'configcat-common';
 
 
 export class HocComponent extends React.Component<
-  { featureFlagKey: string } & WithConfigCatClientProps,
+  { featureFlagKey: string, user?: User } & WithConfigCatClientProps,
   { isEnabled: boolean, loading: boolean }
 > {
   constructor(props: { featureFlagKey: string, user?: User } & WithConfigCatClientProps) {

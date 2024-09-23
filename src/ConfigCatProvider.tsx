@@ -2,8 +2,7 @@
 
 import type { ClientCacheState, HookEvents, IConfig, IConfigCatClient, IConfigCatClientSnapshot, IConfigCatKernel, IEvaluationDetails, RefreshResult, SettingKeyValue, SettingTypeOf, SettingValue, User } from "configcat-common";
 import { PollingMode, getClient } from "configcat-common";
-import type { PropsWithChildren } from "react";
-import React, { Component } from "react";
+import React, { Component, type PropsWithChildren } from "react";
 import { LocalStorageCache } from "./Cache";
 import ConfigCatContext, { type ConfigCatContextData, getOrCreateConfigCatContext } from "./ConfigCatContext";
 import { HttpConfigFetcher } from "./ConfigFetcher";
@@ -14,7 +13,7 @@ type ConfigCatProviderProps = {
   sdkKey: string;
   pollingMode?: PollingMode;
   options?: IReactAutoPollOptions | IReactLazyLoadingOptions | IReactManualPollOptions;
-  configId?: string;
+  id?: string;
 };
 
 type ConfigCatProviderState = {
@@ -84,9 +83,9 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
     this.setState({ lastUpdated: new Date() });
   }
 
-  render(): JSX.Element {
+  render(): React.JSX.Element {
 
-    const context: React.Context<ConfigCatContextData | undefined> = this.props.configId ? getOrCreateConfigCatContext(this.props.configId) : ConfigCatContext;
+    const context: React.Context<ConfigCatContextData | undefined> = this.props.id ? getOrCreateConfigCatContext(this.props.id) : ConfigCatContext;
 
     return (
       <context.Provider value={this.state}>
@@ -181,11 +180,11 @@ class ConfigCatClientStub implements IConfigCatClient {
   }
 }
 
-export function createConfigCatProviderError(methodName: string, configId?: string): Error {
+export function createConfigCatProviderError(methodName: string, providerId?: string): Error {
 
-  const configIdText: string = configId ? ` with configId="${configId}"` : "";
+  const providerIdText: string = providerId ? ` with id="${providerId}"` : "";
 
-  return Error(`${methodName} must be used in ConfigCatProvider${configIdText}!`);
+  return Error(`${methodName} must be used in ConfigCatProvider${providerIdText}!`);
 }
 
 export default ConfigCatProvider;

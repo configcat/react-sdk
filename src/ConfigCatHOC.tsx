@@ -26,16 +26,16 @@ export interface WithConfigCatClientProps {
 
 function withConfigCatClient<P>(
   WrappedComponent: React.ComponentType<P & WithConfigCatClientProps>,
-  configId?: string
+  providerId?: string
 ): React.ComponentType<Omit<P, keyof WithConfigCatClientProps>> {
 
-  const configCatContext = configId ? getOrCreateConfigCatContext(configId) : ConfigCatContext;
+  const configCatContext = providerId ? getOrCreateConfigCatContext(providerId) : ConfigCatContext;
 
   return (props: P) => (
     <configCatContext.Consumer>
       {(context: ConfigCatContextData | undefined) => {
         if (!context) {
-          throw createConfigCatProviderError("withConfigCatClient", configId);
+          throw createConfigCatProviderError("withConfigCatClient", providerId);
         }
         return (
           <WrappedComponent

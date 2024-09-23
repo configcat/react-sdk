@@ -1,19 +1,19 @@
 import React from 'react';
-import { ConfigCatProvider, User, useFeatureFlagByConfigId, withConfigCatClient } from 'configcat-react';
+import { ConfigCatProvider, useFeatureFlag, User, withConfigCatClient } from 'configcat-react';
 import { HocComponent} from  './Hoc';
 
 
 const CC_CONFIGID = { BACKEND: "BACKEND", SHARED: "SHARED"};
 
 const CC_SDK = { 
-  BACKEND: "TODO - INSERT BACKEND SDK KEY",
-  SHARED:"TODO - INSERT SHARED SDK KEY"}
+  BACKEND: "fnvWCKwpfPETf3O6BQgQAg/iMRmhH6DmECovlBvRtjpDw",
+  SHARED:"configcat-sdk-1/fnvWCKwpfPETf3O6BQgQAg/Idklvfo85EaPWoX9zOygNA"}
 
 const userObject = new User('microFrontendUser1');
 
-export const C1 = (args: { featureFlagKey: string, configId: string }) => {
+export const C1 = (args: { featureFlagKey: string, providerId: string }) => {
 
-  const { value: isFeatureEnabled, loading } = useFeatureFlagByConfigId(args.configId, args.featureFlagKey, false, userObject);
+  const { value: isFeatureEnabled, loading } = useFeatureFlag(args.featureFlagKey, false, userObject, args.providerId);
 
   return (
     <div>
@@ -26,7 +26,8 @@ export const C1 = (args: { featureFlagKey: string, configId: string }) => {
   );
 };
 
-const ConfigCatHocComponent = withConfigCatClient(HocComponent, CC_CONFIGID.BACKEND)
+const ConfigCatHocComponentBackEnd = withConfigCatClient(HocComponent, CC_CONFIGID.BACKEND)
+const ConfigCatHocComponentShared = withConfigCatClient(HocComponent, CC_CONFIGID.SHARED)
 
 export const MultipleConfigCatConfigs = () => {
 
@@ -35,19 +36,21 @@ export const MultipleConfigCatConfigs = () => {
       <h1>Embeded provider test</h1>
 
         <div>
-          <ConfigCatProvider sdkKey={CC_SDK.SHARED} options={{pollIntervalSeconds:10}} configId={CC_CONFIGID.SHARED}>
-            
-            <C1 featureFlagKey={"sharedfeature1"} configId={CC_CONFIGID.SHARED}></C1>
+          <ConfigCatProvider sdkKey={CC_SDK.SHARED} options={{pollIntervalSeconds:10}} id={CC_CONFIGID.SHARED}> 
+                Level1
+                <C1 featureFlagKey={"sharedfeature1"} providerId={CC_CONFIGID.SHARED}></C1>
+                <br />
+                <ConfigCatProvider sdkKey={CC_SDK.BACKEND} options={{pollIntervalSeconds:10}} id={CC_CONFIGID.BACKEND}>
+                    Level2 - Functional Component samples
 
-            <ConfigCatProvider sdkKey={CC_SDK.BACKEND} options={{pollIntervalSeconds:10}} configId={CC_CONFIGID.BACKEND}>
-              <C1 featureFlagKey={"isDebugModeOn"} configId={CC_CONFIGID.BACKEND}></C1>
-              <C1 featureFlagKey={"sharedfeature1"} configId={CC_CONFIGID.SHARED}></C1>
-            
+                    <C1 featureFlagKey={"isDebugModeOn"} providerId={CC_CONFIGID.BACKEND}></C1>
+                    <C1 featureFlagKey={"sharedfeature1"} providerId={CC_CONFIGID.SHARED}></C1>
+                    <br />
+                    Level2 - Higher-Order Component samples
 
-            {/* Higher-Order Components sample */}
-              <ConfigCatHocComponent featureFlagKey={"isDebugModeOn"} user={userObject}/>
-            </ConfigCatProvider>
-
+                    <ConfigCatHocComponentBackEnd featureFlagKey={"isDebugModeOn"} user={userObject}/>
+                    <ConfigCatHocComponentShared featureFlagKey={"sharedfeature1"} user={userObject}/>
+                </ConfigCatProvider>
           </ConfigCatProvider>
         </div>
         
