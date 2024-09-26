@@ -6,8 +6,8 @@ import { HocComponent} from  './Hoc';
 const CC_CONFIGID = { BACKEND: "BACKEND", SHARED: "SHARED"};
 
 const CC_SDK = { 
-  BACKEND: "fnvWCKwpfPETf3O6BQgQAg/iMRmhH6DmECovlBvRtjpDw",
-  SHARED:"configcat-sdk-1/fnvWCKwpfPETf3O6BQgQAg/Idklvfo85EaPWoX9zOygNA"}
+  BACKEND: "TODO - INSERT SDKKEY",
+  SHARED:"TODO - INSERT SDKKEY"}
 
 const userObject = new User('microFrontendUser1');
 

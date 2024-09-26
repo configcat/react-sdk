@@ -92,3 +92,60 @@ it("useFeatureFlag Manual poll with forceRefresh should work", async () => {
   await render(<ConfigCatProvider sdkKey={sdkKey} pollingMode={PollingMode.ManualPoll}><TestComponent /></ConfigCatProvider>);
   await screen.findByText("Feature flag value: Cat", void 0, { timeout: 2000 });
 });
+
+it("useFeatureFlag with invalid providerId should fail", () => {
+  const spy = jest.spyOn(console, "error");
+  spy.mockImplementation(() => { });
+
+  const providerId = "PROVIDER_IS_NOT_EXIST";
+
+  const TestComponent = () => {
+    useFeatureFlag("stringDefaultCat", null, void 0, providerId);
+    return (<div />);
+  };
+  expect(() => render(<ConfigCatProvider sdkKey={sdkKey}><TestComponent /></ConfigCatProvider>))
+    .toThrow(`useFeatureFlag must be used in ConfigCatProvider with id="${providerId}"!`);
+  spy.mockRestore();
+});
+
+it("useFeatureFlag with providerId should work", async () => {
+
+  const providerId = "BACKEND";
+
+  const TestComponent = () => {
+    const { value: featureFlag } = useFeatureFlag("stringDefaultCat", "NOT_CAT", void 0, providerId);
+    return (< div>Feature flag value: {featureFlag}</div>);
+  };
+  await render(<ConfigCatProvider sdkKey={sdkKey} id={providerId}><TestComponent /></ConfigCatProvider>);
+  await screen.findByText("Feature flag value: Cat", void 0, { timeout: 2000 });
+});
+
+it("useConfigCatClient with invalid providerId should fail", () => {
+  const spy = jest.spyOn(console, "error");
+  spy.mockImplementation(() => { });
+
+  const providerId = "PROVIDER_IS_NOT_EXIST";
+
+  const TestComponent = () => {
+    useConfigCatClient(providerId);
+    return (<div />);
+  };
+  expect(() => render(<ConfigCatProvider sdkKey={sdkKey}><TestComponent /></ConfigCatProvider>))
+    .toThrow(`useConfigCatClient must be used in ConfigCatProvider with id="${providerId}"!`);
+  spy.mockRestore();
+});
+
+it("useConfigCatClient with providerId should work", async () => {
+
+  const providerId = "BACKEND";
+
+  const TestComponent = () => {
+    const [stringDefaultCat, setStringDefaultCat] = useState("");
+    const client = useConfigCatClient(providerId);
+    useEffect(() => { client.getValueAsync("stringDefaultCat", "", void 0).then((v) => setStringDefaultCat(v)); });
+
+    return (< div>Feature flag value: {stringDefaultCat}</div>);
+  };
+  await render(<ConfigCatProvider sdkKey={sdkKey} id={providerId}><TestComponent /></ConfigCatProvider>);
+  await screen.findByText("Feature flag value: Cat", void 0, { timeout: 2000 });
+});
