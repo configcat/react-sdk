@@ -48,7 +48,7 @@ it("withConfigCatClient without provider should fail", () => {
     return (<TestHocComponentWithConfigCatClient />);
   };
   expect(() => render(<TestComponent />))
-    .toThrow("withConfigCatClient must be used in ConfigCatProvider!");
+    .toThrow("withConfigCatClient must be used in ConfigCatProvider without id attribute!");
   spy.mockRestore();
 });
 

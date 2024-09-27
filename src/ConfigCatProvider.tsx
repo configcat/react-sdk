@@ -182,7 +182,7 @@ class ConfigCatClientStub implements IConfigCatClient {
 
 export function createConfigCatProviderError(methodName: string, providerId?: string): Error {
 
-  const providerIdText: string = providerId ? ` with id="${providerId}"` : "";
+  const providerIdText: string = providerId ? ` with id="${providerId}"` : " without id attribute";
 
   return Error(`${methodName} must be used in ConfigCatProvider${providerIdText}!`);
 }
