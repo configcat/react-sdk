@@ -8,29 +8,34 @@ export interface ConfigCatContextData {
   lastUpdated?: Date;
 }
 
-const ConfigCatContext = React.createContext<ConfigCatContextData | undefined>(
-  void 0
-);
+/** @remarks Map key: provider id normalized to lower case. */
+const ConfigCatContextRegistry = new Map<string, { context: React.Context<ConfigCatContextData | undefined>; isReserved?: boolean }>();
 
-ConfigCatContext.displayName = "ConfigCatContext";
+function registryKeyFor(providerId: string | undefined) {
+  return providerId ? providerId.toLowerCase() : "";
+}
 
-const ConfigCatContextRegistry = new Map<string, React.Context<ConfigCatContextData | undefined>>();
+export function registerConfigCatContext(providerId?: string): React.Context<ConfigCatContextData | undefined> {
+  const context = React.createContext<ConfigCatContextData | undefined>(void 0);
 
-export function getOrCreateConfigCatContext(providerId: string): React.Context<ConfigCatContextData | undefined> {
+  context.displayName = "ConfigCatContext" + (providerId ? "_" + providerId : "");
 
-  let context: React.Context<ConfigCatContextData | undefined> | undefined = ConfigCatContextRegistry.get(providerId.toLowerCase());
-
-  if (!context) {
-    context = React.createContext<ConfigCatContextData | undefined>(
-      void 0
-    );
-
-    context.displayName = "ConfigCatContext_" + providerId;
-
-    ConfigCatContextRegistry.set(providerId.toLowerCase(), context);
-  }
+  ConfigCatContextRegistry.set(registryKeyFor(providerId), { context });
 
   return context;
 }
 
-export default ConfigCatContext;
+export function reserveConfigCatContext(providerId?: string): boolean | undefined {
+  const item = ConfigCatContextRegistry.get(registryKeyFor(providerId));
+  if (!item) return;
+  if (item.isReserved) return false;
+  return item.isReserved = true;
+}
+
+export function getConfigCatContext(providerId?: string): React.Context<ConfigCatContextData | undefined> | undefined {
+  return ConfigCatContextRegistry.get(registryKeyFor(providerId))?.context;
+}
+
+export function unregisterConfigCatContext(providerId?: string): boolean {
+  return ConfigCatContextRegistry.delete(registryKeyFor(providerId));
+}

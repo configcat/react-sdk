@@ -6,7 +6,7 @@
     "build:esm": "tsc -p tsconfig.build.esm.json && gulp esm",
     "build:cjs": "tsc -p tsconfig.build.cjs.json && gulp cjs",
     "prepare": "npm run build",
-    "test": "react-scripts test --detectOpenHandles",
+    "test": "react-scripts test --detectOpenHandles --runInBand --no-cache",
     "lint": "eslint . --ext .ts --ext .tsx",
     "lint:fix": "eslint . --ext .ts --ext .tsx --fix"
   },
