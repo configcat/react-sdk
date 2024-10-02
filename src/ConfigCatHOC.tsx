@@ -2,8 +2,7 @@
 
 import type { IConfigCatClient, SettingTypeOf, SettingValue, User } from "configcat-common";
 import React from "react";
-import { type ConfigCatContextData, getOrCreateConfigCatContext } from "./ConfigCatContext";
-import ConfigCatContext from "./ConfigCatContext";
+import { type ConfigCatContextData, getConfigCatContext } from "./ConfigCatContext";
 import { createConfigCatProviderError } from "./ConfigCatProvider";
 
 export type GetValueType = <T extends SettingValue>(
@@ -29,25 +28,28 @@ function withConfigCatClient<P>(
   providerId?: string
 ): React.ComponentType<Omit<P, keyof WithConfigCatClientProps>> {
 
-  const configCatContext = providerId ? getOrCreateConfigCatContext(providerId) : ConfigCatContext;
+  return (props: P) => {
+    const configCatContext = getConfigCatContext(providerId);
+    if (!configCatContext) throw createConfigCatProviderError("withConfigCatClient", providerId);
 
-  return (props: P) => (
-    <configCatContext.Consumer>
-      {(context: ConfigCatContextData | undefined) => {
-        if (!context) {
-          throw createConfigCatProviderError("withConfigCatClient", providerId);
-        }
-        return (
-          <WrappedComponent
-            configCatClient={context.client}
-            getValue={getValueFunction(context.client)}
-            lastUpdated={context.lastUpdated}
-            {...(props as P)}
-          />
-        );
-      }}
-    </configCatContext.Consumer>
-  );
+    return (
+      <configCatContext.Consumer>
+        {(context: ConfigCatContextData | undefined) => {
+          if (!context) {
+            throw createConfigCatProviderError("withConfigCatClient", providerId);
+          }
+          return (
+            <WrappedComponent
+              configCatClient={context.client}
+              getValue={getValueFunction(context.client)}
+              lastUpdated={context.lastUpdated}
+              {...(props as P)}
+            />
+          );
+        }}
+      </configCatContext.Consumer>
+    );
+  };
 }
 
 export default withConfigCatClient;

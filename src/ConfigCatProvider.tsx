@@ -4,7 +4,7 @@ import type { ClientCacheState, HookEvents, IConfig, IConfigCatClient, IConfigCa
 import { PollingMode, getClient } from "configcat-common";
 import React, { Component, type PropsWithChildren } from "react";
 import { LocalStorageCache } from "./Cache";
-import ConfigCatContext, { type ConfigCatContextData, getOrCreateConfigCatContext } from "./ConfigCatContext";
+import { type ConfigCatContextData, ensureConfigCatContext } from "./ConfigCatContext";
 import { HttpConfigFetcher } from "./ConfigFetcher";
 import CONFIGCAT_SDK_VERSION from "./Version";
 import type { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from ".";
@@ -16,9 +16,7 @@ type ConfigCatProviderProps = {
   id?: string;
 };
 
-type ConfigCatProviderState = {
-  client: IConfigCatClient;
-  lastUpdated?: Date;
+type ConfigCatProviderState = ConfigCatContextData & {
 };
 
 const initializedClients = new Map<string, number>();
@@ -37,6 +35,10 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
   }
 
   componentDidMount(): void {
+    const { sdkKey } = this.props;
+
+    initializedClients.set(sdkKey, (initializedClients.get(sdkKey) ?? 0) + 1);
+
     this.configChangedHandler = newConfig => this.reactConfigChanged(newConfig);
 
     this.state.client.waitForReady().then(() => {
@@ -50,28 +52,30 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
   }
 
   componentWillUnmount(): void {
-    this.state.client.off("configChanged", this.configChangedHandler!);
-    delete this.configChangedHandler;
+    if (this.configChangedHandler) {
+      this.state.client.off("configChanged", this.configChangedHandler);
+      delete this.configChangedHandler;
+    }
 
-    const refCount = (initializedClients.get(this.props.sdkKey) ?? 1) - 1;
-    initializedClients.set(this.props.sdkKey, refCount);
+    const { sdkKey } = this.props;
+
+    const refCount = (initializedClients.get(sdkKey) ?? 1) - 1;
+    initializedClients.set(sdkKey, refCount);
 
     if (refCount <= 0) {
       this.state.client.dispose();
-      initializedClients.delete(this.props.sdkKey);
+      initializedClients.delete(sdkKey);
     }
   }
 
   private initializeConfigCatClient() {
-    const { pollingMode, options } = this.props;
-    const { sdkKey } = this.props;
+    const { pollingMode, options, sdkKey } = this.props;
     const configCatKernel: IConfigCatKernel = LocalStorageCache.setup({
       configFetcher: new HttpConfigFetcher(),
       sdkType: "ConfigCat-React",
       sdkVersion: CONFIGCAT_SDK_VERSION,
     });
 
-    initializedClients.set(sdkKey, (initializedClients.get(sdkKey) ?? 0) + 1);
     return getClient(sdkKey, pollingMode ?? PollingMode.AutoPoll, options, configCatKernel);
   }
 
@@ -84,8 +88,7 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
   }
 
   render(): React.JSX.Element {
-
-    const context: React.Context<ConfigCatContextData | undefined> = this.props.id ? getOrCreateConfigCatContext(this.props.id) : ConfigCatContext;
+    const context = ensureConfigCatContext(this.props.id);
 
     return (
       <context.Provider value={this.state}>
@@ -106,14 +109,23 @@ function serverContextNotSupported(): Error {
   );
 }
 
+function providerIdText(providerId?: string) {
+  return providerId ? ` with id="${providerId}"` : " without id attribute";
+}
+
+export function createConfigCatProviderError(methodName: string, providerId?: string): Error {
+  return Error(`${methodName} must be used in ConfigCatProvider${providerIdText(providerId)}!`);
+}
+
 class ConfigCatClientStub implements IConfigCatClient {
+  readonly isOffline: boolean;
+
   getValueAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: User): Promise<SettingTypeOf<T>> {
     throw serverContextNotSupported();
   }
   getValueDetailsAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: User): Promise<IEvaluationDetails<SettingTypeOf<T>>> {
     throw serverContextNotSupported();
   }
-
   getAllKeysAsync(): Promise<string[]> {
     throw serverContextNotSupported();
   }
@@ -141,7 +153,6 @@ class ConfigCatClientStub implements IConfigCatClient {
   clearDefaultUser(): void {
     throw serverContextNotSupported();
   }
-  isOffline: boolean;
   setOnline(): void {
     throw serverContextNotSupported();
   }
@@ -178,13 +189,6 @@ class ConfigCatClientStub implements IConfigCatClient {
   eventNames(): (keyof HookEvents)[] {
     throw serverContextNotSupported();
   }
-}
-
-export function createConfigCatProviderError(methodName: string, providerId?: string): Error {
-
-  const providerIdText: string = providerId ? ` with id="${providerId}"` : " without id attribute";
-
-  return Error(`${methodName} must be used in ConfigCatProvider${providerIdText}!`);
 }
 
 export default ConfigCatProvider;
