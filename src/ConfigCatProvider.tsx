@@ -16,8 +16,7 @@ type ConfigCatProviderProps = {
   id?: string;
 };
 
-type ConfigCatProviderState = ConfigCatContextData & {
-};
+type ConfigCatProviderState = ConfigCatContextData;
 
 const initializedClients = new Map<string, number>();
 
