@@ -4,7 +4,7 @@ import type { ClientCacheState, HookEvents, IConfig, IConfigCatClient, IConfigCa
 import { PollingMode, getClient } from "configcat-common";
 import React, { Component, type PropsWithChildren } from "react";
 import { LocalStorageCache } from "./Cache";
-import { type ConfigCatContextData, ensureConfigCatContext, registerConfigCatContextUsage, unregisterConfigCatContextUsage } from "./ConfigCatContext";
+import { type ConfigCatContextData, ensureConfigCatContext } from "./ConfigCatContext";
 import { HttpConfigFetcher } from "./ConfigFetcher";
 import CONFIGCAT_SDK_VERSION from "./Version";
 import type { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from ".";
@@ -35,11 +35,9 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
   }
 
   componentDidMount(): void {
-    const { id: providerId, sdkKey } = this.props;
+    const { sdkKey } = this.props;
 
     initializedClients.set(sdkKey, (initializedClients.get(sdkKey) ?? 0) + 1);
-
-    registerConfigCatContextUsage(providerId);
 
     this.configChangedHandler = newConfig => this.reactConfigChanged(newConfig);
 
@@ -59,9 +57,7 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
       delete this.configChangedHandler;
     }
 
-    const { id: providerId, sdkKey } = this.props;
-
-    unregisterConfigCatContextUsage(providerId);
+    const { sdkKey } = this.props;
 
     const refCount = (initializedClients.get(sdkKey) ?? 1) - 1;
     initializedClients.set(sdkKey, refCount);
