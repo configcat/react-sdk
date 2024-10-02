@@ -118,7 +118,7 @@ export function createConfigCatProviderError(methodName: string, providerId?: st
 }
 
 class ConfigCatClientStub implements IConfigCatClient {
-  readonly isOffline: boolean;
+  readonly isOffline = true;
 
   getValueAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: User): Promise<SettingTypeOf<T>> {
     throw serverContextNotSupported();
@@ -159,9 +159,7 @@ class ConfigCatClientStub implements IConfigCatClient {
   setOffline(): void {
     throw serverContextNotSupported();
   }
-  dispose(): void {
-    throw serverContextNotSupported();
-  }
+  dispose(): void { }
   addListener<TEventName extends keyof HookEvents>(_eventName: TEventName, _listener: (...args: HookEvents[TEventName]) => void): this {
     throw serverContextNotSupported();
   }
