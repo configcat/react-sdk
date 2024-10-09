@@ -2,8 +2,8 @@
 
 import type { IConfigCatClient, SettingTypeOf, SettingValue, User } from "configcat-common";
 import React from "react";
-import type { ConfigCatContextData } from "./ConfigCatContext";
-import ConfigCatContext from "./ConfigCatContext";
+import { type ConfigCatContextData, getConfigCatContext } from "./ConfigCatContext";
+import { createConfigCatProviderError } from "./ConfigCatProvider";
 
 export type GetValueType = <T extends SettingValue>(
   key: string,
@@ -24,27 +24,32 @@ export interface WithConfigCatClientProps {
 }
 
 function withConfigCatClient<P>(
-  WrappedComponent: React.ComponentType<P & WithConfigCatClientProps>
+  WrappedComponent: React.ComponentType<P & WithConfigCatClientProps>,
+  providerId?: string
 ): React.ComponentType<Omit<P, keyof WithConfigCatClientProps>> {
-  return (props: P) => (
-    <ConfigCatContext.Consumer>
-      {(context: ConfigCatContextData | undefined) => {
-        if (!context) {
-          throw new Error(
-            "withConfigCatClient must be used within a ConfigCatProvider!"
+
+  return (props: P) => {
+    const configCatContext = getConfigCatContext(providerId);
+    if (!configCatContext) throw createConfigCatProviderError("withConfigCatClient", providerId);
+
+    return (
+      <configCatContext.Consumer>
+        {(context: ConfigCatContextData | undefined) => {
+          if (!context) {
+            throw createConfigCatProviderError("withConfigCatClient", providerId);
+          }
+          return (
+            <WrappedComponent
+              configCatClient={context.client}
+              getValue={getValueFunction(context.client)}
+              lastUpdated={context.lastUpdated}
+              {...(props as P)}
+            />
           );
-        }
-        return (
-          <WrappedComponent
-            configCatClient={context.client}
-            getValue={getValueFunction(context.client)}
-            lastUpdated={context.lastUpdated}
-            {...(props as P)}
-          />
-        );
-      }}
-    </ConfigCatContext.Consumer>
-  );
+        }}
+      </configCatContext.Consumer>
+    );
+  };
 }
 
 export default withConfigCatClient;

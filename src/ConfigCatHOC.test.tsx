@@ -48,7 +48,7 @@ it("withConfigCatClient without provider should fail", () => {
     return (<TestHocComponentWithConfigCatClient />);
   };
   expect(() => render(<TestComponent />))
-    .toThrow("withConfigCatClient must be used within a ConfigCatProvider!");
+    .toThrow("withConfigCatClient must be used in ConfigCatProvider without id attribute!");
   spy.mockRestore();
 });
 
@@ -59,4 +59,30 @@ it("withConfigCatClient default settings should work", async () => {
   };
   render(<ConfigCatProvider sdkKey={sdkKey}><TestComponent /></ConfigCatProvider>);
   await screen.findByText("Feature flag value: Cat", void 0, { timeout: 2000 });
+});
+
+it("withConfigCatClient with providerId should work", async () => {
+  const providerId = "BACKEND";
+
+  const TestComponent = () => {
+    const TestHocComponentWithConfigCatClient = withConfigCatClient(TestHOCComponent, providerId);
+    return (<TestHocComponentWithConfigCatClient />);
+  };
+  render(<ConfigCatProvider sdkKey={sdkKey} id={providerId}><TestComponent /></ConfigCatProvider>);
+  await screen.findByText("Feature flag value: Cat", void 0, { timeout: 2000 });
+});
+
+it("withConfigCatClient with invalid providerId should fail", () => {
+  const spy = jest.spyOn(console, "error");
+  spy.mockImplementation(() => { });
+
+  const providerId = "PROVIDER_IS_NOT_EXIST";
+
+  const TestComponent = () => {
+    const TestHocComponentWithConfigCatClient = withConfigCatClient(TestHOCComponent, providerId);
+    return (<TestHocComponentWithConfigCatClient />);
+  };
+  expect(() => render(<ConfigCatProvider sdkKey={sdkKey}><TestComponent /></ConfigCatProvider>))
+    .toThrow(`withConfigCatClient must be used in ConfigCatProvider with id="${providerId}"!`);
+  spy.mockRestore();
 });

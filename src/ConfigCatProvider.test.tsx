@@ -1,9 +1,11 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { DataGovernance, PollingMode } from "configcat-common";
 import React, { useState } from "react";
+import { useFeatureFlag } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
+const sdkKey2 = "configcat-sdk-1/PKDVCLf-Hq-h-kCzMp-L7Q/tiOvFw5gkky9LFu1Duuvzw";
 
 afterEach(cleanup);
 
@@ -120,4 +122,31 @@ it("LazyLoad initialization with wrong cacheTimeToLiveSeconds fails", () => {
     .toThrow("Invalid 'cacheTimeToLiveSeconds' value");
 
   spy.mockRestore();
+});
+
+it("Multiple provider initialization works", async () => {
+  const spy = jest.spyOn(console, "error");
+  spy.mockImplementation(() => { });
+
+  const TestStringDefaultComponent = (props: {flagName: string; providerId?: string}) => {
+    const flagResult = useFeatureFlag(props.flagName, "NOT_FOUND", void 0, props.providerId);
+
+    return (
+      <div>{flagResult.loading ? "loading..." : flagResult.value}</div>
+    );
+  };
+
+  const providerId = "internalProvider";
+
+  render(
+    <ConfigCatProvider sdkKey={sdkKey}>
+      <ConfigCatProvider sdkKey={sdkKey2} id={providerId}>
+        <TestStringDefaultComponent flagName="stringDefaultCat"/>
+        <TestStringDefaultComponent flagName="internalreactapptest" providerId={providerId}/>
+      </ConfigCatProvider>
+    </ConfigCatProvider>
+  );
+
+  await screen.findByText("Cat", void 0, { timeout: 2000 });
+  await screen.findByText("Dog", void 0, { timeout: 2000 });
 });
