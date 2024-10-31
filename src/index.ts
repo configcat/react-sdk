@@ -1,12 +1,21 @@
 "use client";
 
-import type { IAutoPollOptions, IConfigCatLogger, ILazyLoadingOptions, IManualPollOptions } from "configcat-common";
+import type { FlagOverrides, IAutoPollOptions, IConfigCatLogger, ILazyLoadingOptions, IManualPollOptions, OverrideBehaviour } from "configcat-common";
 import type { GetValueType, WithConfigCatClientProps } from "./ConfigCatHOC";
 import withConfigCatClient from "./ConfigCatHOC";
 import { useConfigCatClient, useFeatureFlag } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
+import { flagOverridesConstructor, IQueryStringProvider, QueryParamsOverrideDataSource } from "./FlagOverrides";
 
 export { createConsoleLogger, createFlagOverridesFromMap } from "configcat-common";
+
+export function createFlagOverridesFromQueryParams(behaviour: OverrideBehaviour,
+  watchChanges?: boolean, paramPrefix?: string, queryStringProvider?: IQueryStringProvider
+): FlagOverrides {
+  return new flagOverridesConstructor(new QueryParamsOverrideDataSource(watchChanges, paramPrefix, queryStringProvider), behaviour);
+}
+
+export type { IQueryStringProvider };
 
 /** Options used to configure the ConfigCat SDK in the case of Auto Polling mode. */
 export type IReactAutoPollOptions = IAutoPollOptions;
@@ -68,4 +77,3 @@ export { OverrideBehaviour } from "configcat-common";
 export { ClientCacheState, RefreshResult } from "configcat-common";
 
 export type { IProvidesHooks, HookEvents } from "configcat-common";
-
