@@ -5,10 +5,24 @@ import type { GetValueType, WithConfigCatClientProps } from "./ConfigCatHOC";
 import withConfigCatClient from "./ConfigCatHOC";
 import { useConfigCatClient, useFeatureFlag } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
-import { flagOverridesConstructor, IQueryStringProvider, QueryParamsOverrideDataSource } from "./FlagOverrides";
+import type { IQueryStringProvider} from "./FlagOverrides";
+import { QueryParamsOverrideDataSource, flagOverridesConstructor } from "./FlagOverrides";
 
 export { createConsoleLogger, createFlagOverridesFromMap } from "configcat-common";
 
+/**
+ * Creates an instance of `FlagOverrides` that uses query string parameters as data source.
+ * @param behaviour The override behaviour.
+ * Specifies whether the local values should override the remote values
+ * or local values should only be used when a remote value doesn't exist
+ * or the local values should be used only.
+ * @param watchChanges If set to `true`, the query string will be tracked for changes.
+ * @param paramPrefix The parameter name prefix used to indicate which query string parameters
+ * specify feature flag override values. Parameters whose name doesn't start with the
+ * prefix will be ignored. Defaults to `cc-`.
+ * @param queryStringProvider The provider object used to obtain the query string.
+ * Defaults to a provider that extracts query string from the URL returned by `window.location.href`.
+ */
 export function createFlagOverridesFromQueryParams(behaviour: OverrideBehaviour,
   watchChanges?: boolean, paramPrefix?: string, queryStringProvider?: IQueryStringProvider
 ): FlagOverrides {
