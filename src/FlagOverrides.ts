@@ -1,7 +1,10 @@
 import { type FlagOverrides, OverrideBehaviour, type SettingValue, createFlagOverridesFromMap } from "configcat-common";
 
+const DEFAULT_PARAM_PREFIX = "cc-";
+const FORCE_STRING_VALUE_SUFFIX = ";str";
+
 export interface IQueryStringProvider {
-  readonly currentValue?: string;
+  readonly currentValue?: string | { [key: string]: string | ReadonlyArray<string> };
 }
 
 class DefaultQueryStringProvider implements IQueryStringProvider {
@@ -10,35 +13,38 @@ class DefaultQueryStringProvider implements IQueryStringProvider {
 
 let defaultQueryStringProvider: DefaultQueryStringProvider | undefined;
 
+type SettingMap = { [name: string]: Setting };
+
 export class QueryParamsOverrideDataSource implements IOverrideDataSource {
   private readonly watchChanges?: boolean;
   private readonly paramPrefix: string;
   private readonly queryStringProvider: IQueryStringProvider;
   private queryString: string | undefined;
-  private settings: { [name: string]: Setting };
+  private settings: SettingMap;
 
   constructor(watchChanges?: boolean, paramPrefix?: string, queryStringProvider?: IQueryStringProvider) {
     this.watchChanges = watchChanges;
-    this.paramPrefix = paramPrefix ?? "cc-";
+    this.paramPrefix = paramPrefix ?? DEFAULT_PARAM_PREFIX;
 
     queryStringProvider ??= defaultQueryStringProvider ??= new DefaultQueryStringProvider();
     this.queryStringProvider = queryStringProvider;
 
-    const currentQueryString = queryStringProvider.currentValue;
-    this.queryString = currentQueryString;
-    this.settings = extractSettingsFromQueryString(currentQueryString, this.paramPrefix);
+    const currentQueryStringOrParams = queryStringProvider.currentValue;
+    this.settings = extractSettings(currentQueryStringOrParams, this.paramPrefix);
+    this.queryString = getQueryString(currentQueryStringOrParams);
   }
 
-  getOverrides(): Promise<{ [name: string]: Setting }> {
+  getOverrides(): Promise<SettingMap> {
     return Promise.resolve(this.getOverridesSync());
   }
 
-  getOverridesSync(): { [name: string]: Setting } {
+  getOverridesSync(): SettingMap {
     if (this.watchChanges) {
-      const currentQueryString = this.queryStringProvider.currentValue;
-      if (currentQueryString !== this.queryString) {
+      const currentQueryStringOrParams = this.queryStringProvider.currentValue;
+      const currentQueryString = getQueryString(currentQueryStringOrParams);
+      if (this.queryString !== currentQueryString) {
+        this.settings = extractSettings(currentQueryStringOrParams, this.paramPrefix);
         this.queryString = currentQueryString;
-        this.settings = extractSettingsFromQueryString(currentQueryString, this.paramPrefix);
       }
     }
 
@@ -46,12 +52,74 @@ export class QueryParamsOverrideDataSource implements IOverrideDataSource {
   }
 }
 
-function extractSettingsFromQueryString(queryString: string | undefined, paramPrefix: string) {
-  const settings: { [name: string]: Setting } = {};
+function getQueryString(queryStringOrParams: string | { [key: string]: string | ReadonlyArray<string> } | undefined) {
+  if (queryStringOrParams == null) {
+    return "";
+  }
 
+  if (typeof queryStringOrParams === "string") {
+    return queryStringOrParams;
+  }
+
+  let queryString = "", separator = "?";
+
+  for (const key in queryStringOrParams) {
+    if (!Object.prototype.hasOwnProperty.call(queryStringOrParams, key)) continue;
+
+    const values = queryStringOrParams[key] as string | string[];
+    let value: string, length: number;
+
+    if (!Array.isArray(values)) value = values, length = 1;
+    else if (values.length) value = values[0], length = values.length;
+    else continue;
+
+    for (let i = 0; ;) {
+      queryString += separator + encodeURIComponent(key) + "=" + encodeURIComponent(value);
+      if (++i >= length) break;
+      separator = "&";
+      value = values[i];
+    }
+  }
+
+  return queryString;
+}
+
+function extractSettings(queryStringOrParams: string | { [key: string]: string | ReadonlyArray<string> } | undefined, paramPrefix: string) {
+  const settings: SettingMap = {};
+
+  if (typeof queryStringOrParams === "string") {
+    extractSettingFromQueryString(queryStringOrParams, paramPrefix, settings);
+  }
+  else if (queryStringOrParams != null) {
+    extractSettingsFromQueryParams(queryStringOrParams, paramPrefix, settings);
+  }
+
+  return settings;
+}
+
+function extractSettingsFromQueryParams(queryParams: { [key: string]: string | ReadonlyArray<string> } | undefined, paramPrefix: string, settings: SettingMap) {
+  for (const key in queryParams) {
+    if (!Object.prototype.hasOwnProperty.call(queryParams, key)) continue;
+
+    const values = queryParams[key] as string | string[];
+    let value: string, length: number;
+
+    if (!Array.isArray(values)) value = values, length = 1;
+    else if (values.length) value = values[0], length = values.length;
+    else continue;
+
+    for (let i = 0; ;) {
+      extractSettingFromQueryParam(key, value, paramPrefix, settings);
+      if (++i >= length) break;
+      value = values[i];
+    }
+  }
+}
+
+function extractSettingFromQueryString(queryString: string, paramPrefix: string, settings: SettingMap) {
   if (!queryString
-    || queryString.lastIndexOf("?", 0) < 0) { // identical to `queryString.startsWith("?")`
-    return settings;
+    || queryString.lastIndexOf("?", 0) < 0) { // identical to `!queryString.startsWith("?")`
+    return;
   }
 
   const parts = queryString.substring(1).split("&");
@@ -59,34 +127,36 @@ function extractSettingsFromQueryString(queryString: string | undefined, paramPr
     part = part.replace(/\+/g, " ");
     const index = part.indexOf("=");
 
-    let key = decodeURIComponent(index >= 0 ? part.substring(0, index) : part);
-    if (!key
-      || key.length <= paramPrefix.length
-      || key.lastIndexOf(paramPrefix, 0) < 0) { // identical to `!key.startsWith(paramPrefix)`
-      continue;
-    }
-    key = key.substring(paramPrefix.length);
+    const key = decodeURIComponent(index >= 0 ? part.substring(0, index) : part);
+    const value = index >= 0 ? decodeURIComponent(part.substring(index + 1)) : "";
 
-    const strSuffix = ";str";
-    const forceInterpretValueAsString = key.length > strSuffix.length
-      && key.indexOf(strSuffix, key.length - strSuffix.length) >= 0; // identical to `key.endsWith(strSuffix)`
-
-    let value: boolean | string | number = index > -1 ? decodeURIComponent(part.substring(index + 1)) : "";
-
-    if (forceInterpretValueAsString) {
-      key = key.substring(0, key.length - strSuffix.length);
-    }
-    else {
-      value = parseQueryStringValue(value);
-    }
-
-    settings[key] = settingConstuctor.fromValue(value);
+    extractSettingFromQueryParam(key, value, paramPrefix, settings);
   }
-
-  return settings;
 }
 
-function parseQueryStringValue(value: string): boolean | string | number {
+function extractSettingFromQueryParam(key: string, value: string, paramPrefix: string, settings: SettingMap) {
+  if (!key
+    || key.length <= paramPrefix.length
+    || key.lastIndexOf(paramPrefix, 0) < 0) { // identical to `!key.startsWith(paramPrefix)`
+    return;
+  }
+
+  key = key.substring(paramPrefix.length);
+
+  const interpretValueAsString = key.length > FORCE_STRING_VALUE_SUFFIX.length
+    && key.indexOf(FORCE_STRING_VALUE_SUFFIX, key.length - FORCE_STRING_VALUE_SUFFIX.length) >= 0; // identical to `key.endsWith(strSuffix)`
+
+  if (interpretValueAsString) {
+    key = key.substring(0, key.length - FORCE_STRING_VALUE_SUFFIX.length);
+  }
+  else {
+    value = parseSettingValue(value) as unknown as string;
+  }
+
+  settings[key] = settingConstuctor.fromValue(value);
+}
+
+function parseSettingValue(value: string): NonNullable<SettingValue> {
   switch (value.toLowerCase()) {
     case "false":
       return false;
