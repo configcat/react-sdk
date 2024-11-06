@@ -1,0 +1,16 @@
+name: Mention Teams
+
+on:
+  pull_request:
+    types:
+      - labeled
+
+jobs:
+  react-to-labels:
+    uses: configcat/.github/.github/workflows/ux-label-mention.yml@master
+    with:
+      id: ${{ github.event.pull_request.number }}
+      repo: ${{ github.repository }}
+    secrets:
+      gh_token: ${{ secrets.GITHUB_TOKEN }}
+      slack_webhook_url: ${{ secrets.TEXT_REVIEW_SLACK_WEBHOOK_URL }}
