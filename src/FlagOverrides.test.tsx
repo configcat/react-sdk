@@ -62,7 +62,7 @@ describe("Flag Overrides", () => {
     await screen.findByText("Feature flag value: CHANGED_OVERRIDE_CAT", void 0, { timeout: 2000 });
   });
 
-  it("Query string override should work -q parsed query string", async () => {
+  it("Query string override should work - parsed query string", async () => {
     const TestComponent = () => {
       const { value: featureFlag } = useFeatureFlag("stringDefaultCat", "NOT_CAT");
       return (<div>Feature flag value: {featureFlag}</div>);
@@ -108,7 +108,7 @@ describe("Flag Overrides", () => {
     await screen.findByText("Feature flag value: OVERRIDE_CAT", void 0, { timeout: 2000 });
   });
 
-  it("Query string override should work - respects force-value-to-be-interpreted-as-string suffix", async () => {
+  it("Query string override should work - respects force string value suffix", async () => {
     const TestComponent = () => {
       const { value: boolFeatureFlag } = useFeatureFlag("boolDefaultFalse", false);
       const { value: stringFeatureFlag } = useFeatureFlag("stringDefaultCat", "NOT_CAT");

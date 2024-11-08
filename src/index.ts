@@ -5,7 +5,7 @@ import type { GetValueType, WithConfigCatClientProps } from "./ConfigCatHOC";
 import withConfigCatClient from "./ConfigCatHOC";
 import { useConfigCatClient, useFeatureFlag } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
-import type { IQueryStringProvider} from "./FlagOverrides";
+import type { IQueryStringProvider } from "./FlagOverrides";
 import { QueryParamsOverrideDataSource, flagOverridesConstructor } from "./FlagOverrides";
 
 export { createConsoleLogger, createFlagOverridesFromMap } from "configcat-common";
@@ -21,7 +21,7 @@ export { createConsoleLogger, createFlagOverridesFromMap } from "configcat-commo
  * specify feature flag override values. Parameters whose name doesn't start with the
  * prefix will be ignored. Defaults to `cc-`.
  * @param queryStringProvider The provider object used to obtain the query string.
- * Defaults to a provider that extracts query string from the URL returned by `window.location.href`.
+ * Defaults to a provider that returns the value of `window.location.search`.
  */
 export function createFlagOverridesFromQueryParams(behaviour: OverrideBehaviour,
   watchChanges?: boolean, paramPrefix?: string, queryStringProvider?: IQueryStringProvider
