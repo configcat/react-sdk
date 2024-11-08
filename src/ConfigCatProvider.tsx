@@ -1,11 +1,9 @@
 "use client";
 
-import type { ClientCacheState, HookEvents, IConfig, IConfigCatClient, IConfigCatClientSnapshot, IConfigCatKernel, IEvaluationDetails, RefreshResult, SettingKeyValue, SettingTypeOf, SettingValue, User } from "configcat-common";
-import { PollingMode, getClient } from "configcat-common";
+import type { ClientCacheState, HookEvents, IConfig, IConfigCatClient, IConfigCatClientSnapshot, IEvaluationDetails, RefreshResult, SettingKeyValue, SettingTypeOf, SettingValue, User } from "@configcat/sdk";
+import { Internals, PollingMode } from "@configcat/sdk";
 import React, { Component, type PropsWithChildren } from "react";
-import { LocalStorageCache } from "./Cache";
 import { type ConfigCatContextData, ensureConfigCatContext } from "./ConfigCatContext";
-import { HttpConfigFetcher } from "./ConfigFetcher";
 import CONFIGCAT_SDK_VERSION from "./Version";
 import type { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from ".";
 
@@ -66,13 +64,15 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
 
   private initializeConfigCatClient() {
     const { pollingMode, options, sdkKey } = this.props;
-    const configCatKernel: IConfigCatKernel = LocalStorageCache.setup({
-      configFetcher: new HttpConfigFetcher(),
+    const configCatKernel: Internals.IConfigCatKernel = {
+      configFetcher: new Internals.XmlHttpRequestConfigFetcher(),
       sdkType: "ConfigCat-React",
       sdkVersion: CONFIGCAT_SDK_VERSION,
-    });
+      eventEmitterFactory: () => new Internals.DefaultEventEmitter(),
+      defaultCacheFactory: Internals.LocalStorageConfigCache.tryGetFactory()
+    };
 
-    return getClient(sdkKey, pollingMode ?? PollingMode.AutoPoll, options, configCatKernel);
+    return Internals.getClient(sdkKey, pollingMode ?? PollingMode.AutoPoll, options, configCatKernel);
   }
 
   reactConfigChanged(_newConfig: IConfig): void {

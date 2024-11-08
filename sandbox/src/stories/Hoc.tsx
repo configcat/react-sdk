@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { ConfigCatProvider, LogLevel, withConfigCatClient, WithConfigCatClientProps } from 'configcat-react';
-import { User } from 'configcat-common';
+import { ConfigCatProvider, LogLevel, withConfigCatClient, WithConfigCatClientProps, User } from 'configcat-react';
 
 
 export class HocComponent extends React.Component<
