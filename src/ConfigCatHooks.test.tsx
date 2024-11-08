@@ -1,5 +1,5 @@
+import { PollingMode } from "@configcat/sdk";
 import { cleanup, render, screen } from "@testing-library/react";
-import { PollingMode } from "configcat-common";
 import React, { useEffect, useState } from "react";
 import { useConfigCatClient, useFeatureFlag } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
