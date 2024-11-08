@@ -1,5 +1,5 @@
+import { DataGovernance, PollingMode } from "@configcat/sdk";
 import { cleanup, render, screen } from "@testing-library/react";
-import { DataGovernance, PollingMode } from "configcat-common";
 import React, { useState } from "react";
 import { useFeatureFlag } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
