@@ -26,18 +26,18 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
   constructor(props: ConfigCatProviderProps) {
     super(props);
 
+    const { sdkKey } = this.props;
+
     const client: IConfigCatClient = !isServerContext()
       ? this.initializeConfigCatClient()
       : new ConfigCatClientStub();
+
+    initializedClients.set(sdkKey, (initializedClients.get(sdkKey) ?? 0) + 1);
 
     this.state = { client };
   }
 
   componentDidMount(): void {
-    const { sdkKey } = this.props;
-
-    initializedClients.set(sdkKey, (initializedClients.get(sdkKey) ?? 0) + 1);
-
     this.configChangedHandler = newConfig => this.reactConfigChanged(newConfig);
 
     this.state.client.waitForReady().then(() => {
