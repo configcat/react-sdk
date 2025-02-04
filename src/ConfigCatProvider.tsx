@@ -18,7 +18,9 @@ type ConfigCatProviderProps = {
 
 type ConfigCatProviderState = ConfigCatContextData;
 
-const initializedClients = new Map<string, number>();
+type AugmentedConfigCatClient = IConfigCatClient & {
+  $reactSdk_providers?: Set<ConfigCatProvider>;
+}
 
 class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderProps>, ConfigCatProviderState, {}> {
   private configChangedHandler?: (newConfig: IConfig) => void;
@@ -26,18 +28,18 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
   constructor(props: ConfigCatProviderProps) {
     super(props);
 
-    const client: IConfigCatClient = !isServerContext()
+    const client = (!isServerContext()
       ? this.initializeConfigCatClient()
-      : new ConfigCatClientStub();
+      : new ConfigCatClientStub()
+    ) as AugmentedConfigCatClient;
+
+    const providers = client.$reactSdk_providers ??= new Set();
+    providers.add(this);
 
     this.state = { client };
   }
 
   componentDidMount(): void {
-    const { sdkKey } = this.props;
-
-    initializedClients.set(sdkKey, (initializedClients.get(sdkKey) ?? 0) + 1);
-
     this.configChangedHandler = newConfig => this.reactConfigChanged(newConfig);
 
     this.state.client.waitForReady().then(() => {
@@ -56,14 +58,9 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
       delete this.configChangedHandler;
     }
 
-    const { sdkKey } = this.props;
-
-    const refCount = (initializedClients.get(sdkKey) ?? 1) - 1;
-    initializedClients.set(sdkKey, refCount);
-
-    if (refCount <= 0) {
+    const providers = (this.state.client as AugmentedConfigCatClient).$reactSdk_providers;
+    if (providers?.delete(this) && !providers.size) {
       this.state.client.dispose();
-      initializedClients.delete(sdkKey);
     }
   }
 
