@@ -1,11 +1,19 @@
 "use client";
 
-import type { ClientCacheState, HookEvents, IConfig, IConfigCatClient, IConfigCatClientSnapshot, IEvaluationDetails, RefreshResult, SettingKeyValue, SettingTypeOf, SettingValue, User } from "@configcat/sdk";
-import { Internals, PollingMode } from "@configcat/sdk";
+import type { ClientCacheState, Config, EvaluationDetails, HookEvents, IAutoPollOptions, IConfigCatClient, IConfigCatClientSnapshot, ILazyLoadingOptions, IManualPollOptions, RefreshResult, SettingKeyValue, SettingTypeOf, SettingValue, User } from "@configcat/sdk";
+import { Internals, LocalStorageConfigCache, PollingMode, XmlHttpRequestConfigFetcher } from "@configcat/sdk";
 import React, { Component, type PropsWithChildren } from "react";
 import { type ConfigCatContextData, ensureConfigCatContext } from "./ConfigCatContext";
 import CONFIGCAT_SDK_VERSION from "./Version";
-import type { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from ".";
+
+/** Options used to configure the ConfigCat SDK in the case of Auto Polling mode. */
+export type IReactAutoPollOptions = IAutoPollOptions;
+
+/** Options used to configure the ConfigCat SDK in the case of Lazy Loading mode. */
+export type IReactLazyLoadingOptions = ILazyLoadingOptions;
+
+/** Options used to configure the ConfigCat SDK in the case of Manual Polling mode. */
+export type IReactManualPollOptions = IManualPollOptions;
 
 type ConfigCatProviderProps = {
   sdkKey: string;
@@ -21,7 +29,7 @@ type AugmentedConfigCatClient = IConfigCatClient & {
 }
 
 class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderProps>, ConfigCatProviderState, {}> {
-  private configChangedHandler?: (newConfig: IConfig) => void;
+  private configChangedHandler?: (newConfig: Config) => void;
 
   constructor(props: ConfigCatProviderProps) {
     super(props);
@@ -65,17 +73,17 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
   private initializeConfigCatClient() {
     const { pollingMode, options, sdkKey } = this.props;
     const configCatKernel: Internals.IConfigCatKernel = {
-      configFetcher: new Internals.XmlHttpRequestConfigFetcher(),
       sdkType: "ConfigCat-React",
       sdkVersion: CONFIGCAT_SDK_VERSION,
       eventEmitterFactory: () => new Internals.DefaultEventEmitter(),
-      defaultCacheFactory: Internals.LocalStorageConfigCache.tryGetFactory()
+      defaultCacheFactory: LocalStorageConfigCache["tryGetFactory"](),
+      configFetcherFactory: XmlHttpRequestConfigFetcher["getFactory"](),
     };
 
     return Internals.getClient(sdkKey, pollingMode ?? PollingMode.AutoPoll, options, configCatKernel);
   }
 
-  reactConfigChanged(_newConfig: IConfig): void {
+  reactConfigChanged(_newConfig: Config): void {
     this.setState({ lastUpdated: new Date() });
   }
 
@@ -119,7 +127,7 @@ class ConfigCatClientStub implements IConfigCatClient {
   getValueAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: User): Promise<SettingTypeOf<T>> {
     throw serverContextNotSupported();
   }
-  getValueDetailsAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: User): Promise<IEvaluationDetails<SettingTypeOf<T>>> {
+  getValueDetailsAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: User): Promise<EvaluationDetails<SettingTypeOf<T>>> {
     throw serverContextNotSupported();
   }
   getAllKeysAsync(): Promise<string[]> {
@@ -128,7 +136,7 @@ class ConfigCatClientStub implements IConfigCatClient {
   getAllValuesAsync(_user?: User): Promise<SettingKeyValue<SettingValue>[]> {
     throw serverContextNotSupported();
   }
-  getAllValueDetailsAsync(_user?: User): Promise<IEvaluationDetails<SettingValue>[]> {
+  getAllValueDetailsAsync(_user?: User): Promise<EvaluationDetails<SettingValue>[]> {
     throw serverContextNotSupported();
   }
   getKeyAndValueAsync(_variationId: string): Promise<SettingKeyValue<SettingValue> | null> {

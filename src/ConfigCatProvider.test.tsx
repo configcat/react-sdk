@@ -14,7 +14,7 @@ it("Default initialization fails without SDK Key", () => {
   spy.mockImplementation(() => { });
 
   expect(() => render(<ConfigCatProvider sdkKey="" />))
-    .toThrow("Invalid 'sdkKey' value");
+    .toThrow("Invalid argument `sdkKey`. Expected a non-empty string.");
   spy.mockRestore();
 });
 
@@ -50,7 +50,7 @@ it("AutoPoll initialization wrong pollIntervalSeconds parameter fails", () => {
       sdkKey={sdkKey}
       pollingMode={PollingMode.AutoPoll}
       options={{ pollIntervalSeconds: -1, maxInitWaitTimeSeconds: 20 }} />))
-    .toThrow("Invalid 'pollIntervalSeconds' value");
+    .toThrow("Invalid property `options.pollIntervalSeconds`. Expected a value between 1 and 2147483, got -1.");
   spy.mockRestore();
 });
 
@@ -63,7 +63,7 @@ it("AutoPoll initialization wrong maxInitWaitTimeSeconds parameter fails", () =>
       sdkKey={sdkKey}
       pollingMode={PollingMode.AutoPoll}
       options={{ maxInitWaitTimeSeconds: 2147484 }} />))
-    .toThrow("Invalid 'maxInitWaitTimeSeconds' value");
+    .toThrow("Invalid property `options.maxInitWaitTimeSeconds`. Expected a value less than or equal to 2147483, got 2147484.");
   spy.mockRestore();
 });
 
@@ -96,7 +96,7 @@ it("ManualPoll initialization wrong requestTimeoutMs fails", () => {
     render(<ConfigCatProvider sdkKey={sdkKey}
       pollingMode={PollingMode.ManualPoll}
       options={{ requestTimeoutMs: -1 }} />))
-    .toThrow("Invalid 'requestTimeoutMs' value");
+    .toThrow("Invalid property `options.requestTimeoutMs`. Expected a value greater than 0, got -1.");
   spy.mockRestore();
 });
 
@@ -119,7 +119,7 @@ it("LazyLoad initialization with wrong cacheTimeToLiveSeconds fails", () => {
     render(<ConfigCatProvider sdkKey={sdkKey}
       pollingMode={PollingMode.LazyLoad}
       options={{ cacheTimeToLiveSeconds: -1 }} />))
-    .toThrow("Invalid 'cacheTimeToLiveSeconds' value");
+    .toThrow("Invalid property `options.cacheTimeToLiveSeconds`. Expected a value between 1 and 2147483647, got -1.");
 
   spy.mockRestore();
 });
