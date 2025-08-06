@@ -25,7 +25,7 @@ type ConfigCatProviderProps = {
 type ConfigCatProviderState = ConfigCatContextData;
 
 type AugmentedConfigCatClient = IConfigCatClient & {
-  $reactSdk_providers?: Set<ConfigCatProvider>;
+  _configCatReactSdkProviders?: Set<ConfigCatProvider>;
 }
 
 class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderProps>, ConfigCatProviderState, {}> {
@@ -39,7 +39,7 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
       : new ConfigCatClientStub()
     ) as AugmentedConfigCatClient;
 
-    const providers = client.$reactSdk_providers ??= new Set();
+    const providers = client._configCatReactSdkProviders ??= new Set();
     providers.add(this);
 
     this.state = { client };
@@ -64,7 +64,7 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
       delete this.configChangedHandler;
     }
 
-    const providers = (this.state.client as AugmentedConfigCatClient).$reactSdk_providers;
+    const providers = (this.state.client as AugmentedConfigCatClient)._configCatReactSdkProviders;
     if (providers?.delete(this) && !providers.size) {
       this.state.client.dispose();
     }
