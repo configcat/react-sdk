@@ -8,7 +8,7 @@ const ConfigCatButtonClassComponent = withConfigCatClient(ButtonClassComponent);
 
 export default function App() {
   return (
-    <ConfigCatProvider sdkKey="zVPVCO5_LS9VnDcpIDE84g/zVPVCBScEzDn-VNq0dnYog" options={{logger: createConsoleLogger(LogLevel.Info)}}>
+    <ConfigCatProvider sdkKey="configcat-sdk-1/PKDVCLf-Hq-h-kCzMp-L7Q/tiOvFw5gkky9LFu1Duuvzw" options={{logger: createConsoleLogger(LogLevel.Info)}}>
       <View style={styles.container}>
         <ConfigCatButtonClassComponent text={"Feature Enabled (with HOC)"} />
         <ButtonFunctionComponent text={"Feature Enabled (with HOOKS)"} />

@@ -10,7 +10,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <ConfigCatProvider sdkKey="zVPVCO5_LS9VnDcpIDE84g/zVPVCBScEzDn-VNq0dnYog" options={{logger: createConsoleLogger(LogLevel.Info)}}>
+    <ConfigCatProvider sdkKey="configcat-sdk-1/PKDVCLf-Hq-h-kCzMp-L7Q/tiOvFw5gkky9LFu1Duuvzw" options={{logger: createConsoleLogger(LogLevel.Info)}}>
       <App />
     </ConfigCatProvider>
   </React.StrictMode>
