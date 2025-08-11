@@ -73,4 +73,3 @@ export { User } from "@configcat/sdk";
 export type { HookEvents, IProvidesConfigCatClient, IProvidesHooks } from "@configcat/sdk";
 
 export type { Message } from "@configcat/sdk";
-
