@@ -1,93 +1,75 @@
 "use client";
 
-import type { FlagOverrides, IAutoPollOptions, IConfigCatLogger, ILazyLoadingOptions, IManualPollOptions, OverrideBehaviour } from "configcat-common";
 import type { GetValueType, WithConfigCatClientProps } from "./ConfigCatHOC";
 import withConfigCatClient from "./ConfigCatHOC";
 import { useConfigCatClient, useFeatureFlag } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
-import type { IQueryStringProvider } from "./FlagOverrides";
-import { QueryParamsOverrideDataSource, flagOverridesConstructor } from "./FlagOverrides";
-
-export { createConsoleLogger, createFlagOverridesFromMap } from "configcat-common";
-
-/**
- * Creates an instance of `FlagOverrides` that uses query string parameters as data source.
- * @param behaviour The override behaviour.
- * Specifies whether the local values should override the remote values
- * or local values should only be used when a remote value doesn't exist
- * or the local values should be used only.
- * @param watchChanges If set to `true`, the query string will be tracked for changes.
- * @param paramPrefix The parameter name prefix used to indicate which query string parameters
- * specify feature flag override values. Parameters whose name doesn't start with the
- * prefix will be ignored. Defaults to `cc-`.
- * @param queryStringProvider The provider object used to obtain the query string.
- * Defaults to a provider that returns the value of `window.location.search`.
- */
-export function createFlagOverridesFromQueryParams(behaviour: OverrideBehaviour,
-  watchChanges?: boolean, paramPrefix?: string, queryStringProvider?: IQueryStringProvider
-): FlagOverrides {
-  return new flagOverridesConstructor(new QueryParamsOverrideDataSource(watchChanges, paramPrefix, queryStringProvider), behaviour);
-}
-
-export type { IQueryStringProvider };
-
-/** Options used to configure the ConfigCat SDK in the case of Auto Polling mode. */
-export type IReactAutoPollOptions = IAutoPollOptions;
-
-/** Options used to configure the ConfigCat SDK in the case of Lazy Loading mode. */
-export type IReactLazyLoadingOptions = ILazyLoadingOptions;
-
-/** Options used to configure the ConfigCat SDK in the case of Manual Polling mode. */
-export type IReactManualPollOptions = IManualPollOptions;
-
-export type IReactConfigCatLogger = IConfigCatLogger;
 
 export type { WithConfigCatClientProps, GetValueType };
 export { ConfigCatProvider, useFeatureFlag, useConfigCatClient, withConfigCatClient };
 
-/* Public types re-export from common-js */
+export type { IReactAutoPollOptions, IReactLazyLoadingOptions, IReactManualPollOptions } from "./ConfigCatProvider";
 
-// These exports should be kept in sync with the exports listed in the section "Public types for end users" of common-js/src/index.ts!
+/* Public type re-exports from @configcat/sdk */
 
-export { PollingMode } from "configcat-common";
+// These exports should be kept in sync with the exports listed in the `src/index/browser.ts` module
+// located in the `js-unified-sdk` repo (https://github.com/configcat/js-unified-sdk).
 
-export type { IOptions } from "configcat-common";
+export { createConsoleLogger, createFlagOverridesFromMap, createFlagOverridesFromQueryParams } from "@configcat/sdk";
 
-export type { IAutoPollOptions, IManualPollOptions, ILazyLoadingOptions } from "configcat-common";
+export type { IQueryStringProvider } from "@configcat/sdk";
 
-export { DataGovernance } from "configcat-common";
+export { LocalStorageConfigCache } from "@configcat/sdk";
 
-export type { IConfigCatLogger } from "configcat-common";
+export { IndexedDBConfigCache } from "@configcat/sdk";
 
-export type { LogEventId, LogMessage } from "configcat-common";
+export { XmlHttpRequestConfigFetcher } from "@configcat/sdk";
 
-export { LogLevel } from "configcat-common";
+export { ClientSideFetchApiConfigFetcher } from "@configcat/sdk";
 
-export { FormattableLogMessage } from "configcat-common";
+// These exports should be kept in sync with the exports listed in the `src/index.ts` module.
 
-export type { IConfigCatCache } from "configcat-common";
+export type { IConfigCatCache } from "@configcat/sdk";
+
+export type { IConfigCatClient, IConfigCatClientSnapshot } from "@configcat/sdk";
+
+export type { IAutoPollOptions, ILazyLoadingOptions, IManualPollOptions, IOptions } from "@configcat/sdk";
+
+export { DataGovernance, PollingMode } from "@configcat/sdk";
+
+export type { IConfigCatLogger, LogEventId, LogFilterCallback, LogMessage } from "@configcat/sdk";
+
+export { FormattableLogMessage, LogLevel } from "@configcat/sdk";
+
+export type { FetchErrorCauses, IConfigCatConfigFetcher } from "@configcat/sdk";
+
+export { FetchError, FetchRequest, FetchResponse } from "@configcat/sdk";
+
+export { PrerequisiteFlagComparator, SegmentComparator, SettingType, UserComparator } from "@configcat/sdk";
+
+export type { RefreshResult } from "@configcat/sdk";
+
+export { ClientCacheState, RefreshErrorCode } from "@configcat/sdk";
+
+export type { FlagOverrides, IOverrideDataSource } from "@configcat/sdk";
+
+export { OverrideBehaviour } from "@configcat/sdk";
 
 export type {
-  IConfig, ISegment, SettingTypeMap, SettingValue, VariationIdValue, ISettingValueContainer, ISettingUnion, ISetting, ITargetingRule, IPercentageOption,
-  ConditionTypeMap, IConditionUnion, ICondition, UserConditionComparisonValueTypeMap, IUserConditionUnion, IUserCondition, IPrerequisiteFlagCondition, ISegmentCondition
-} from "configcat-common";
+  Condition, ConditionContainer, Config, PercentageOption, PrerequisiteFlagCondition, Segment, SegmentCondition,
+  Setting, SettingValue, SettingValueContainer, SettingValueModel, TargetingRule, UserCondition, VariationIdValue,
+} from "@configcat/sdk";
 
-export { SettingType, UserComparator, PrerequisiteFlagComparator, SegmentComparator } from "configcat-common";
+export { ConfigJson, deserializeConfig, prepareConfig, createSettingFromValue } from "@configcat/sdk";
 
-export type { IConfigCatClient, IConfigCatClientSnapshot } from "configcat-common";
+export type { IEvaluationDetails, EvaluationDetails, SettingKeyValue, SettingTypeOf } from "@configcat/sdk";
 
-export { SettingKeyValue } from "configcat-common";
+export { EvaluationErrorCode } from "@configcat/sdk";
 
-export type { IEvaluationDetails, SettingTypeOf } from "configcat-common";
+export type { IUser, UserAttributeValue } from "@configcat/sdk";
 
-export type { UserAttributeValue } from "configcat-common";
+export { User } from "@configcat/sdk";
 
-export { User } from "configcat-common";
+export type { HookEvents, IProvidesConfigCatClient, IProvidesHooks } from "@configcat/sdk";
 
-export type { FlagOverrides } from "configcat-common";
-
-export { OverrideBehaviour } from "configcat-common";
-
-export { ClientCacheState, RefreshResult } from "configcat-common";
-
-export type { IProvidesHooks, HookEvents } from "configcat-common";
+export type { Message } from "@configcat/sdk";

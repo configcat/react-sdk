@@ -1,4 +1,4 @@
-import type { IConfigCatClient } from "configcat-common";
+import type { IConfigCatClient } from "@configcat/sdk";
 import React from "react";
 
 export interface ConfigCatContextData {
