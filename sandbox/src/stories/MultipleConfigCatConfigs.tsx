@@ -1,13 +1,13 @@
-import React from 'react';
 import { ConfigCatProvider, useFeatureFlag, User, withConfigCatClient } from 'configcat-react';
 import { HocComponent} from  './Hoc';
 
 
 const CC_CONFIGID = { BACKEND: "BACKEND", SHARED: "SHARED"};
 
-const CC_SDK = { 
+const CC_SDK = {
   BACKEND: "TODO - INSERT SDKKEY",
-  SHARED:"TODO - INSERT SDKKEY"}
+  SHARED:"TODO - INSERT SDKKEY"
+};
 
 const userObject = new User('microFrontendUser1');
 
