@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { MultipleConfigCatConfigs } from './MultipleConfigCatConfigs';
 
 const meta: Meta<typeof MultipleConfigCatConfigs> = {

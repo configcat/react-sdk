@@ -1,3 +1,4 @@
+import addonLinks from "@storybook/addon-links";
 import { definePreview } from '@storybook/react-vite'
 
 const preview = definePreview({
@@ -9,7 +10,8 @@ const preview = definePreview({
         date: /Date$/,
       },
     },
-  }
+  },
+  addons: [addonLinks()]
 });
 
 export default preview;

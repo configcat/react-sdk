@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { HocPage } from './Hoc';
 
 const meta: Meta<typeof HocPage> = {
