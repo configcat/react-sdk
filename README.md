@@ -1,19 +1,5 @@
 # ConfigCat SDK for React applications
 
-https://configcat.com
-
-ConfigCat SDK for React provides easy integration for your web application to ConfigCat.
-
-## About
-
-Manage features and change your software configuration using <a href="https://configcat.com" target="_blank">ConfigCat feature flags</a>
-, without the need to re-deploy code. A <a href="https://app.configcat.com" target="_blank">10 minute trainable Dashboard</a>
-allows even non-technical team members to manage features directly. Deploy anytime, release when confident.
-Target a specific group of users first with new ideas. Supports A/B/n testing and soft launching.
-
-ConfigCat is a <a href="https://configcat.com" target="_blank">hosted feature flag service</a>. Manage feature toggles across frontend, backend, mobile, desktop apps. <a href="https://configcat.com" target="_blank">Alternative to LaunchDarkly</a>. Management app + feature flag SDKs.
-
-
 [![REACT CI](https://github.com/configcat/react-sdk/actions/workflows/react-ci.yml/badge.svg)](https://github.com/configcat/react-sdk/actions/workflows/react-ci.yml)
 [![codecov](https://codecov.io/gh/configcat/react-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/configcat/react-sdk) 
 [![Known Vulnerabilities](https://snyk.io/test/github/configcat/react-sdk/badge.svg?targetFile=package.json)](https://snyk.io/test/github/configcat/react-sdk?targetFile=package.json) 
@@ -23,27 +9,31 @@ ConfigCat is a <a href="https://configcat.com" target="_blank">hosted feature fl
 [![](https://data.jsdelivr.com/v1/package/npm/configcat-react/badge)](https://www.jsdelivr.com/package/npm/configcat-react)
 [![NPM](https://nodei.co/npm/configcat-react.png)](https://nodei.co/npm/configcat-react/)
 
-## Getting Started
+ConfigCat SDK for React provides easy integration for your web application to [ConfigCat](https://configcat.com).
 
-The ConfigCat React SDK uses the Context API (requires React **16.3** or later) and Hook API (requires React **16.8** or later) to provide a better integration in your React application.
+## Getting started
+
+The SDK supports the Context API (requires React **16.3** or later) and the Hook API (requires React **16.8** or later) to provide a better integration for your React applications.
 
 ### 1. Install package:
 
-_via NPM [package](https://npmjs.com/package/configcat-react):_
+#### _via NPM_
+
+Install the [NPM package](https://npmjs.com/package/configcat-react):
 
 ```PowerShell
 npm i configcat-react
 ```
 
-### 2. Go to the <a href="https://app.configcat.com/sdkkey" target="_blank">ConfigCat Dashboard</a> to get your *SDK Key*:
+### 2. Go to the <a href="https://app.configcat.com/sdkkey" target="_blank">ConfigCat Dashboard</a> to get your _SDK Key_:
 
 ![SDK-KEY](https://raw.githubusercontent.com/ConfigCat/react-sdk/master/media/readme02-3.png  "SDK-KEY")
 
-### 3. Import and initialize ConfigCatProvider
+### 3. Import and initialize ConfigCatProvider:
 
-In most cases you should wrap your root component with `ConfigCatProvider` to access ConfigCat features in child components with Context API.
+In most cases, you should wrap your root component with `ConfigCatProvider` to access ConfigCat features in child components with the Context API.
 
-```js
+```tsx
 import React from "react";
 import { ConfigCatProvider } from "configcat-react";
 
@@ -61,7 +51,7 @@ export default App;
 ### 4. Get your setting value:
 
 The React hooks (`useFeatureFlag`) way:
-```js
+```tsx
 function ButtonComponent() {
   const { value: isAwesomeFeatureEnabled, loading } = useFeatureFlag("isAwesomeFeatureEnabled", false);
 
@@ -72,54 +62,58 @@ function ButtonComponent() {
 ```
 
 The React HOC (`WithConfigCatClientProps`) way:
-```js
+```tsx
 class TestHOCComponent extends React.Component<
-    WithConfigCatClientProps,
-    { isAwesomeFeatureEnabled: string }
+  WithConfigCatClientProps,
+  { isAwesomeFeatureEnabled: string }
 > {
-    constructor(props: WithConfigCatClientProps) {
-        super(props);
+  constructor(props: WithConfigCatClientProps) {
+    super(props);
 
-        this.state = { isAwesomeFeatureEnabled: false, loading: true };
-    }
+    this.state = { isAwesomeFeatureEnabled: false, loading: true };
+  }
 
-    componentDidMount() {
-        this.evaluateFeatureFlag();
-    }
+  componentDidMount() {
+    this.evaluateFeatureFlag();
+  }
 
-    componentDidUpdate(prevProps: any) {
-      // To achieve hot reload on config.json updates.
-      if (prevProps?.lastUpdated !== this.props.lastUpdated) {
-        this.evaluateFeatureFlag();
-      }
+  componentDidUpdate(prevProps: any) {
+    // To achieve hot reload on config.json updates.
+    if (prevProps?.lastUpdated !== this.props.lastUpdated) {
+      this.evaluateFeatureFlag();
     }
+  }
 
-    evaluateFeatureFlag(){
-        this.props
-            .getValue("isAwesomeFeatureEnabled", false)
-            .then((v: boolean) => this.setState({ isAwesomeFeatureEnabled: v, loading: false }));
-    }
-    
-    render() {
-        return loading ? (<div>Loading...</div>) : (
-            <div>Feature flag value: {this.state.isAwesomeFeatureEnabled ? 'ON' : 'OFF'}</div>
-        );
-    }
+  evaluateFeatureFlag(){
+    this.props
+      .getValue("isAwesomeFeatureEnabled", false)
+      .then((v: boolean) => this.setState({ isAwesomeFeatureEnabled: v, loading: false }));
+  }
+  
+  render() {
+    return loading ? (<div>Loading...</div>) : (
+      <div>Feature flag value: {this.state.isAwesomeFeatureEnabled ? 'ON' : 'OFF'}</div>
+    );
+  }
 }
 ```
 
-## Sample/Demo app
+## Sample/demo app
   - [React](https://github.com/configcat/react-sdk/tree/main/samples/react-sdk-sample)
 
-## Polling Modes
-The ConfigCat SDK supports 3 different polling mechanisms to acquire the setting values from ConfigCat. After latest setting values are downloaded, they are stored in the internal cache then all requests are served from there. Read more about Polling Modes and how to use them at [ConfigCat Docs](https://configcat.com/docs/sdk-reference/react/).
+## Polling modes
+
+The ConfigCat SDK supports 3 different polling strategies to fetch feature flags and settings from the ConfigCat CDN. Once the latest data is downloaded, it is stored in the cache, then the SDK uses the cached data to evaluate feature flags and settings. Read more about polling modes and how to use them at [ConfigCat Docs](https://configcat.com/docs/sdk-reference/js/overview/#polling-modes).
 
 ## Sensitive information handling
 
-The frontend/mobile SDKs are running in your users' browsers/devices. The SDK is downloading a [config.json](https://configcat.com/docs/requests/) file from ConfigCat's CDN servers. The URL path for this config.json file contains your SDK key, so the SDK key and the content of your config.json file (feature flag keys, feature flag values, targeting rules, % rules) can be visible to your users. 
-This SDK key is read-only, it only allows downloading your config.json file, but nobody can make any changes with it in your ConfigCat account.  
-Suppose you don't want your SDK key or the content of your config.json file visible to your users. In that case, we recommend you use the SDK only in your backend applications and call a backend endpoint in your frontend/mobile application to evaluate the feature flags for a specific application customer.  
-Also, we recommend using [sensitive targeting comparators](https://configcat.com/docs/advanced/targeting/#sensitive-text-comparators) in the targeting rules of those feature flags that are used in the frontend/mobile SDKs.
+Frontend/mobile SDKs run in your users' browsers/devices. They download a [config JSON](https://configcat.com/docs/requests/) file from ConfigCat's CDN servers. Since the SDK Key is included in the URL path of this file, your users can access both the SDK Key and the contents of the config JSON (including feature flag keys, feature flag values, targeting rules, percentage options, etc.)
+
+However, the SDK Key provides read-only access: it only allows downloading your config JSON file, but it cannot be used to modify the corresponding config in your ConfigCat account.
+
+If you want to prevent your users from accessing your SDK Key and the contents of your config JSON file, we recommend using the SDK in your backend services only. You can then provide a secure API endpoint for your frontend/mobile applications to evaluate feature flags and settings for your users.
+
+Also, we suggest using [confidential text comparators](https://configcat.com/docs/targeting/targeting-rule/user-condition/#confidential-text-comparators) in the targeting rules of the feature flags and settings that are used in frontend/mobile SDKs.
 
 ## Need help?
 https://configcat.com/support
@@ -128,6 +122,11 @@ https://configcat.com/support
 Contributions are welcome. For more info please read the [Contribution Guideline](CONTRIBUTING.md).
 
 ## About ConfigCat
-- [Official ConfigCat SDK's for other platforms](https://github.com/configcat)
+
+ConfigCat is a feature flag and configuration management service that lets you separate releases from deployments. You can turn your features ON/OFF using <a href="https://app.configcat.com" target="_blank">ConfigCat Dashboard</a> even after they are deployed. ConfigCat lets you target specific groups of users based on region, email or any other custom user attribute.
+
+ConfigCat is a <a href="https://configcat.com" target="_blank">hosted feature flag service</a>. Manage feature toggles across frontend, backend, mobile, desktop apps. <a href="https://configcat.com" target="_blank">Alternative to LaunchDarkly</a>. Management app + feature flag SDKs.
+
+- [Official ConfigCat SDKs for other platforms](https://github.com/configcat#-official-open-source-sdks)
 - [Documentation](https://configcat.com/docs)
-- [Blog](https://blog.configcat.com)
+- [Blog](https://configcat.com/blog)
