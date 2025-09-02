@@ -33,7 +33,7 @@
   "homepage": "https://configcat.com",
   "license": "MIT",
   "dependencies": {
-    "@configcat/sdk": "^1.0.0",
+    "@configcat/sdk": "^1.0.1",
     "tslib": "^2.4.1"
   },
   "peerDependencies": {
