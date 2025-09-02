@@ -1,5 +1,5 @@
 import React from "react";
-import { WithConfigCatClientProps } from "configcat-react";
+import { type WithConfigCatClientProps } from "configcat-react";
 
 class ButtonClassComponent extends React.Component<
   { text: string } & WithConfigCatClientProps,

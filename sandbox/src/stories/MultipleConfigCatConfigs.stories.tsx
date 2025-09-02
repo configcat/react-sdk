@@ -1,19 +1,17 @@
-import React from 'react';
-import { ComponentStory, ComponentMeta } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 import { MultipleConfigCatConfigs } from './MultipleConfigCatConfigs';
 
-export default {
+const meta: Meta<typeof MultipleConfigCatConfigs> = {
   title: 'Showcase',
   component: MultipleConfigCatConfigs,
   parameters: {
     // More on Story layout: https://storybook.js.org/docs/react/configure/story-layout
     layout: 'padded',
   },
-} as ComponentMeta<typeof MultipleConfigCatConfigs>;
+};
+export default meta;
 
-const Template: ComponentStory<typeof MultipleConfigCatConfigs> = (args) => <MultipleConfigCatConfigs />;
+type Story = StoryObj<typeof MultipleConfigCatConfigs>;
 
-export const MultipleConfigcatConfigs = Template.bind({});
-
-
-
+export const MultipleConfigcatConfigs: Story = {
+};

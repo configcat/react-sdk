@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useConfigCatClient, useFeatureFlag, ConfigCatProvider, LogLevel, User } from 'configcat-react';
 
 export const HookComponent = (args: { featureFlagKey: string }) => {

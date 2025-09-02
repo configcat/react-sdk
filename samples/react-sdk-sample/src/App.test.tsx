@@ -1,9 +1,26 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { describe, it } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react"
+import App from "./App"
+import { ConfigCatProvider, createFlagOverridesFromMap, OverrideBehaviour } from "configcat-react";
 
-test('renders learn react link', () => {
-  render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+describe("App", () => {
+  it("renders feature flagged components", async () => {
+    const flagOverrides = createFlagOverridesFromMap({
+      "isAwesomeFeatureEnabled": true,
+    }, OverrideBehaviour.LocalOnly);
+
+    render(
+      <ConfigCatProvider sdkKey="test" options={{flagOverrides}}>
+        <App />
+      </ConfigCatProvider>
+    );
+
+    await waitFor(() => {
+      let buttonElement = screen.getByText("Feature Enabled (with HOC)");
+      expect(buttonElement).toHaveProperty("disabled", false);
+
+      buttonElement = screen.getByText("Feature Enabled (with HOOKS)");
+      expect(buttonElement).toHaveProperty("disabled", false);
+    });
+  });
 });
