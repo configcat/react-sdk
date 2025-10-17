@@ -8,29 +8,29 @@ on:
     tags: [ 'v[0-9]+.[0-9]+.[0-9]+' ]
   pull_request:
     branches: [ main ]
-    
+
   workflow_dispatch:
-  
+
 jobs:
   test:
     runs-on: ubuntu-latest
     name: Test with react-scripts and report coverage
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v5
         with:
           node-version: 14
-        
+
       - name: Install dependencies
         run: |
           npm install codecov -g
           npm install
-          
+
       - name: Build
         run: |
           npm run build
-      
+
       - name: Test
         run: npm run test -- --coverage
 
@@ -44,27 +44,32 @@ jobs:
         with:
           name: npm-package
           path: configcat-react*.tgz
-        
+
   publish:
     needs: [test]
-    runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags')
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for OIDC (see also https://docs.npmjs.com/trusted-publishers)
+      contents: read
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v5
         with:
-          node-version: 14
+          node-version: 22
           registry-url: 'https://registry.npmjs.org'
-          
+
+      # Ensure npm 11.5.1 or later is installed
+      - name: Update npm
+        run: npm install -g npm@latest
+
       - name: Install dependencies
         run: npm install
-        
+
       - name: Build
         run: |
           npm run build
 
       - name: 🚀Publish
         run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_API_KEY }}
