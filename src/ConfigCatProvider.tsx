@@ -1,6 +1,6 @@
 "use client";
 
-import type { ClientCacheState, Config, EvaluationDetails, HookEvents, IAutoPollOptions, IConfigCatClient, IConfigCatClientSnapshot, ILazyLoadingOptions, IManualPollOptions, RefreshResult, SettingKeyValue, SettingTypeOf, SettingValue, User } from "@configcat/sdk";
+import type { ClientCacheState, Config, EvaluationDetails, HookEvents, IAutoPollOptions, IConfigCatClient, IConfigCatClientSnapshot, ILazyLoadingOptions, IManualPollOptions, IUser, RefreshResult, SettingKeyValue, SettingTypeOf, SettingValue } from "@configcat/sdk";
 import { Internals, LocalStorageConfigCache, PollingMode, XmlHttpRequestConfigFetcher } from "@configcat/sdk";
 import React, { Component, type PropsWithChildren } from "react";
 import { type ConfigCatContextData, ensureConfigCatContext } from "./ConfigCatContext";
@@ -124,19 +124,19 @@ export function createConfigCatProviderError(methodName: string, providerId?: st
 class ConfigCatClientStub implements IConfigCatClient {
   readonly isOffline = true;
 
-  getValueAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: User): Promise<SettingTypeOf<T>> {
+  getValueAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: IUser): Promise<SettingTypeOf<T>> {
     throw serverContextNotSupported();
   }
-  getValueDetailsAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: User): Promise<EvaluationDetails<SettingTypeOf<T>>> {
+  getValueDetailsAsync<T extends SettingValue>(_key: string, _defaultValue: T, _user?: IUser): Promise<EvaluationDetails<SettingTypeOf<T>>> {
     throw serverContextNotSupported();
   }
   getAllKeysAsync(): Promise<string[]> {
     throw serverContextNotSupported();
   }
-  getAllValuesAsync(_user?: User): Promise<SettingKeyValue<SettingValue>[]> {
+  getAllValuesAsync(_user?: IUser): Promise<SettingKeyValue<SettingValue>[]> {
     throw serverContextNotSupported();
   }
-  getAllValueDetailsAsync(_user?: User): Promise<EvaluationDetails<SettingValue>[]> {
+  getAllValueDetailsAsync(_user?: IUser): Promise<EvaluationDetails<SettingValue>[]> {
     throw serverContextNotSupported();
   }
   getKeyAndValueAsync(_variationId: string): Promise<SettingKeyValue<SettingValue> | null> {
@@ -151,7 +151,7 @@ class ConfigCatClientStub implements IConfigCatClient {
   snapshot(): IConfigCatClientSnapshot {
     throw serverContextNotSupported();
   }
-  setDefaultUser(_defaultUser: User): void {
+  setDefaultUser(_defaultUser: IUser): void {
     throw serverContextNotSupported();
   }
   clearDefaultUser(): void {

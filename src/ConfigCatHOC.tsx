@@ -1,6 +1,6 @@
 "use client";
 
-import type { IConfigCatClient, SettingTypeOf, SettingValue, User } from "@configcat/sdk";
+import type { IConfigCatClient, SettingTypeOf, SettingValue, IUser } from "@configcat/sdk";
 import React from "react";
 import { type ConfigCatContextData, getConfigCatContext } from "./ConfigCatContext";
 import { createConfigCatProviderError } from "./ConfigCatProvider";
@@ -8,11 +8,11 @@ import { createConfigCatProviderError } from "./ConfigCatProvider";
 export type GetValueType = <T extends SettingValue>(
   key: string,
   defaultValue: T,
-  user?: User
+  user?: IUser
 ) => Promise<SettingTypeOf<T>>;
 
 const getValueFunction = (client: IConfigCatClient) => {
-  return async function <T extends SettingValue>(key: string, defaultValue: T, user?: User) {
+  return async function <T extends SettingValue>(key: string, defaultValue: T, user?: IUser) {
     return await client.getValueAsync(key, defaultValue, user);
   };
 };

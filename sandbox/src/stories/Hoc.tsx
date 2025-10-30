@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { ConfigCatProvider, LogLevel, withConfigCatClient, type WithConfigCatClientProps, User } from 'configcat-react';
+import { ConfigCatProvider, LogLevel, withConfigCatClient, type WithConfigCatClientProps, type IUser } from 'configcat-react';
 
 
 export class HocComponent extends React.Component<
-  { featureFlagKey: string, user?: User } & WithConfigCatClientProps,
+  { featureFlagKey: string, user?: IUser } & WithConfigCatClientProps,
   { isEnabled: boolean, loading: boolean }
 > {
-  constructor(props: { featureFlagKey: string, user?: User } & WithConfigCatClientProps) {
+  constructor(props: { featureFlagKey: string, user?: IUser } & WithConfigCatClientProps) {
     super(props);
 
     this.state = { isEnabled: false, loading: true };

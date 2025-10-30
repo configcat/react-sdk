@@ -1,11 +1,11 @@
 "use client";
 
-import type { IConfigCatClient, SettingTypeOf, SettingValue, User } from "@configcat/sdk";
+import type { IConfigCatClient, SettingTypeOf, SettingValue, IUser } from "@configcat/sdk";
 import { useContext, useEffect, useState } from "react";
 import { getConfigCatContext } from "./ConfigCatContext";
 import { createConfigCatProviderError } from "./ConfigCatProvider";
 
-function useFeatureFlag<T extends SettingValue>(key: string, defaultValue: T, user?: User, providerId?: string): {
+function useFeatureFlag<T extends SettingValue>(key: string, defaultValue: T, user?: IUser, providerId?: string): {
   value: SettingTypeOf<T>;
   loading: boolean;
 } {

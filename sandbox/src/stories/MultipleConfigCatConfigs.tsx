@@ -1,4 +1,4 @@
-import { ConfigCatProvider, useFeatureFlag, User, withConfigCatClient } from 'configcat-react';
+import { ConfigCatProvider, useFeatureFlag, withConfigCatClient, type IUser } from 'configcat-react';
 import { HocComponent} from  './Hoc';
 
 
@@ -9,7 +9,7 @@ const CC_SDK = {
   SHARED:"TODO - INSERT SDKKEY"
 };
 
-const userObject = new User('microFrontendUser1');
+const userObject: IUser = { identifier: 'microFrontendUser1' };
 
 export const C1 = (args: { featureFlagKey: string, providerId: string }) => {
 
