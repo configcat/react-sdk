@@ -127,7 +127,7 @@ it("Multiple provider initialization works", async () => {
   const spy = vi.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
-  const TestStringDefaultComponent = (props: {flagName: string; providerId?: string}) => {
+  const TestStringDefaultComponent = (props: { flagName: string; providerId?: string }) => {
     const flagResult = useFeatureFlag(props.flagName, "NOT_FOUND", void 0, props.providerId);
 
     return (

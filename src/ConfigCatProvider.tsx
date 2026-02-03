@@ -26,7 +26,7 @@ type ConfigCatProviderState = ConfigCatContextData;
 
 type AugmentedConfigCatClient = IConfigCatClient & {
   _configCatReactSdkProviders?: Set<ConfigCatProvider>;
-}
+};
 
 class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderProps>, ConfigCatProviderState, {}> {
   private configChangedHandler?: (newConfig: Config) => void;
@@ -76,8 +76,8 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
       sdkType: "ConfigCat-React",
       sdkVersion: CONFIGCAT_SDK_VERSION,
       eventEmitterFactory: () => new Internals.DefaultEventEmitter(),
-      defaultCacheFactory: LocalStorageConfigCache["tryGetFactory"](),
-      configFetcherFactory: XmlHttpRequestConfigFetcher["getFactory"](),
+      defaultCacheFactory: (LocalStorageConfigCache["tryGetFactory"] as () => Internals.IConfigCatKernel["defaultCacheFactory"])(),
+      configFetcherFactory: (XmlHttpRequestConfigFetcher["getFactory"] as () => Internals.IConfigCatKernel["configFetcherFactory"])(),
     };
 
     return Internals.getClient(sdkKey, pollingMode ?? PollingMode.AutoPoll, options, configCatKernel);
@@ -133,13 +133,13 @@ class ConfigCatClientStub implements IConfigCatClient {
   getAllKeysAsync(): Promise<string[]> {
     throw serverContextNotSupported();
   }
-  getAllValuesAsync(_user?: IUser): Promise<SettingKeyValue<SettingValue>[]> {
+  getAllValuesAsync(_user?: IUser): Promise<SettingKeyValue[]> {
     throw serverContextNotSupported();
   }
-  getAllValueDetailsAsync(_user?: IUser): Promise<EvaluationDetails<SettingValue>[]> {
+  getAllValueDetailsAsync(_user?: IUser): Promise<EvaluationDetails[]> {
     throw serverContextNotSupported();
   }
-  getKeyAndValueAsync(_variationId: string): Promise<SettingKeyValue<SettingValue> | null> {
+  getKeyAndValueAsync(_variationId: string): Promise<SettingKeyValue | null> {
     throw serverContextNotSupported();
   }
   forceRefreshAsync(): Promise<RefreshResult> {
