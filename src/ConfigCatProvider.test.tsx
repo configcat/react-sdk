@@ -1,16 +1,15 @@
 import { DataGovernance, PollingMode } from "@configcat/sdk";
-import { cleanup, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import React, { useState } from "react";
+import { vi } from "vitest";
 import { useFeatureFlag } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 const sdkKey2 = "configcat-sdk-1/PKDVCLf-Hq-h-kCzMp-L7Q/tiOvFw5gkky9LFu1Duuvzw";
 
-afterEach(cleanup);
-
 it("Default initialization fails without SDK Key", () => {
-  const spy = jest.spyOn(console, "error");
+  const spy = vi.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   expect(() => render(<ConfigCatProvider sdkKey="" />))
@@ -42,7 +41,7 @@ it("AutoPoll advanced initialization works", () => {
 });
 
 it("AutoPoll initialization wrong pollIntervalSeconds parameter fails", () => {
-  const spy = jest.spyOn(console, "error");
+  const spy = vi.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   expect(() =>
@@ -55,7 +54,7 @@ it("AutoPoll initialization wrong pollIntervalSeconds parameter fails", () => {
 });
 
 it("AutoPoll initialization wrong maxInitWaitTimeSeconds parameter fails", () => {
-  const spy = jest.spyOn(console, "error");
+  const spy = vi.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   expect(() =>
@@ -89,7 +88,7 @@ it("ManualPoll simple initialization works", () => {
 });
 
 it("ManualPoll initialization wrong requestTimeoutMs fails", () => {
-  const spy = jest.spyOn(console, "error");
+  const spy = vi.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   expect(() =>
@@ -112,7 +111,7 @@ it("LazyLoad advanced initialization works", () => {
 });
 
 it("LazyLoad initialization with wrong cacheTimeToLiveSeconds fails", () => {
-  const spy = jest.spyOn(console, "error");
+  const spy = vi.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   expect(() =>
@@ -125,7 +124,7 @@ it("LazyLoad initialization with wrong cacheTimeToLiveSeconds fails", () => {
 });
 
 it("Multiple provider initialization works", async () => {
-  const spy = jest.spyOn(console, "error");
+  const spy = vi.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   const TestStringDefaultComponent = (props: {flagName: string; providerId?: string}) => {

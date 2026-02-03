@@ -1,12 +1,11 @@
-import { act, cleanup, render, screen } from "@testing-library/react";
+import { act, render, screen } from "@testing-library/react";
 import React from "react";
+import { vi } from "vitest";
 import ConfigCatProvider from "./ConfigCatProvider";
 import type { WithConfigCatClientProps } from ".";
 import { withConfigCatClient } from ".";
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
-
-afterEach(cleanup);
 
 class TestHOCComponent extends React.Component<WithConfigCatClientProps, { stringDefaultCatValue: string }> {
   constructor(props: WithConfigCatClientProps) {
@@ -40,7 +39,7 @@ class TestHOCComponent extends React.Component<WithConfigCatClientProps, { strin
 }
 
 it("withConfigCatClient without provider should fail", () => {
-  const spy = jest.spyOn(console, "error");
+  const spy = vi.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   const TestComponent = () => {
@@ -73,7 +72,7 @@ it("withConfigCatClient with providerId should work", async () => {
 });
 
 it("withConfigCatClient with invalid providerId should fail", () => {
-  const spy = jest.spyOn(console, "error");
+  const spy = vi.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   const providerId = "PROVIDER_IS_NOT_EXIST";
