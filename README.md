@@ -5,8 +5,8 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/configcat/react-sdk/badge.svg?targetFile=package.json)](https://snyk.io/test/github/configcat/react-sdk?targetFile=package.json) 
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=configcat_react-sdk&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=configcat_react-sdk) 
 [![Tree Shaking](https://badgen.net/bundlephobia/tree-shaking/configcat-react)](https://bundlephobia.com/result?p=configcat-react) 
-![License](https://img.shields.io/github/license/configcat/react-sdk.svg) 
-[![](https://data.jsdelivr.com/v1/package/npm/configcat-react/badge)](https://www.jsdelivr.com/package/npm/configcat-react)
+[![License](https://img.shields.io/github/license/configcat/react-sdk.svg)](https://github.com/configcat/react-sdk/blob/main/LICENSE)
+[![JSDELIVR](https://data.jsdelivr.com/v1/package/npm/configcat-react/badge)](https://www.jsdelivr.com/package/npm/configcat-react)
 [![NPM](https://nodei.co/npm/configcat-react.png)](https://www.npmjs.com/package/configcat-react)
 
 ConfigCat SDK for React provides easy integration for your web application to [ConfigCat](https://configcat.com).
