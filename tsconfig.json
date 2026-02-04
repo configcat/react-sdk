@@ -17,8 +17,10 @@
     "esModuleInterop": true
   },
   "exclude": [
-    "**/node_modules/",
+    "node_modules/",
+    "dist/",
     "lib/",
-    "samples/"
+    "samples/",
+    "sandbox/"
   ]
 }

@@ -1,15 +1,14 @@
 import { PollingMode } from "@configcat/sdk";
-import { cleanup, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import React, { useEffect, useState } from "react";
+import { vi } from "vitest";
 import { useConfigCatClient, useFeatureFlag } from "./ConfigCatHooks";
 import ConfigCatProvider from "./ConfigCatProvider";
 
 const sdkKey = "PKDVCLf-Hq-h-kCzMp-L7Q/psuH7BGHoUmdONrzzUOY7A";
 
-afterEach(cleanup);
-
 it("useConfigCatClient without provider should fail", () => {
-  const spy = jest.spyOn(console, "error");
+  const spy = vi.spyOn(console, "error");
   spy.mockImplementation(() => { });
   const TestComponent = () => {
     useConfigCatClient();
@@ -32,7 +31,7 @@ it("useConfigCatClient with provider forceRefresh() should work", async () => {
 });
 
 it("useFeatureFlag without provider should fail", () => {
-  const spy = jest.spyOn(console, "error");
+  const spy = vi.spyOn(console, "error");
   spy.mockImplementation(() => { });
   const TestComponent = () => {
     useFeatureFlag("test", false);
@@ -94,7 +93,7 @@ it("useFeatureFlag Manual poll with forceRefresh should work", async () => {
 });
 
 it("useFeatureFlag with invalid providerId should fail", () => {
-  const spy = jest.spyOn(console, "error");
+  const spy = vi.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   const providerId = "PROVIDER_IS_NOT_EXIST";
@@ -121,7 +120,7 @@ it("useFeatureFlag with providerId should work", async () => {
 });
 
 it("useConfigCatClient with invalid providerId should fail", () => {
-  const spy = jest.spyOn(console, "error");
+  const spy = vi.spyOn(console, "error");
   spy.mockImplementation(() => { });
 
   const providerId = "PROVIDER_IS_NOT_EXIST";

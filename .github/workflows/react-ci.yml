@@ -14,33 +14,36 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: Test with react-scripts and report coverage
+    name: Test with vitest and report coverage
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
-          node-version: 14
+          node-version: 20
 
-      - name: Install dependencies
-        run: |
-          npm install codecov -g
-          npm install
-
-      - name: Build
-        run: |
-          npm run build
+      - name: Install dependencies & build
+        run: npm install
 
       - name: Test
-        run: npm run test -- --coverage
+        run: npm run coverage
 
-      - name: Upload coverage report
-        run: codecov
+      - name: Upload coverage folder
+        uses: actions/upload-artifact@v6
+        with:
+          name: coverage-report
+          path: coverage
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v7.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: 📦Pack
         run: npm pack
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           name: npm-package
           path: configcat-react*.tgz
@@ -53,9 +56,9 @@ jobs:
       id-token: write # Required for OIDC (see also https://docs.npmjs.com/trusted-publishers)
       contents: read
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         with:
           node-version: 22
           registry-url: 'https://registry.npmjs.org'
@@ -64,12 +67,8 @@ jobs:
       - name: Update npm
         run: npm install -g npm@latest
 
-      - name: Install dependencies
+      - name: Install dependencies & build
         run: npm install
-
-      - name: Build
-        run: |
-          npm run build
 
       - name: 🚀Publish
         run: npm publish

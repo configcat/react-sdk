@@ -1,4 +1,3 @@
-import { describe, it } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react"
 import App from "./App"
 import { ConfigCatProvider, createFlagOverridesFromMap, OverrideBehaviour } from "configcat-react";

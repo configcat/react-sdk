@@ -1,6 +1,6 @@
 "use client";
 
-import type { IConfigCatClient, SettingTypeOf, SettingValue, IUser } from "@configcat/sdk";
+import type { IConfigCatClient, IUser, SettingTypeOf, SettingValue } from "@configcat/sdk";
 import React from "react";
 import { type ConfigCatContextData, getConfigCatContext } from "./ConfigCatContext";
 import { createConfigCatProviderError } from "./ConfigCatProvider";
@@ -43,7 +43,7 @@ function withConfigCatClient<P>(
               configCatClient={context.client}
               getValue={getValueFunction(context.client)}
               lastUpdated={context.lastUpdated}
-              {...(props as P)}
+              {...props}
             />
           );
         }}

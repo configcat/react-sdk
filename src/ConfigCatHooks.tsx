@@ -1,6 +1,6 @@
 "use client";
 
-import type { IConfigCatClient, SettingTypeOf, SettingValue, IUser } from "@configcat/sdk";
+import type { IConfigCatClient, IUser, SettingTypeOf, SettingValue } from "@configcat/sdk";
 import { useContext, useEffect, useState } from "react";
 import { getConfigCatContext } from "./ConfigCatContext";
 import { createConfigCatProviderError } from "./ConfigCatProvider";

@@ -1,13 +1,13 @@
 # ConfigCat SDK for React applications
 
 [![REACT CI](https://github.com/configcat/react-sdk/actions/workflows/react-ci.yml/badge.svg)](https://github.com/configcat/react-sdk/actions/workflows/react-ci.yml)
-[![codecov](https://codecov.io/gh/configcat/react-sdk/branch/main/graph/badge.svg)](https://codecov.io/gh/configcat/react-sdk) 
+[![SonarCloud Coverage](https://img.shields.io/sonar/coverage/configcat_react-sdk?logo=SonarCloud&server=https%3A%2F%2Fsonarcloud.io)](https://sonarcloud.io/project/overview?id=configcat_react-sdk)
 [![Known Vulnerabilities](https://snyk.io/test/github/configcat/react-sdk/badge.svg?targetFile=package.json)](https://snyk.io/test/github/configcat/react-sdk?targetFile=package.json) 
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=configcat_react-sdk&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=configcat_react-sdk) 
 [![Tree Shaking](https://badgen.net/bundlephobia/tree-shaking/configcat-react)](https://bundlephobia.com/result?p=configcat-react) 
-![License](https://img.shields.io/github/license/configcat/react-sdk.svg) 
-[![](https://data.jsdelivr.com/v1/package/npm/configcat-react/badge)](https://www.jsdelivr.com/package/npm/configcat-react)
-[![NPM](https://nodei.co/npm/configcat-react.png)](https://nodei.co/npm/configcat-react/)
+[![License](https://img.shields.io/github/license/configcat/react-sdk.svg)](https://github.com/configcat/react-sdk/blob/main/LICENSE)
+[![JSDELIVR](https://data.jsdelivr.com/v1/package/npm/configcat-react/badge)](https://www.jsdelivr.com/package/npm/configcat-react)
+[![NPM](https://nodei.co/npm/configcat-react.png)](https://www.npmjs.com/package/configcat-react)
 
 ConfigCat SDK for React provides easy integration for your web application to [ConfigCat](https://configcat.com).
 
