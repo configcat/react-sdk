@@ -30,6 +30,8 @@ type AugmentedConfigCatClient = IConfigCatClient & {
 
 class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderProps>, ConfigCatProviderState, {}> {
   private configChangedHandler?: (newConfig: Config) => void;
+  private originalClearDefaultUser?: () => void;
+  private originalSetDefaultUser?: (defaultUser: IUser) => void;
 
   constructor(props: ConfigCatProviderProps) {
     super(props);
@@ -42,31 +44,72 @@ class ConfigCatProvider extends Component<PropsWithChildren<ConfigCatProviderPro
     const providers = client._configCatReactSdkProviders ??= new Set();
     providers.add(this);
 
-    this.state = { client };
+    this.state = { client, defaultUser: this.props.options?.defaultUser };
   }
 
   componentDidMount(): void {
+    const { client } = this.state;
+
+    // Monkey-patch client's `clearDefaultUser` and `setDefaultUser` methods to detect default user changes.
+
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    this.originalClearDefaultUser = client.clearDefaultUser;
+    client.clearDefaultUser = () => {
+      if (this.originalClearDefaultUser && this.state.client === client) {
+        this.originalClearDefaultUser.call(client);
+        this.setState({ defaultUser: void 0 });
+      }
+    };
+
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    this.originalSetDefaultUser = client.setDefaultUser;
+    client.setDefaultUser = defaultUser => {
+      if (this.originalSetDefaultUser && this.state.client === client) {
+        this.originalSetDefaultUser.call(client, defaultUser);
+        this.setState({ defaultUser });
+      }
+    };
+
+    // Wire up config data change detection.
+
     this.configChangedHandler = newConfig => this.reactConfigChanged(newConfig);
 
-    this.state.client.waitForReady().then(() => {
-      if (!this.configChangedHandler) {
-        // If the component was unmounted before client initialization finished, we have nothing left to do.
-        return;
+    client.waitForReady().then(() => {
+      // If the component was unmounted before client initialization finished, we have nothing left to do.
+      if (this.configChangedHandler && this.state.client === client) {
+        client.on("configChanged", this.configChangedHandler);
+        this.clientReady();
       }
-      this.state.client.on("configChanged", this.configChangedHandler);
-      this.clientReady();
     });
   }
 
   componentWillUnmount(): void {
+    const { client } = this.state;
+
+    // Stop config data change detection.
+
     if (this.configChangedHandler) {
-      this.state.client.off("configChanged", this.configChangedHandler);
-      delete this.configChangedHandler;
+      client.off("configChanged", this.configChangedHandler);
+      this.configChangedHandler = void 0;
     }
 
-    const providers = (this.state.client as AugmentedConfigCatClient)._configCatReactSdkProviders;
+    // Restore monkey-patched client methods.
+
+    if (this.originalClearDefaultUser) {
+      client.clearDefaultUser = this.originalClearDefaultUser!;
+      this.originalClearDefaultUser = void 0;
+    }
+
+    if (this.originalSetDefaultUser) {
+      client.setDefaultUser = this.originalSetDefaultUser!;
+      this.originalSetDefaultUser = void 0;
+    }
+
+    // Dispose client if no longer in use.
+
+    const providers = (client as AugmentedConfigCatClient)._configCatReactSdkProviders;
     if (providers?.delete(this) && !providers.size) {
-      this.state.client.dispose();
+      client.dispose();
     }
   }
 

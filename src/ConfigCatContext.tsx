@@ -1,8 +1,9 @@
-import type { IConfigCatClient } from "@configcat/sdk";
+import type { IConfigCatClient, IUser } from "@configcat/sdk";
 import React from "react";
 
 export interface ConfigCatContextData {
   client: IConfigCatClient;
+  defaultUser?: IUser | null;
   lastUpdated?: Date;
 }
 
